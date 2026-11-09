@@ -1,14 +1,14 @@
 @import "tailwindcss";
 @font-face {
   font-family: DM Sans;
-  src: url("/fonts/dm-sans-regular.ttf") format("truetype");
+  src: url("../public/fonts/dm-sans-regular.ttf") format("truetype");
   font-style: normal;
   font-weight: 400 500;
   font-display: swap;
 }
 @font-face {
   font-family: DM Sans;
-  src: url("/fonts/dm-sans-semibold.ttf") format("truetype");
+  src: url("../public/fonts/dm-sans-semibold.ttf") format("truetype");
   font-style: normal;
   font-weight: 550 800;
   font-display: swap;
@@ -348,6 +348,13 @@ ol {
   gap: 26px;
   align-items: center;
   margin-top: 31px;
+}
+.hero-vision {
+  margin-top: 28px;
+  max-width: 55ch;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.65;
 }
 .release-note {
   display: flex;

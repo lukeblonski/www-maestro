@@ -58,6 +58,7 @@ export default function Home() {
               <span className="tiny-dot" />
               {c.hero.releaseNote}
             </p>
+            <p className="hero-vision">{c.hero.vision}</p>
           </div>
           <HeroDemo />
         </section>
@@ -75,7 +76,7 @@ export default function Home() {
         <section className="section container problem-section" id="why">
           <div className="section-heading" data-reveal>
             <h2>{c.problem.title}</h2>
-            <p>{c.hero.vision}</p>
+            <p>{c.problem.introduction}</p>
           </div>
           <div className="problem-grid">
             {c.problem.items.map((item, i) => (

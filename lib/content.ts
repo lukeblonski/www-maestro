@@ -10,7 +10,7 @@ export const content = {
     heading: ["Build the right product,", "the right way.", "Autonomously."],
     description: `${PRODUCT_NAME} is your partner in turning an idea into a working application. Talk through the problem, decide what matters, and let it take care of the build.`,
     vision:
-      "Our ambition: anyone who wants to solve a problem can build a product that solves it.",
+      "Our 2027 vision: if you can name your problem, you’ll know within hours whether your idea is worth building and have a working product on your own server within days — without a developer. You’ll understand every decision and keep your code, data and knowledge.",
     primary: "Join the first release",
     secondary: "See how it works",
     releaseNote: "First release planned for 30 November 2026",
@@ -52,6 +52,8 @@ export const content = {
   },
   problem: {
     title: "Building software is solved. Solving problems is not.",
+    introduction:
+      "You don't need to know what a PR, Node or VPS is. All you need is the will to build your next moonshot.",
     items: [
       {
         title: "Is this the right thing to build?",
@@ -155,7 +157,8 @@ export const content = {
     },
   },
   observer: {
-    title: "A partner who remembers the whole story.",
+    title:
+      "This is not another code monkey. This is your partner in building meaningful things.",
     memoryExample:
       "You wanted to make dinner easier with the food you already have. I’ve kept that at the heart of this version.",
     memoryLabel: "Your earlier decision, remembered",
@@ -189,7 +192,7 @@ export const content = {
   principles: {
     title: "Less to manage. More to make possible.",
     description:
-      "Focus on the outcome, not the output. These are the boundaries your partner works within.",
+      "We offload you from everything AI does better, so you can focus on what only humans do best. Focus on the outcome, not the output.",
     items: [
       {
         title: "Show what matters to the decision.",
@@ -358,7 +361,7 @@ export const content = {
       {
         question: "Do I need to know how to code?",
         answer:
-          "No. You do not need to know what a PR, Node, TypeScript or VPS is. You describe the problem and make the choices that affect your product. Setup does involve pasting an installation command into your server provider’s browser terminal and signing in to your own accounts; the installer provides checks and guidance.",
+          "No. To set up Maestro, paste an installation command into your server provider’s browser terminal and sign in to your own accounts. The installer provides checks and guidance.",
       },
       {
         question: "What will it cost?",
