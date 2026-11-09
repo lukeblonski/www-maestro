@@ -12,7 +12,7 @@ import {
   CircleCheck,
   CornerDownLeft,
   Moon,
-  Play,
+  Utensils,
   RotateCcw,
   Sun,
 } from "lucide-react";
@@ -187,18 +187,19 @@ export function ProjectWalkthrough() {
           <p>{current.description}</p>
         </div>
         {step === 2 ? (
-          <div className="checker-preview">
-            <div className="checker-top">
-              <Play size={17} />
+          <div className="meal-preview">
+            <div className="meal-top">
+              <Utensils size={17} />
               <span>{e.preview.title}</span>
               <span className="preview-tag">{e.preview.caption}</span>
             </div>
-            <div className="video-placeholder" aria-hidden="true">
-              <div className="video-play">
-                <Play size={28} />
-              </div>
-              <span className="video-line" />
-              <span className="video-line short" />
+            <div className="meal-ingredients">
+              <span>{e.preview.ingredientsLabel}</span>
+              <ul>
+                {e.preview.ingredients.map((ingredient) => (
+                  <li key={ingredient}>{ingredient}</li>
+                ))}
+              </ul>
             </div>
             <button
               className="button button-primary"
@@ -208,10 +209,10 @@ export function ProjectWalkthrough() {
               <ArrowRight size={16} />
             </button>
             {checked && (
-              <div className="checker-result" role="status">
+              <div className="meal-result" role="status">
                 <strong>{e.preview.resultTitle}</strong>
                 <p>{e.preview.resultDescription}</p>
-                <span>{e.preview.sourceLabel}</span>
+                <span>{e.preview.resultNote}</span>
               </div>
             )}
           </div>

@@ -1,8 +1,8 @@
 // Product name lives here so the working name can be changed in one place.
 export const PRODUCT_NAME = "Maestro";
 
-// Public copy is grounded in source-materials/01–07. Example conversations are
-// adapted illustrations, not customer quotations or evidence of medical results.
+// Product and workflow copy is grounded in source-materials/01–07. The dinner
+// app is an invented illustration requested by the user, not a customer project.
 export const content = {
   meta: { title: `${PRODUCT_NAME} — Build your next moonshot` },
   hero: {
@@ -22,12 +22,12 @@ export const content = {
   },
   heroDemo: {
     title: "Your idea, moving forward.",
-    caption: "Illustrative conversation · based on a real project",
+    caption: "Illustrative conversation · an everyday idea",
     observerLabel: PRODUCT_NAME,
     userLabel: "You",
     recommendationLabel: "Recommended",
     yourDecision: "Your decision",
-    projectLabel: "Video claim checker",
+    projectLabel: "What’s for dinner?",
     previewLabel: "Illustrative preview",
     readyLabel: "Works, ready to use",
     resetLabel: "Replay the conversation",
@@ -40,12 +40,12 @@ export const content = {
       status: "Build status",
       action: "Your decision",
     },
-    user: "I want to help people check the claims in YouTube videos.",
+    user: "I want to build an app that answers “what’s for dinner?” using what’s already in my fridge.",
     observer:
-      "What would help them most: a quick answer beside the video, or a detailed report elsewhere?",
+      "Should it help people choose dinner tonight, or plan meals for the whole week?",
     recommendation:
-      "Start with a short answer beside the video, with evidence they can explore.",
-    reply: "Yes. Keep it simple.",
+      "Start with tonight. Add the ingredients you have and get a few simple dinner ideas.",
+    reply: "Yes. Start with tonight.",
     approved: "Direction agreed. I’ll work out the details.",
     statuses: ["Conversation", "Shape", "Build", "Check"],
     phase: "Your direction, ready to review",
@@ -73,9 +73,9 @@ export const content = {
   example: {
     title: "From “I have an idea” to “it works.”",
     description:
-      "Follow a real founder project: a tool that helps people check claims in YouTube videos without leaving the video to read a long report.",
+      "Take a familiar question — “what’s for dinner?” — and turn it into an app that suggests meals using what’s already in the fridge.",
     caption:
-      "An illustrated walkthrough of the first-release workflow. Conversations are adapted from the project; screens are illustrative.",
+      "An imagined dinner app, illustrating the first-release workflow. Conversations and screens are examples.",
     stepLabel: "Step",
     next: "Next step",
     previous: "Previous step",
@@ -85,19 +85,19 @@ export const content = {
         description: `${PRODUCT_NAME} asks who needs this, what they have tried and what a useful result would look like. It challenges the idea, too: would an existing chat tool be enough?`,
         role: "You",
         message:
-          "They want a short answer while watching, not another tool and a long report.",
+          "At the end of the day, I’m tired of deciding what to cook. I’d like a few ideas using the food I already have.",
       },
       {
         title: "Decide what people will see",
-        description: `${PRODUCT_NAME} works out the details and brings the visible choices to you: a small set of claims, clear verdicts and a spending limit. You approve or change them.`,
+        description: `${PRODUCT_NAME} works out the details and brings the visible choices to you: how to add ingredients, how many meal ideas to show and how to flag anything missing. You approve or change them.`,
         role: PRODUCT_NAME,
         message:
-          "I recommend a short verdict panel beside the video. People can open the evidence when they want more detail.",
+          "I recommend three simple dinner ideas from your ingredients, with a short list of anything you still need.",
       },
       {
         title: "Try the shape of your idea",
         description:
-          "Open a private, clickable mockup. Explore the video page, the check button and the verdict panel. Comment on what should change before the build begins.",
+          "Open a private, clickable mockup. Try the ingredient list and see a suggested dinner. Comment on what should change before the build begins.",
         role: "You",
         message:
           "This is the experience I had in mind. Let’s build this version.",
@@ -142,24 +142,26 @@ export const content = {
       },
     ],
     preview: {
-      title: "A clearer answer, beside the video.",
-      caption: "Illustrative mockup · no real video or claim is being checked",
-      button: "Check this video",
-      resultTitle: "A short verdict. Evidence you can explore.",
+      title: "What’s for dinner?",
+      caption: "Illustrative mockup · sample ingredients and meal",
+      ingredientsLabel: "In your fridge",
+      ingredients: ["Eggs", "Spinach", "Tomatoes"],
+      button: "Show a dinner idea",
+      resultTitle: "Spinach & tomato omelette",
       resultDescription:
-        "The planned experience brings the main claims and supporting sources into one panel, so people can see what an answer is based on.",
-      sourceLabel: "Supporting sources · preview only",
+        "A simple dinner using all three ingredients. A little oil, salt and pepper from the cupboard, and you’re ready to cook.",
+      resultNote: "An example of the result your app could show.",
       reset: "Reset the preview",
     },
   },
   observer: {
     title: "A partner who remembers the whole story.",
     memoryExample:
-      "You wanted the short answer beside the video. I’ve kept that at the heart of this version.",
+      "You wanted to make dinner easier with the food you already have. I’ve kept that at the heart of this version.",
     memoryLabel: "Your earlier decision, remembered",
     notificationTitle: "Your decision is needed",
     notificationMessage:
-      "The preview is ready. I recommend keeping the verdict beside the video.",
+      "The preview is ready. I recommend starting with three dinner ideas from the ingredients you have.",
     plainExample: "“Here’s what matters. Here’s what I recommend.”",
     description: `Meet ${PRODUCT_NAME}: your point of contact from the first conversation to the finished application. Talk in the Claude app on your computer or phone. It keeps the work understandable and your intent in view.`,
     features: [
@@ -374,7 +376,7 @@ export const content = {
       {
         question: "How long does it take to start a project?",
         answer:
-          "Think in terms of an evening to get a project started. In the founder’s example, the initial product conversation took about 20 minutes, followed by shaping, a mockup and approvals. That is an example, not a promised turnaround. The time to finish an application depends on what you are building.",
+          "Think in terms of an evening to get a project started. In an earlier founder project, the initial product conversation took about 20 minutes, followed by shaping, a mockup and approvals. That is an example, not a promised turnaround. The time to finish an application depends on what you are building.",
       },
       {
         question: "Will it tell me whether my idea is worth building?",

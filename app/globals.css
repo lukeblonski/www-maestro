@@ -758,20 +758,20 @@ ol {
   width: 35px;
   height: 35px;
 }
-.checker-preview {
+.meal-preview {
   margin-block: 25px;
   padding: 18px;
   background: var(--soft);
   border-radius: 10px;
 }
-.checker-top {
+.meal-top {
   display: flex;
   gap: 7px;
   align-items: center;
   flex-wrap: wrap;
   font-size: 11px;
 }
-.checker-top > svg {
+.meal-top > svg {
   color: var(--green);
 }
 .preview-tag {
@@ -781,51 +781,44 @@ ol {
   color: var(--muted);
   margin-bottom: 10px;
 }
-.video-placeholder {
-  height: 86px;
+.meal-ingredients {
+  margin: 12px 0 20px;
+}
+.meal-ingredients > span {
+  font-size: 11px;
+  font-weight: 600;
+}
+.meal-ingredients ul {
   display: flex;
-  align-items: center;
-  gap: 14px;
-  position: relative;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
 }
-.video-play {
-  display: grid;
-  place-items: center;
-  width: 75px;
-  height: 58px;
-  border-radius: 8px;
-  background: var(--accent-soft);
-  color: var(--green);
+.meal-ingredients li {
+  font-size: 12px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
 }
-.video-line {
-  height: 7px;
-  width: 50%;
-  background: var(--line);
-  border-radius: 3px;
-}
-.video-line.short {
-  position: absolute;
-  left: 89px;
-  top: 57px;
-  width: 30%;
-}
-.checker-preview .button {
+.meal-preview .button {
   min-height: 36px;
   font-size: 11px;
   padding: 8px 13px;
 }
-.checker-result {
+.meal-result {
   font-size: 12px;
   margin-top: 16px;
 }
-.checker-result p {
+.meal-result p {
   color: var(--muted);
   font-size: 11px;
   margin: 6px 0;
 }
-.checker-result > span {
+.meal-result > span {
   font-size: 10px;
-  text-decoration: underline;
+  color: var(--muted);
 }
 /* Observer bento */
 .observer-bento {
@@ -1450,7 +1443,7 @@ thead .maestro-column {
   animation: settle 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 .approved-reply,
-.checker-result {
+.meal-result {
   animation: reply-in 0.25s ease-out;
 }
 .hero-demo {
