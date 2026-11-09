@@ -10,14 +10,14 @@ export const content = {
     heading: ["Build the right product,", "the right way.", "Autonomously."],
     description: `${PRODUCT_NAME} is your partner in turning an idea into a working application. Talk through the problem, decide what matters, and let it take care of the build.`,
     vision:
-      "Our ambition: anyone who can describe a problem can build a product they understand and own.",
+      "Our ambition: anyone who wants to solve a problem can build a product that solves it.",
     primary: "Join the first release",
     secondary: "See how it works",
     releaseNote: "First release planned for 30 November 2026",
     proofs: [
       "No coding required",
       "Built on your server",
-      "Your knowledge stays yours",
+      "Your proprietary knowledge stays yours",
     ],
   },
   heroDemo: {
