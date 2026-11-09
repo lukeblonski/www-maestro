@@ -181,14 +181,14 @@ At 700px and below, the hero uses `clamp(42px, 8.5vw, 63px)` and a 1.08 line hei
 
 The centered container has a 1280px maximum width including gutters. Default gutters are 48px; they reduce to 32px at 1100px, 24px at 700px, and 20px at 390px. Section padding changes from 112px to 85px at 900px, then 70px at 700px.
 
-The desktop hero uses a 1.1:0.9 grid with a 62px gap. The walkthrough pairs a 370px step list with a flexible panel. Observer cards use a 1.15:1 bento grid and a 20px gap; the conversation spans two rows. Large sections alternate open content, soft surfaces, and forest panels.
+The desktop hero uses a 1.1:0.9 grid with a 62px gap. The walkthrough pairs a 370px step list with a flexible panel. Maestro cards use a 1.15:1 bento grid and a 20px gap; the conversation spans two rows. Large sections alternate open content, soft surfaces, and forest panels.
 
 | Breakpoint | Implemented change |
 | --- | --- |
 | Minimum 1450px | Hero gap increases to 85px and vertical space to 100px/90px. |
 | Maximum 1100px | Narrower gutters and gaps; walkthrough list becomes 310px; form stacks. |
-| Maximum 900px | Desktop navigation becomes a menu; ownership becomes two columns; walkthrough list becomes 270px. |
-| Maximum 700px | Header reduces from 85px to 72px; hero, bento, major paired sections, and walkthrough stack; steps become a two-column grid. |
+| Maximum 900px | Ownership becomes two columns; walkthrough list becomes 270px. |
+| Maximum 700px | Header reduces from 85px to 72px and its CTA is hidden; hero, bento, major paired sections, and walkthrough stack; steps become a two-column grid. |
 | Maximum 390px | Tightest gutters and type adjustments; form stacks again. |
 
 The comparison remains a real table in a horizontally scrollable, keyboard-focusable region. Its minimum width is 720px on larger screens and 690px at 700px and below. The ownership grid retains two columns on mobile. The 360px minimum is a product requirement, not an additional CSS breakpoint.
@@ -197,7 +197,7 @@ The comparison remains a real table in a horizontally scrollable, keyboard-focus
 
 Most surfaces are flat, separated by tone and one-pixel rules. The hero conversation alone uses the reusable `--shadow`: `0 22px 60px -25px #1a392b38` in light mode and `0 22px 60px -25px #0008` in dark mode. Its soft green backing plate is rotated 3 degrees. Buttons move upward 2px on hover; cards have no generic lift effect.
 
-Scroll reveals move visible content upward from a 16px offset over 0.7s with `cubic-bezier(.16,1,.3,1)`. The hero uses 0.9s. Approval and mockup results enter over 0.25s with `ease-out`. Reduced-motion preferences disable animations, transitions, and smooth scrolling. Content is visible before the observer runs and when JavaScript is unavailable.
+Scroll reveals move visible content upward from a 16px offset over 0.7s with `cubic-bezier(.16,1,.3,1)`. The hero uses 0.9s. Approval and mockup results enter over 0.25s with `ease-out`. Reduced-motion preferences disable animations, transitions, and smooth scrolling. Content is visible before IntersectionObserver runs and when JavaScript is unavailable.
 
 ## Shapes
 
@@ -207,10 +207,10 @@ The primary surface radius is the CSS `--radius` represented by `rounded.surface
 
 - **Buttons:** primary lime, ink, and forest treatments share compact typography and an 8px radius. Default buttons have a 51px minimum height; the header variant has a 42px minimum height, 10px/15px padding, and 12px type. Hover transitions take 0.2s. Icon buttons are 42px square; pagination uses 35px and replay uses 28px. Disabled pagination dims to 0.35 opacity.
 - **Fields:** the email field uses a visible label, surface fill, one-pixel line border, 51px minimum height, and muted placeholder. Invalid input receives a two-pixel green outline and an explicit message. Submission currently returns a clearly disclosed preview state; it neither sends nor stores an address.
-- **Navigation:** the header is sticky, opaque, and separated by a rule. Desktop links use 12px muted text and green hover text. The mobile menu exposes `aria-expanded` and `aria-controls`; Escape closes it and restores focus to its button. The header CTA is hidden at 700px while the menu retains the action.
+- **Header:** the header is sticky, opaque, and separated by a rule. It contains the logo, theme toggle, and desktop CTA. At 700px and below, only the logo and theme toggle remain. The one-page site has no section menu or navigation at any viewport size.
 - **Tags:** compact, outlined, semibold labels. They annotate release and planning status and are not interactive filters.
 - **Bento cards:** soft, forest, and accent-soft surfaces use the shared surface radius. Default inset is 32px, changing to 27px at 900px and 28px at 700px. The forest notification uses the forest text roles.
-- **Conversation:** an explicitly illustrative figure contains a user bubble, Observer reply, recommendation rule, approval button, and four-stage status track. Approval updates both the reply and progress, with a replay action. The reply area announces changes politely.
+- **Conversation:** an explicitly illustrative figure contains a user bubble, Maestro reply, recommendation rule, approval button, and four-stage status track. Approval updates both the reply and progress, with a replay action. The reply area announces changes politely.
 - **Walkthrough:** eight native buttons expose the selected state through `aria-pressed` and control a named panel. Selected steps use forest with lime numbering. Panel copy is a polite atomic live region; previous/next buttons disable at the ends. The third step has a clearly illustrative, reversible check-result preview.
 - **FAQ:** native `details` and `summary`, divided by rules; a chevron rotates when open. No custom accordion keyboard model is required.
 

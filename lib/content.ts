@@ -5,12 +5,6 @@ export const PRODUCT_NAME = "Maestro";
 // adapted illustrations, not customer quotations or evidence of medical results.
 export const content = {
   meta: { title: `${PRODUCT_NAME} — Build your next moonshot` },
-  nav: [
-    { label: "How it works", href: "#how-it-works" },
-    { label: "Your partner", href: "#observer" },
-    { label: "Your ownership", href: "#ownership" },
-    { label: "First release", href: "#first-release" },
-  ],
   hero: {
     mission: "Everyone can build their moonshot.",
     heading: ["Build the right product,", "the right way.", "Autonomously."],
@@ -29,7 +23,7 @@ export const content = {
   heroDemo: {
     title: "Your idea, moving forward.",
     caption: "Illustrative conversation · based on a real project",
-    observerLabel: "Observer",
+    observerLabel: PRODUCT_NAME,
     userLabel: "You",
     recommendationLabel: "Recommended",
     yourDecision: "Your decision",
@@ -41,7 +35,7 @@ export const content = {
     buildMessage: "Direction approved. Planning next.",
     labels: {
       you: "You",
-      observer: "Observer",
+      observer: PRODUCT_NAME,
       project: "Your project",
       status: "Build status",
       action: "Your decision",
@@ -88,8 +82,7 @@ export const content = {
     steps: [
       {
         title: "Start with the problem",
-        description:
-          "The Observer asks who needs this, what they have tried and what a useful result would look like. It challenges the idea, too: would an existing chat tool be enough?",
+        description: `${PRODUCT_NAME} asks who needs this, what they have tried and what a useful result would look like. It challenges the idea, too: would an existing chat tool be enough?`,
         role: "You",
         message:
           "They want a short answer while watching, not another tool and a long report.",
@@ -97,7 +90,7 @@ export const content = {
       {
         title: "Decide what people will see",
         description: `${PRODUCT_NAME} works out the details and brings the visible choices to you: a small set of claims, clear verdicts and a spending limit. You approve or change them.`,
-        role: "Observer",
+        role: PRODUCT_NAME,
         message:
           "I recommend a short verdict panel beside the video. People can open the evidence when they want more detail.",
       },
@@ -113,14 +106,14 @@ export const content = {
         title: "Approve a clear proposal",
         description:
           "Review what will be built, where it will run, what it may cost and the trade-offs. The decisions that matter are explained in everyday language.",
-        role: "Observer",
+        role: PRODUCT_NAME,
         message:
           "Here is the plan, the running cost and what needs your approval — all in one place.",
       },
       {
         title: "Let the preparation happen",
         description: `${PRODUCT_NAME} records the product’s intent, plans the work, prepares the application and its safeguards, and creates a private home for your code.`,
-        role: "Observer",
+        role: PRODUCT_NAME,
         message:
           "The preparation is under way. Your plan and decisions are saved with your project.",
       },
@@ -128,7 +121,7 @@ export const content = {
         title: "Set the boundaries once",
         description:
           "Approve access, a public address if needed, any data sent to an AI service and permitted spending. Private service keys go directly onto your server, never into the conversation.",
-        role: "Observer",
+        role: PRODUCT_NAME,
         message:
           "Before I connect a paid service, here is what it needs, what data it receives and the limit you can set.",
       },
@@ -136,14 +129,14 @@ export const content = {
         title: "Build, review and check",
         description:
           "The application is built piece by piece. Each piece goes through research, planning, independent reviews and automatic tests, including checks in a real browser.",
-        role: "Observer",
+        role: PRODUCT_NAME,
         message:
           "The next piece is being checked. I’ll come back if a decision needs you.",
       },
       {
         title: "Works, ready to use",
         description: `${PRODUCT_NAME} checks the whole application before handing it over. You start using it and report anything you notice; you do not have to run a manual test checklist.`,
-        role: "Observer",
+        role: PRODUCT_NAME,
         message:
           "Works, ready to use. Your application is on your server, with the decisions and work behind it saved for you.",
       },
@@ -168,8 +161,7 @@ export const content = {
     notificationMessage:
       "The preview is ready. I recommend keeping the verdict beside the video.",
     plainExample: "“Here’s what matters. Here’s what I recommend.”",
-    description:
-      "Meet the Observer: your point of contact from the first conversation to the finished application. Talk in the Claude app on your computer or phone. It keeps the work understandable and your intent in view.",
+    description: `Meet ${PRODUCT_NAME}: your point of contact from the first conversation to the finished application. Talk in the Claude app on your computer or phone. It keeps the work understandable and your intent in view.`,
     features: [
       {
         title: "Plain language. Useful answers.",
@@ -178,8 +170,7 @@ export const content = {
       },
       {
         title: "A recommendation, not homework.",
-        description:
-          "When a decision needs you, the Observer explains the choice, recommends a direction and offers a reply you can accept or change.",
+        description: `When a decision needs you, ${PRODUCT_NAME} explains the choice, recommends a direction and offers a reply you can accept or change.`,
       },
       {
         title: "Your context, kept with you.",
@@ -232,8 +223,7 @@ export const content = {
     items: [
       {
         title: "Your server",
-        description:
-          "Your application and the Observer’s memory run on a server you control, paid for directly with your provider.",
+        description: `Your application and ${PRODUCT_NAME}’s memory run on a server you control, paid for directly with your provider.`,
       },
       {
         title: "Your code and decisions",
@@ -310,7 +300,7 @@ export const content = {
       "Designed for nontechnical people ready to take an idea through to a working application. These are the capabilities planned to be available in the first release.",
     items: [
       "One-command installation on your own server, with guided sign-ins and setup checks.",
-      "The Observer as your conversational partner, with memory on your server and phone notifications.",
+      `${PRODUCT_NAME} as your conversational partner, with memory on your server and phone notifications.`,
       "A focused product conversation that challenges assumptions and clarifies the first version.",
       "Visible product choices and a private, clickable mockup for your approval.",
       "Clear approval of the plan, costs, access and any sharing of data.",
@@ -374,8 +364,7 @@ export const content = {
       },
       {
         question: "Where are my data, code and project history?",
-        answer:
-          "Your application data and the Observer’s memory live on your server. Your code and project history live in your own private repository. If a feature needs to send data to an AI or other external service, the Observer asks for your approval and explains what will be shared.",
+        answer: `Your application data and ${PRODUCT_NAME}’s memory live on your server. Your code and project history live in your own private repository. If a feature needs to send data to an AI or other external service, ${PRODUCT_NAME} asks for your approval and explains what will be shared.`,
       },
       {
         question: `What happens if I stop using ${PRODUCT_NAME}?`,
@@ -422,11 +411,7 @@ export const content = {
     backToTop: "Back to top",
   },
   ui: {
-    mainNav: "Main navigation",
-    mobileNav: "Mobile navigation",
     skipLink: "Skip to main content",
-    menuOpen: "Open navigation",
-    menuClose: "Close navigation",
     themeLight: "Switch to light theme",
     themeDark: "Switch to dark theme",
     firstRelease: "First release",

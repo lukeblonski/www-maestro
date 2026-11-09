@@ -11,12 +11,10 @@ import {
   Circle,
   CircleCheck,
   CornerDownLeft,
-  Menu,
   Moon,
   Play,
   RotateCcw,
   Sun,
-  X,
 } from "lucide-react";
 import { content as c } from "@/lib/content";
 import { Brand, BrandMark } from "./brand";
@@ -24,21 +22,9 @@ import { submitWaitlist } from "@/lib/waitlist";
 
 export function Header() {
   const [dark, setDark] = useState(false);
-  const [open, setOpen] = useState(false);
-  const menuButton = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     setDark(document.documentElement.dataset.theme === "dark");
   }, []);
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && open) {
-        setOpen(false);
-        menuButton.current?.focus();
-      }
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [open]);
   function toggleTheme() {
     const next = !dark;
     setDark(next);
@@ -53,13 +39,6 @@ export function Header() {
         <a href="#top" className="brand-link" aria-label={c.ui.backToTop}>
           <Brand />
         </a>
-        <nav className="desktop-nav" aria-label={c.ui.mainNav}>
-          {c.nav.map((item) => (
-            <a key={item.href} href={item.href}>
-              {item.label}
-            </a>
-          ))}
-        </nav>
         <div className="header-actions">
           <button
             className="icon-button theme-button"
@@ -72,35 +51,8 @@ export function Header() {
             {c.hero.primary}
             <ArrowUpRight size={16} />
           </a>
-          <button
-            ref={menuButton}
-            className="icon-button menu-toggle"
-            aria-label={open ? c.ui.menuClose : c.ui.menuOpen}
-            aria-expanded={open}
-            aria-controls="mobile-navigation"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <X /> : <Menu />}
-          </button>
         </div>
       </div>
-      <nav
-        id="mobile-navigation"
-        className="mobile-nav"
-        aria-label={c.ui.mobileNav}
-        hidden={!open}
-      >
-        {c.nav.map((item) => (
-          <a key={item.href} href={item.href} onClick={() => setOpen(false)}>
-            {item.label}
-            <ArrowUpRight size={16} />
-          </a>
-        ))}
-        <a href="#waitlist" onClick={() => setOpen(false)}>
-          {c.hero.primary}
-          <ArrowUpRight size={16} />
-        </a>
-      </nav>
     </header>
   );
 }

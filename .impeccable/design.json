@@ -425,7 +425,7 @@
       {
         "name": "control-transition",
         "value": "0.2s ease",
-        "purpose": "Button background/lift, icon backgrounds, navigation color, step fill, and FAQ chevron."
+        "purpose": "Button background/lift, icon backgrounds, step fill, and FAQ chevron."
       },
       {
         "name": "scroll-settle",
@@ -458,7 +458,7 @@
         "value": "1100px"
       },
       {
-        "name": "menu-max",
+        "name": "compact-layout-max",
         "value": "900px"
       },
       {
@@ -505,13 +505,6 @@
       "refersTo": "input-light"
     },
     {
-      "name": "Desktop navigation",
-      "kind": "nav",
-      "description": "Muted section links on an opaque paper header, green hover text, and visible keyboard focus. The live header switches to the menu at 900px.",
-      "html": "<nav class=\"ds-navigation\" aria-label=\"Main\"><a href=\"#how-it-works\">How it works</a><a href=\"#observer\">Your partner</a><a href=\"#ownership\">Your ownership</a><a href=\"#first-release\">First release</a></nav>",
-      "css": ".ds-navigation{font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:26px;font-size:12px;background:var(--paper,#fafbf7);border-bottom:1px solid var(--line,#dce2d8)}.ds-navigation a{padding-block:12px;color:var(--muted,#5c675e);text-decoration:none;line-height:1.6;transition:color .2s}.ds-navigation a:hover{color:var(--green,#286447)}.ds-navigation a:focus-visible{outline:3px solid var(--green,#286447);outline-offset:5px;}@media(prefers-reduced-motion:reduce){.ds-navigation a{transition:none}}"
-    },
-    {
       "name": "Status tag",
       "kind": "chip",
       "description": "A static status annotation, not a filter or button.",
@@ -520,7 +513,7 @@
       "refersTo": "tag"
     },
     {
-      "name": "Observer bento surface",
+      "name": "Maestro bento surface",
       "kind": "card",
       "description": "A flat soft surface with the shared 16px radius and compact explanatory text.",
       "html": "<article class=\"ds-bento\"><h3>Your context, kept with you.</h3><p>Its lasting memory lives on your server. Your reasons, preferences and decisions stay available for the next conversation.</p></article>",
@@ -538,7 +531,7 @@
       "name": "Illustrative conversation",
       "kind": "custom",
       "description": "The signature conversation combines a user bubble, recommendation rule, and forest reply button. The live component adds approval/replay and a four-stage status track.",
-      "html": "<figure class=\"ds-conversation\"><div class=\"ds-conversation-top\"><span class=\"ds-avatar\"><svg width=\"30\" height=\"30\" viewBox=\"0 0 32 32\" fill=\"none\" aria-hidden=\"true\"><path d=\"M4 25V13c0-4 3-6 6-6s6 2 6 6v12M16 25V13c0-4 3-6 6-6s6 2 6 6v12\" stroke=\"currentColor\" stroke-width=\"3.4\" stroke-linecap=\"round\"/><path d=\"M4 19h24\" stroke=\"currentColor\" stroke-width=\"2.2\"/></svg></span><div><strong>Observer</strong><span>Your idea, moving forward.</span></div></div><div class=\"ds-conversation-body\"><div class=\"ds-user\"><span class=\"ds-speaker\">You</span><p>I want to help people check the claims in YouTube videos.</p></div><div class=\"ds-observer\"><span class=\"ds-speaker\">Observer</span><p>What would help them most: a quick answer beside the video, or a detailed report elsewhere?</p><div class=\"ds-recommendation\"><span>Recommended</span><p>Start with a short answer beside the video, with evidence they can explore.</p></div><button class=\"ds-reply\" type=\"button\">Yes. Keep it simple.<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 10 4 15l5 5M20 4v7a4 4 0 0 1-4 4H4\"/></svg></button></div></div><figcaption>Illustrative conversation · based on a real project</figcaption></figure>",
+      "html": "<figure class=\"ds-conversation\"><div class=\"ds-conversation-top\"><span class=\"ds-avatar\"><svg width=\"30\" height=\"30\" viewBox=\"0 0 32 32\" fill=\"none\" aria-hidden=\"true\"><path d=\"M4 25V13c0-4 3-6 6-6s6 2 6 6v12M16 25V13c0-4 3-6 6-6s6 2 6 6v12\" stroke=\"currentColor\" stroke-width=\"3.4\" stroke-linecap=\"round\"/><path d=\"M4 19h24\" stroke=\"currentColor\" stroke-width=\"2.2\"/></svg></span><div><strong>Maestro</strong><span>Your idea, moving forward.</span></div></div><div class=\"ds-conversation-body\"><div class=\"ds-user\"><span class=\"ds-speaker\">You</span><p>I want to help people check the claims in YouTube videos.</p></div><div class=\"ds-observer\"><span class=\"ds-speaker\">Maestro</span><p>What would help them most: a quick answer beside the video, or a detailed report elsewhere?</p><div class=\"ds-recommendation\"><span>Recommended</span><p>Start with a short answer beside the video, with evidence they can explore.</p></div><button class=\"ds-reply\" type=\"button\">Yes. Keep it simple.<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 10 4 15l5 5M20 4v7a4 4 0 0 1-4 4H4\"/></svg></button></div></div><figcaption>Illustrative conversation · based on a real project</figcaption></figure>",
       "css": ".ds-conversation{font-family:'DM Sans',sans-serif;margin:0;border-radius:14px;background:var(--surface,#fff);color:var(--ink,#202b23);box-shadow:var(--shadow,0 22px 60px -25px #1a392b38);overflow:hidden;line-height:1.6}.ds-conversation-top{display:flex;gap:11px;align-items:center;padding:20px 22px;border-bottom:1px solid var(--line,#dce2d8)}.ds-avatar{width:36px;height:36px;background:var(--forest,#153c2f);color:var(--lime,#d5f680);display:grid;place-items:center;border-radius:10px}.ds-avatar svg{width:24px;height:24px}.ds-conversation-top strong{display:block;font-size:13px}.ds-conversation-top div>span{display:block;font-size:10px;color:var(--muted,#5c675e)}.ds-conversation-body{padding:22px 22px 20px;font-size:12px}.ds-user{background:var(--soft,#f0f3eb);border-radius:12px 12px 3px 12px;padding:13px 16px;width:84%;margin-left:auto}.ds-speaker{display:block;font-size:10px;font-weight:600;color:var(--muted,#5c675e);margin-bottom:7px}.ds-user p{font-size:13px;line-height:1.55;margin:0}.ds-observer{margin-top:22px}.ds-observer>p{font-size:13px;line-height:1.65;margin:0}.ds-recommendation{margin-top:14px;padding-left:13px;border-left:1px solid var(--green,#286447)}.ds-recommendation>span{font-size:10px;font-weight:600;color:var(--green,#286447)}.ds-recommendation p{margin:3px 0 0;color:var(--muted,#5c675e);font-size:12px}.ds-reply{font-family:'DM Sans',sans-serif;margin-top:17px;width:100%;background:var(--forest,#153c2f);color:var(--on-forest,#f3f7ee);border:0;border-radius:6px;padding:12px 14px;text-align:left;display:flex;justify-content:space-between;align-items:center;font-size:12px;cursor:pointer}.ds-reply:hover{background:#27583e}.ds-reply:focus-visible{outline:3px solid var(--green,#286447);outline-offset:5px;outline-offset:3px}.ds-conversation figcaption{text-align:center;font-size:9px;color:var(--muted,#5c675e);margin-top:14px}"
     },
     {

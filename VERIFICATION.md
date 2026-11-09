@@ -5,7 +5,7 @@
 - At 360px, the document width equals the viewport width; the comparison table has its own horizontal scrolling region.
 - All internal anchors resolve to existing sections.
 - Theme switching and persistence after reload work; browser storage contains only the theme preference.
-- Mobile navigation opens, closes after a section selection, and supports Escape with focus restoration.
+- The header has no section navigation or menu on desktop or mobile. It retains the logo and theme toggle, plus a CTA above the mobile breakpoint.
 - The conversation approval and replay controls work.
 - All eight example stages are selectable. Previous/next controls respect the endpoints. The video mockup toggles an explicitly illustrative result.
 - FAQ opens and closes with native disclosure controls.
