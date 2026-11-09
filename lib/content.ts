@@ -360,8 +360,7 @@ export const content = {
     items: [
       {
         question: "Do I need to know how to code?",
-        answer:
-          "No. To set up Maestro, paste an installation command into your server provider’s browser terminal and sign in to your own accounts. The installer provides checks and guidance.",
+        answer: `No. To set up ${PRODUCT_NAME}, paste an installation command into your server provider’s browser terminal and sign in to your own accounts. The installer provides checks and guidance.`,
       },
       {
         question: "What will it cost?",
