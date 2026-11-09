@@ -1,0 +1,581 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-09T22:42:34.440712+00:00",
+  "title": "Design System: Maestro",
+  "extensions": {
+    "colorMeta": {
+      "light-paper": {
+        "role": "neutral",
+        "displayName": "Light paper",
+        "tonalRamp": [
+          "oklch(15.00% 0.0018 117.92)",
+          "oklch(26.43% 0.0038 117.92)",
+          "oklch(37.86% 0.0054 117.92)",
+          "oklch(49.29% 0.0054 117.92)",
+          "oklch(60.71% 0.0054 117.92)",
+          "oklch(72.14% 0.0054 117.92)",
+          "oklch(83.57% 0.0038 117.92)",
+          "oklch(95.00% 0.0018 117.92)"
+        ]
+      },
+      "light-surface": {
+        "role": "neutral",
+        "displayName": "Light surface",
+        "tonalRamp": [
+          "oklch(15.00% 0.0000 89.88)",
+          "oklch(26.43% 0.0000 89.88)",
+          "oklch(37.86% 0.0000 89.88)",
+          "oklch(49.29% 0.0000 89.88)",
+          "oklch(60.71% 0.0000 89.88)",
+          "oklch(72.14% 0.0000 89.88)",
+          "oklch(83.57% 0.0000 89.88)",
+          "oklch(95.00% 0.0000 89.88)"
+        ]
+      },
+      "light-soft": {
+        "role": "neutral",
+        "displayName": "Light soft",
+        "tonalRamp": [
+          "oklch(15.00% 0.0037 123.46)",
+          "oklch(26.43% 0.0079 123.46)",
+          "oklch(37.86% 0.0110 123.46)",
+          "oklch(49.29% 0.0110 123.46)",
+          "oklch(60.71% 0.0110 123.46)",
+          "oklch(72.14% 0.0110 123.46)",
+          "oklch(83.57% 0.0079 123.46)",
+          "oklch(95.00% 0.0037 123.46)"
+        ]
+      },
+      "light-ink": {
+        "role": "neutral",
+        "displayName": "Light ink",
+        "tonalRamp": [
+          "oklch(15.00% 0.0070 153.30)",
+          "oklch(26.43% 0.0151 153.30)",
+          "oklch(37.86% 0.0211 153.30)",
+          "oklch(49.29% 0.0211 153.30)",
+          "oklch(60.71% 0.0211 153.30)",
+          "oklch(72.14% 0.0211 153.30)",
+          "oklch(83.57% 0.0151 153.30)",
+          "oklch(95.00% 0.0070 153.30)"
+        ]
+      },
+      "light-muted": {
+        "role": "neutral",
+        "displayName": "Light muted",
+        "tonalRamp": [
+          "oklch(15.00% 0.0065 150.79)",
+          "oklch(26.43% 0.0139 150.79)",
+          "oklch(37.86% 0.0195 150.79)",
+          "oklch(49.29% 0.0195 150.79)",
+          "oklch(60.71% 0.0195 150.79)",
+          "oklch(72.14% 0.0195 150.79)",
+          "oklch(83.57% 0.0139 150.79)",
+          "oklch(95.00% 0.0065 150.79)"
+        ]
+      },
+      "light-line": {
+        "role": "neutral",
+        "displayName": "Light line",
+        "tonalRamp": [
+          "oklch(15.00% 0.0050 132.48)",
+          "oklch(26.43% 0.0106 132.48)",
+          "oklch(37.86% 0.0149 132.48)",
+          "oklch(49.29% 0.0149 132.48)",
+          "oklch(60.71% 0.0149 132.48)",
+          "oklch(72.14% 0.0149 132.48)",
+          "oklch(83.57% 0.0106 132.48)",
+          "oklch(95.00% 0.0050 132.48)"
+        ]
+      },
+      "light-green": {
+        "role": "primary",
+        "displayName": "Light green",
+        "tonalRamp": [
+          "oklch(15.00% 0.0263 159.76)",
+          "oklch(26.43% 0.0565 159.76)",
+          "oklch(37.86% 0.0790 159.76)",
+          "oklch(49.29% 0.0790 159.76)",
+          "oklch(60.71% 0.0790 159.76)",
+          "oklch(72.14% 0.0790 159.76)",
+          "oklch(83.57% 0.0565 159.76)",
+          "oklch(95.00% 0.0263 159.76)"
+        ]
+      },
+      "light-forest": {
+        "role": "primary",
+        "displayName": "Light forest",
+        "tonalRamp": [
+          "oklch(15.00% 0.0167 168.39)",
+          "oklch(26.43% 0.0359 168.39)",
+          "oklch(37.86% 0.0502 168.39)",
+          "oklch(49.29% 0.0502 168.39)",
+          "oklch(60.71% 0.0502 168.39)",
+          "oklch(72.14% 0.0502 168.39)",
+          "oklch(83.57% 0.0359 168.39)",
+          "oklch(95.00% 0.0167 168.39)"
+        ]
+      },
+      "light-forest-muted": {
+        "role": "primary",
+        "displayName": "Light forest muted",
+        "tonalRamp": [
+          "oklch(15.00% 0.0071 156.74)",
+          "oklch(26.43% 0.0152 156.74)",
+          "oklch(37.86% 0.0213 156.74)",
+          "oklch(49.29% 0.0213 156.74)",
+          "oklch(60.71% 0.0213 156.74)",
+          "oklch(72.14% 0.0213 156.74)",
+          "oklch(83.57% 0.0152 156.74)",
+          "oklch(95.00% 0.0071 156.74)"
+        ]
+      },
+      "light-accent-soft": {
+        "role": "primary",
+        "displayName": "Light accent soft",
+        "tonalRamp": [
+          "oklch(15.00% 0.0086 128.77)",
+          "oklch(26.43% 0.0183 128.77)",
+          "oklch(37.86% 0.0257 128.77)",
+          "oklch(49.29% 0.0257 128.77)",
+          "oklch(60.71% 0.0257 128.77)",
+          "oklch(72.14% 0.0257 128.77)",
+          "oklch(83.57% 0.0183 128.77)",
+          "oklch(95.00% 0.0086 128.77)"
+        ]
+      },
+      "dark-paper": {
+        "role": "neutral",
+        "displayName": "Dark paper",
+        "tonalRamp": [
+          "oklch(15.00% 0.0051 165.91)",
+          "oklch(26.43% 0.0110 165.91)",
+          "oklch(37.86% 0.0154 165.91)",
+          "oklch(49.29% 0.0154 165.91)",
+          "oklch(60.71% 0.0154 165.91)",
+          "oklch(72.14% 0.0154 165.91)",
+          "oklch(83.57% 0.0110 165.91)",
+          "oklch(95.00% 0.0051 165.91)"
+        ]
+      },
+      "dark-surface": {
+        "role": "neutral",
+        "displayName": "Dark surface",
+        "tonalRamp": [
+          "oklch(15.00% 0.0064 160.74)",
+          "oklch(26.43% 0.0137 160.74)",
+          "oklch(37.86% 0.0192 160.74)",
+          "oklch(49.29% 0.0192 160.74)",
+          "oklch(60.71% 0.0192 160.74)",
+          "oklch(72.14% 0.0192 160.74)",
+          "oklch(83.57% 0.0137 160.74)",
+          "oklch(95.00% 0.0064 160.74)"
+        ]
+      },
+      "dark-soft": {
+        "role": "neutral",
+        "displayName": "Dark soft",
+        "tonalRamp": [
+          "oklch(15.00% 0.0077 157.55)",
+          "oklch(26.43% 0.0164 157.55)",
+          "oklch(37.86% 0.0230 157.55)",
+          "oklch(49.29% 0.0230 157.55)",
+          "oklch(60.71% 0.0230 157.55)",
+          "oklch(72.14% 0.0230 157.55)",
+          "oklch(83.57% 0.0164 157.55)",
+          "oklch(95.00% 0.0077 157.55)"
+        ]
+      },
+      "dark-ink": {
+        "role": "neutral",
+        "displayName": "Dark ink",
+        "tonalRamp": [
+          "oklch(15.00% 0.0053 130.42)",
+          "oklch(26.43% 0.0113 130.42)",
+          "oklch(37.86% 0.0159 130.42)",
+          "oklch(49.29% 0.0159 130.42)",
+          "oklch(60.71% 0.0159 130.42)",
+          "oklch(72.14% 0.0159 130.42)",
+          "oklch(83.57% 0.0113 130.42)",
+          "oklch(95.00% 0.0053 130.42)"
+        ]
+      },
+      "dark-muted": {
+        "role": "neutral",
+        "displayName": "Dark muted",
+        "tonalRamp": [
+          "oklch(15.00% 0.0064 150.48)",
+          "oklch(26.43% 0.0137 150.48)",
+          "oklch(37.86% 0.0192 150.48)",
+          "oklch(49.29% 0.0192 150.48)",
+          "oklch(60.71% 0.0192 150.48)",
+          "oklch(72.14% 0.0192 150.48)",
+          "oklch(83.57% 0.0137 150.48)",
+          "oklch(95.00% 0.0064 150.48)"
+        ]
+      },
+      "dark-line": {
+        "role": "neutral",
+        "displayName": "Dark line",
+        "tonalRamp": [
+          "oklch(15.00% 0.0093 154.83)",
+          "oklch(26.43% 0.0198 154.83)",
+          "oklch(37.86% 0.0278 154.83)",
+          "oklch(49.29% 0.0278 154.83)",
+          "oklch(60.71% 0.0278 154.83)",
+          "oklch(72.14% 0.0278 154.83)",
+          "oklch(83.57% 0.0198 154.83)",
+          "oklch(95.00% 0.0093 154.83)"
+        ]
+      },
+      "dark-green": {
+        "role": "primary",
+        "displayName": "Dark green",
+        "tonalRamp": [
+          "oklch(15.00% 0.0371 130.11)",
+          "oklch(26.43% 0.0794 130.11)",
+          "oklch(37.86% 0.1112 130.11)",
+          "oklch(49.29% 0.1112 130.11)",
+          "oklch(60.71% 0.1112 130.11)",
+          "oklch(72.14% 0.1112 130.11)",
+          "oklch(83.57% 0.0794 130.11)",
+          "oklch(95.00% 0.0371 130.11)"
+        ]
+      },
+      "dark-forest": {
+        "role": "primary",
+        "displayName": "Dark forest",
+        "tonalRamp": [
+          "oklch(15.00% 0.0147 162.55)",
+          "oklch(26.43% 0.0315 162.55)",
+          "oklch(37.86% 0.0442 162.55)",
+          "oklch(49.29% 0.0442 162.55)",
+          "oklch(60.71% 0.0442 162.55)",
+          "oklch(72.14% 0.0442 162.55)",
+          "oklch(83.57% 0.0315 162.55)",
+          "oklch(95.00% 0.0147 162.55)"
+        ]
+      },
+      "dark-forest-muted": {
+        "role": "primary",
+        "displayName": "Dark forest muted",
+        "tonalRamp": [
+          "oklch(15.00% 0.0062 155.76)",
+          "oklch(26.43% 0.0134 155.76)",
+          "oklch(37.86% 0.0187 155.76)",
+          "oklch(49.29% 0.0187 155.76)",
+          "oklch(60.71% 0.0187 155.76)",
+          "oklch(72.14% 0.0187 155.76)",
+          "oklch(83.57% 0.0134 155.76)",
+          "oklch(95.00% 0.0062 155.76)"
+        ]
+      },
+      "dark-accent-soft": {
+        "role": "primary",
+        "displayName": "Dark accent soft",
+        "tonalRamp": [
+          "oklch(15.00% 0.0143 148.14)",
+          "oklch(26.43% 0.0306 148.14)",
+          "oklch(37.86% 0.0428 148.14)",
+          "oklch(49.29% 0.0428 148.14)",
+          "oklch(60.71% 0.0428 148.14)",
+          "oklch(72.14% 0.0428 148.14)",
+          "oklch(83.57% 0.0306 148.14)",
+          "oklch(95.00% 0.0143 148.14)"
+        ]
+      },
+      "lime": {
+        "role": "primary",
+        "displayName": "Lime",
+        "tonalRamp": [
+          "oklch(15.00% 0.0497 122.22)",
+          "oklch(26.43% 0.1066 122.22)",
+          "oklch(37.86% 0.1492 122.22)",
+          "oklch(49.29% 0.1492 122.22)",
+          "oklch(60.71% 0.1492 122.22)",
+          "oklch(72.14% 0.1492 122.22)",
+          "oklch(83.57% 0.1066 122.22)",
+          "oklch(95.00% 0.0497 122.22)"
+        ]
+      },
+      "on-forest": {
+        "role": "primary",
+        "displayName": "On forest",
+        "tonalRamp": [
+          "oklch(15.00% 0.0042 126.37)",
+          "oklch(26.43% 0.0090 126.37)",
+          "oklch(37.86% 0.0126 126.37)",
+          "oklch(49.29% 0.0126 126.37)",
+          "oklch(60.71% 0.0126 126.37)",
+          "oklch(72.14% 0.0126 126.37)",
+          "oklch(83.57% 0.0090 126.37)",
+          "oklch(95.00% 0.0042 126.37)"
+        ]
+      },
+      "primary-label": {
+        "role": "primary",
+        "displayName": "Primary label",
+        "tonalRamp": [
+          "oklch(15.00% 0.0190 148.03)",
+          "oklch(26.43% 0.0407 148.03)",
+          "oklch(37.86% 0.0569 148.03)",
+          "oklch(49.29% 0.0569 148.03)",
+          "oklch(60.71% 0.0569 148.03)",
+          "oklch(72.14% 0.0569 148.03)",
+          "oklch(83.57% 0.0407 148.03)",
+          "oklch(95.00% 0.0190 148.03)"
+        ]
+      },
+      "primary-hover": {
+        "role": "primary",
+        "displayName": "Primary hover",
+        "tonalRamp": [
+          "oklch(15.00% 0.0404 122.79)",
+          "oklch(26.43% 0.0867 122.79)",
+          "oklch(37.86% 0.1213 122.79)",
+          "oklch(49.29% 0.1213 122.79)",
+          "oklch(60.71% 0.1213 122.79)",
+          "oklch(72.14% 0.1213 122.79)",
+          "oklch(83.57% 0.0867 122.79)",
+          "oklch(95.00% 0.0404 122.79)"
+        ]
+      },
+      "forest-hover": {
+        "role": "primary",
+        "displayName": "Forest hover",
+        "tonalRamp": [
+          "oklch(15.00% 0.0231 158.17)",
+          "oklch(26.43% 0.0496 158.17)",
+          "oklch(37.86% 0.0694 158.17)",
+          "oklch(49.29% 0.0694 158.17)",
+          "oklch(60.71% 0.0694 158.17)",
+          "oklch(72.14% 0.0694 158.17)",
+          "oklch(83.57% 0.0496 158.17)",
+          "oklch(95.00% 0.0231 158.17)"
+        ]
+      },
+      "forest-line": {
+        "role": "primary",
+        "displayName": "Forest line",
+        "tonalRamp": [
+          "oklch(15.00% 0.0129 156.72)",
+          "oklch(26.43% 0.0276 156.72)",
+          "oklch(37.86% 0.0387 156.72)",
+          "oklch(49.29% 0.0387 156.72)",
+          "oklch(60.71% 0.0387 156.72)",
+          "oklch(72.14% 0.0387 156.72)",
+          "oklch(83.57% 0.0276 156.72)",
+          "oklch(95.00% 0.0129 156.72)"
+        ]
+      },
+      "selection-label": {
+        "role": "primary",
+        "displayName": "Selection label",
+        "tonalRamp": [
+          "oklch(15.00% 0.0167 163.84)",
+          "oklch(26.43% 0.0357 163.84)",
+          "oklch(37.86% 0.0500 163.84)",
+          "oklch(49.29% 0.0500 163.84)",
+          "oklch(60.71% 0.0500 163.84)",
+          "oklch(72.14% 0.0500 163.84)",
+          "oklch(83.57% 0.0357 163.84)",
+          "oklch(95.00% 0.0167 163.84)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Hero display",
+        "purpose": "Three authored hero lines; responsive overrides are recorded in DESIGN.md."
+      },
+      "headline": {
+        "displayName": "Section heading",
+        "purpose": "Main section hierarchy; individual sections have observed overrides."
+      },
+      "title": {
+        "displayName": "Base title",
+        "purpose": "Default h3 styling; larger bento and example titles override the size."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Global text base; supporting and mockup copy is more compact."
+      },
+      "button": {
+        "displayName": "Action label",
+        "purpose": "Default action typography, with smaller header and form variants."
+      },
+      "label": {
+        "displayName": "Form label",
+        "purpose": "Visible email field label."
+      }
+    },
+    "shadows": [
+      {
+        "name": "conversation-light",
+        "value": "0 22px 60px -25px #1a392b38",
+        "purpose": "Light-theme --shadow on the hero conversation."
+      },
+      {
+        "name": "conversation-dark",
+        "value": "0 22px 60px -25px #0008",
+        "purpose": "Dark-theme --shadow on the hero conversation."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-transition",
+        "value": "0.2s ease",
+        "purpose": "Button background/lift, icon backgrounds, navigation color, step fill, and FAQ chevron."
+      },
+      {
+        "name": "scroll-settle",
+        "value": "0.7s cubic-bezier(.16,1,.3,1)",
+        "purpose": "Translate visible content from 16px to zero once it intersects at threshold 0.12."
+      },
+      {
+        "name": "hero-settle",
+        "value": "0.9s cubic-bezier(.16,1,.3,1)",
+        "purpose": "Hero conversation entry from 16px to zero."
+      },
+      {
+        "name": "reply-in",
+        "value": "0.25s ease-out",
+        "purpose": "Approval and checker results enter from translateY(5px), opacity 0.6."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation: none !important; transition: none !important; scroll-behavior: auto",
+        "purpose": "Applied when prefers-reduced-motion is reduce; content stays visible."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide-hero-min",
+        "value": "1450px"
+      },
+      {
+        "name": "compact-desktop-max",
+        "value": "1100px"
+      },
+      {
+        "name": "menu-max",
+        "value": "900px"
+      },
+      {
+        "name": "stacked-max",
+        "value": "700px"
+      },
+      {
+        "name": "narrow-max",
+        "value": "390px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "description": "Lime call to action; 51px minimum height, a small hover lift, and visible keyboard focus.",
+      "html": "<button type=\"button\" class=\"ds-button-primary\">Join the first release<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 17 17 7M7 7h10v10\"/></svg></button>",
+      "css": ".ds-button-primary{font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:18px;min-height:51px;padding:12px 22px;border:1px solid transparent;border-radius:8px;font-size:14px;font-weight:600;line-height:1.45;cursor:pointer;transition:background .2s,transform .2s;background:var(--lime,#d5f680);color:#1e3c23;}.ds-button-primary:hover{transform:translateY(-2px);background:#e2ffa2;}.ds-button-primary:focus-visible{outline:3px solid var(--green,#286447);outline-offset:5px;}@media(prefers-reduced-motion:reduce){.ds-button-primary{transition:none}}",
+      "refersTo": "button-primary"
+    },
+    {
+      "name": "Ink action",
+      "kind": "button",
+      "description": "Theme-aware ink action. The live header uses the smaller 42px variant.",
+      "html": "<button type=\"button\" class=\"ds-button-ink\">Join the first release<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 17 17 7M7 7h10v10\"/></svg></button>",
+      "css": ".ds-button-ink{font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:18px;min-height:51px;padding:12px 22px;border:1px solid transparent;border-radius:8px;font-size:14px;font-weight:600;line-height:1.45;cursor:pointer;transition:background .2s,transform .2s;background:var(--ink,#202b23);color:var(--paper,#fafbf7);}.ds-button-ink:hover{transform:translateY(-2px);background:var(--green,#286447);}.ds-button-ink:focus-visible{outline:3px solid var(--green,#286447);outline-offset:5px;}@media(prefers-reduced-motion:reduce){.ds-button-ink{transition:none}}",
+      "refersTo": "button-ink-light"
+    },
+    {
+      "name": "Forest form action",
+      "kind": "button",
+      "description": "Forest action used beside the waitlist field; colors inherit the current theme.",
+      "html": "<button type=\"button\" class=\"ds-button-forest\">Join the first release<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 17 17 7M7 7h10v10\"/></svg></button>",
+      "css": ".ds-button-forest{font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:18px;min-height:51px;padding:12px 22px;border:1px solid transparent;border-radius:8px;font-size:14px;font-weight:600;line-height:1.45;cursor:pointer;transition:background .2s,transform .2s;background:var(--forest,#153c2f);color:var(--on-forest,#f3f7ee);font-size:12px;padding-inline:16px;gap:10px;}.ds-button-forest:hover{transform:translateY(-2px);background:#27583e;}.ds-button-forest:focus-visible{outline:3px solid var(--green,#286447);outline-offset:5px;}@media(prefers-reduced-motion:reduce){.ds-button-forest{transition:none}}",
+      "refersTo": "button-forest-light"
+    },
+    {
+      "name": "Email field",
+      "kind": "input",
+      "description": "Visible email label, semantic validation, theme-aware field, and persistent explanatory copy. The live form currently returns preview only.",
+      "html": "<div class=\"ds-field\"><label for=\"ds-email\">Email address</label><input id=\"ds-email\" name=\"email\" type=\"email\" autocomplete=\"email\" placeholder=\"you@example.com\" aria-describedby=\"ds-email-note\" required maxlength=\"254\"><p id=\"ds-email-note\">Form preview only. Sign-ups are not open here yet; nothing is sent or saved.</p></div>",
+      "css": ".ds-field{font-family:'DM Sans',sans-serif;color:var(--ink,#202b23)}.ds-field label{font-size:12px;font-weight:600;display:block;margin-bottom:10px;line-height:1.6}.ds-field input{font-family:'DM Sans',sans-serif;border:1px solid var(--line,#dce2d8);background:var(--surface,#fff);color:var(--ink,#202b23);border-radius:8px;width:100%;min-width:0;min-height:51px;padding:12px 14px;font-size:13px;caret-color:var(--green,#286447)}.ds-field input::placeholder{color:var(--muted,#5c675e);opacity:1}.ds-field input:focus-visible{outline:3px solid var(--green,#286447);outline-offset:5px;}.ds-field input[aria-invalid=true]{outline:2px solid var(--green,#286447);outline-offset:2px}.ds-field p{font-size:11px;color:var(--muted,#5c675e);margin:13px 0 0;line-height:1.6}",
+      "refersTo": "input-light"
+    },
+    {
+      "name": "Desktop navigation",
+      "kind": "nav",
+      "description": "Muted section links on an opaque paper header, green hover text, and visible keyboard focus. The live header switches to the menu at 900px.",
+      "html": "<nav class=\"ds-navigation\" aria-label=\"Main\"><a href=\"#how-it-works\">How it works</a><a href=\"#observer\">Your partner</a><a href=\"#ownership\">Your ownership</a><a href=\"#first-release\">First release</a></nav>",
+      "css": ".ds-navigation{font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:26px;font-size:12px;background:var(--paper,#fafbf7);border-bottom:1px solid var(--line,#dce2d8)}.ds-navigation a{padding-block:12px;color:var(--muted,#5c675e);text-decoration:none;line-height:1.6;transition:color .2s}.ds-navigation a:hover{color:var(--green,#286447)}.ds-navigation a:focus-visible{outline:3px solid var(--green,#286447);outline-offset:5px;}@media(prefers-reduced-motion:reduce){.ds-navigation a{transition:none}}"
+    },
+    {
+      "name": "Status tag",
+      "kind": "chip",
+      "description": "A static status annotation, not a filter or button.",
+      "html": "<span class=\"ds-tag\">Planned</span>",
+      "css": ".ds-tag{font-family:'DM Sans',sans-serif;display:inline-flex;padding:5px 10px;border:1px solid var(--line,#dce2d8);border-radius:5px;font-size:11px;font-weight:600;line-height:1.6;white-space:nowrap;color:var(--ink,#202b23)}",
+      "refersTo": "tag"
+    },
+    {
+      "name": "Observer bento surface",
+      "kind": "card",
+      "description": "A flat soft surface with the shared 16px radius and compact explanatory text.",
+      "html": "<article class=\"ds-bento\"><h3>Your context, kept with you.</h3><p>Its lasting memory lives on your server. Your reasons, preferences and decisions stay available for the next conversation.</p></article>",
+      "css": ".ds-bento{font-family:'DM Sans',sans-serif;background:var(--soft,#f0f3eb);color:var(--ink,#202b23);border-radius:var(--radius,16px);padding:32px}.ds-bento h3{margin:0;font-size:21px;font-weight:600;line-height:1.35;letter-spacing:-.02em;text-wrap:balance}.ds-bento p{font-size:14px;line-height:1.75;color:var(--muted,#5c675e);margin:10px 0 0}@media(max-width:900px){.ds-bento{padding:27px}}@media(max-width:700px){.ds-bento{padding:28px}.ds-bento h3{font-size:20px}}",
+      "refersTo": "bento-light"
+    },
+    {
+      "name": "Project step selector",
+      "kind": "custom",
+      "description": "Native buttons expose selection through aria-pressed. In the application they update the live example panel; the specimen shows both visual states.",
+      "html": "<div class=\"ds-steps\" role=\"group\" aria-label=\"Step\"><button type=\"button\" class=\"ds-step ds-selected\" aria-pressed=\"true\"><span class=\"ds-number\">01</span><span>Start with the problem</span><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 17 17 7M7 7h10v10\"/></svg></button><button type=\"button\" class=\"ds-step\" aria-pressed=\"false\"><span class=\"ds-number\">02</span><span>Decide what people will see</span><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 17 17 7M7 7h10v10\"/></svg></button></div>",
+      "css": ".ds-steps{display:flex;flex-direction:column;gap:5px;padding:4px 0;background:var(--soft,#f0f3eb)}.ds-step{font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:15px;text-align:left;padding:15px;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--ink,#202b23);font-size:13px;width:100%;line-height:1.5;min-height:56px;cursor:pointer;transition:background .2s}.ds-number{font-variant-numeric:tabular-nums;color:var(--muted,#5c675e);font-size:11px}.ds-step svg{margin-left:auto;opacity:0}.ds-step:hover{background:var(--surface,#fff)}.ds-step.ds-selected{background:var(--forest,#153c2f);color:var(--on-forest,#f3f7ee)}.ds-selected .ds-number,.ds-selected svg{color:var(--lime,#d5f680)}.ds-selected svg{opacity:1}.ds-step:focus-visible{outline:3px solid var(--green,#286447);outline-offset:5px;}@media(max-width:700px){.ds-steps{display:grid;grid-template-columns:1fr 1fr;gap:7px}.ds-step{font-size:11px;min-height:64px;line-height:1.45;padding:10px;border:1px solid var(--line,#dce2d8);gap:8px}.ds-step svg{display:none}.ds-number{font-size:10px}}@media(prefers-reduced-motion:reduce){.ds-step{transition:none}}"
+    },
+    {
+      "name": "Illustrative conversation",
+      "kind": "custom",
+      "description": "The signature conversation combines a user bubble, recommendation rule, and forest reply button. The live component adds approval/replay and a four-stage status track.",
+      "html": "<figure class=\"ds-conversation\"><div class=\"ds-conversation-top\"><span class=\"ds-avatar\"><svg width=\"30\" height=\"30\" viewBox=\"0 0 32 32\" fill=\"none\" aria-hidden=\"true\"><path d=\"M4 25V13c0-4 3-6 6-6s6 2 6 6v12M16 25V13c0-4 3-6 6-6s6 2 6 6v12\" stroke=\"currentColor\" stroke-width=\"3.4\" stroke-linecap=\"round\"/><path d=\"M4 19h24\" stroke=\"currentColor\" stroke-width=\"2.2\"/></svg></span><div><strong>Observer</strong><span>Your idea, moving forward.</span></div></div><div class=\"ds-conversation-body\"><div class=\"ds-user\"><span class=\"ds-speaker\">You</span><p>I want to help people check the claims in YouTube videos.</p></div><div class=\"ds-observer\"><span class=\"ds-speaker\">Observer</span><p>What would help them most: a quick answer beside the video, or a detailed report elsewhere?</p><div class=\"ds-recommendation\"><span>Recommended</span><p>Start with a short answer beside the video, with evidence they can explore.</p></div><button class=\"ds-reply\" type=\"button\">Yes. Keep it simple.<svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 10 4 15l5 5M20 4v7a4 4 0 0 1-4 4H4\"/></svg></button></div></div><figcaption>Illustrative conversation · based on a real project</figcaption></figure>",
+      "css": ".ds-conversation{font-family:'DM Sans',sans-serif;margin:0;border-radius:14px;background:var(--surface,#fff);color:var(--ink,#202b23);box-shadow:var(--shadow,0 22px 60px -25px #1a392b38);overflow:hidden;line-height:1.6}.ds-conversation-top{display:flex;gap:11px;align-items:center;padding:20px 22px;border-bottom:1px solid var(--line,#dce2d8)}.ds-avatar{width:36px;height:36px;background:var(--forest,#153c2f);color:var(--lime,#d5f680);display:grid;place-items:center;border-radius:10px}.ds-avatar svg{width:24px;height:24px}.ds-conversation-top strong{display:block;font-size:13px}.ds-conversation-top div>span{display:block;font-size:10px;color:var(--muted,#5c675e)}.ds-conversation-body{padding:22px 22px 20px;font-size:12px}.ds-user{background:var(--soft,#f0f3eb);border-radius:12px 12px 3px 12px;padding:13px 16px;width:84%;margin-left:auto}.ds-speaker{display:block;font-size:10px;font-weight:600;color:var(--muted,#5c675e);margin-bottom:7px}.ds-user p{font-size:13px;line-height:1.55;margin:0}.ds-observer{margin-top:22px}.ds-observer>p{font-size:13px;line-height:1.65;margin:0}.ds-recommendation{margin-top:14px;padding-left:13px;border-left:1px solid var(--green,#286447)}.ds-recommendation>span{font-size:10px;font-weight:600;color:var(--green,#286447)}.ds-recommendation p{margin:3px 0 0;color:var(--muted,#5c675e);font-size:12px}.ds-reply{font-family:'DM Sans',sans-serif;margin-top:17px;width:100%;background:var(--forest,#153c2f);color:var(--on-forest,#f3f7ee);border:0;border-radius:6px;padding:12px 14px;text-align:left;display:flex;justify-content:space-between;align-items:center;font-size:12px;cursor:pointer}.ds-reply:hover{background:#27583e}.ds-reply:focus-visible{outline:3px solid var(--green,#286447);outline-offset:5px;outline-offset:3px}.ds-conversation figcaption{text-align:center;font-size:9px;color:var(--muted,#5c675e);margin-top:14px}"
+    },
+    {
+      "name": "FAQ disclosure",
+      "kind": "custom",
+      "description": "Native details/summary behavior with a dividing rule and rotating chevron.",
+      "html": "<details class=\"ds-faq\"><summary>Do I need to know how to code?<svg width=\"21\" height=\"21\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m6 9 6 6 6-6\"/></svg></summary><p>No. You do not need to know what a PR, Node, TypeScript or VPS is. You describe the problem and make the choices that affect your product. Setup does involve pasting an installation command into your server provider’s browser terminal and signing in to your own accounts; the installer provides checks and guidance.</p></details>",
+      "css": ".ds-faq{font-family:'DM Sans',sans-serif;border-top:1px solid var(--line,#dce2d8);border-bottom:1px solid var(--line,#dce2d8);color:var(--ink,#202b23)}.ds-faq summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:18px;padding:22px 0;cursor:pointer;font-size:15px;font-weight:600;line-height:1.5}.ds-faq summary::-webkit-details-marker{display:none}.ds-faq summary svg{color:var(--muted,#5c675e);transition:transform .2s}.ds-faq[open] summary svg{transform:rotate(180deg)}.ds-faq summary:focus-visible{outline:3px solid var(--green,#286447);outline-offset:5px;}.ds-faq p{margin:0;padding:0 30px 24px 0;color:var(--muted,#5c675e);font-size:13px;line-height:1.85}@media(prefers-reduced-motion:reduce){.ds-faq summary svg{transition:none}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Warm paper, botanical green, precise rules",
+    "overview": "The implemented interface combines generous headlines with compact, readable conversations. Warm pale surfaces and quiet rules establish structure; forest panels and a lime action color give decisions and progress more emphasis. The dark theme keeps the same hierarchy with lighter green text and deeper surfaces.",
+    "keyCharacteristics": [
+      "One botanical green accent family, from forest to lime.",
+      "Self-hosted DM Sans throughout, with large, tightly spaced headings.",
+      "Open sections, asymmetric bento surfaces, and visible conversational examples.",
+      "Restrained movement that never hides essential content."
+    ],
+    "rules": [
+      {
+        "name": "The One Accent Rule",
+        "body": "Reuse the existing green family for actions, emphasis, and status; communicate errors and progress with text, icons, and semantic state as well as color.",
+        "section": "colors"
+      }
+    ],
+    "dos": [
+      "**Do** reuse semantic CSS colors so both themes remain coherent.",
+      "**Do** preserve visible labels, keyboard focus, state text, and reduced-motion behavior.",
+      "**Do** keep illustrative conversations and mockups explicitly identified as examples.",
+      "**Do** use the existing DM Sans hierarchy, open rules, and restrained surface depth."
+    ],
+    "donts": [
+      "**Don't** introduce a second accent family or use color as the only state signal.",
+      "**Don't** hide essential content behind scroll animations.",
+      "**Don't** turn every section into a shadowed card or add generic hover lift to cards.",
+      "**Don't** present the current waitlist preview as a successful subscription."
+    ]
+  }
+}
