@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { content as c } from "@/lib/content";
 import { Brand, BrandMark } from "./brand";
-import { submitWaitlist } from "@/lib/waitlist";
+import { submitWaitlist, WZORZEC_ADRESU } from "@/lib/waitlist";
 
 export function Header() {
   const [dark, setDark] = useState(false);
@@ -276,16 +276,22 @@ export function FAQ() {
 }
 
 export function WaitlistForm() {
-  const [status, setStatus] = useState<"idle" | "invalid" | "preview">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "invalid" | "sending" | "success" | "failed"
+  >("idle");
   const email = useRef<HTMLInputElement>(null);
+  const trap = useRef<HTMLInputElement>(null);
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!email.current?.validity.valid) {
+    if (status === "sending") return;
+    const address = email.current?.value.trim() ?? "";
+    if (!email.current?.validity.valid || !WZORZEC_ADRESU.test(address)) {
       setStatus("invalid");
       email.current?.focus();
       return;
     }
-    const result = await submitWaitlist(email.current.value.trim());
+    setStatus("sending");
+    const result = await submitWaitlist(address, trap.current?.value ?? "");
     setStatus(result.status);
   }
   return (
@@ -302,17 +308,31 @@ export function WaitlistForm() {
           required
           maxLength={254}
           aria-invalid={status === "invalid"}
-          aria-describedby="waitlist-note waitlist-status"
-          onChange={() => setStatus("idle")}
+          aria-describedby="waitlist-status"
+          onChange={() => {
+            if (status !== "sending") setStatus("idle");
+          }}
         />
-        <button className="button button-primary" type="submit">
-          {c.waitlist.button}
+        <button
+          className="button button-primary"
+          type="submit"
+          disabled={status === "sending"}
+        >
+          {status === "sending" ? c.waitlist.sending : c.waitlist.button}
           <ArrowUpRight size={18} />
         </button>
       </div>
-      <p className="form-note" id="waitlist-note">
-        {c.waitlist.demoNote}
-      </p>
+      <div className="form-trap" aria-hidden="true">
+        <label htmlFor="waitlist-website">Website</label>
+        <input
+          ref={trap}
+          id="waitlist-website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
       <p
         id="waitlist-status"
         className={`form-status ${status}`}
@@ -321,15 +341,12 @@ export function WaitlistForm() {
       >
         {status === "invalid"
           ? c.waitlist.error
-          : status === "preview"
+          : status === "success"
             ? c.waitlist.success
-            : ""}
+            : status === "failed"
+              ? c.waitlist.failure
+              : ""}
       </p>
-      <div className="todo-notes">
-        {c.waitlist.todos.map((todo) => (
-          <p key={todo}>{todo}</p>
-        ))}
-      </div>
     </form>
   );
 }

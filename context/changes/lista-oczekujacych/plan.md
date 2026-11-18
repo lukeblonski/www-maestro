@@ -392,19 +392,19 @@ Pierwsza publikacja po scaleniu tworzy funkcję i migrację `v1` Durable Object.
 
 #### Automated
 
-- [x] 1.1 Testy funkcji przechodzą
-- [x] 1.2 Pełne sprawdzenie przechodzi
-- [x] 1.3 W worker/ nie ma adresu e-mail poza nadawcą Resend
+- [x] 1.1 Testy funkcji przechodzą — dc91a32
+- [x] 1.2 Pełne sprawdzenie przechodzi — dc91a32
+- [x] 1.3 W worker/ nie ma adresu e-mail poza nadawcą Resend — dc91a32
 
 ### Phase 2: Formularz na stronie
 
 #### Automated
 
-- [ ] 2.1 Sprawdzenie z budową, testem out/ i krok 16 przechodzi
-- [ ] 2.2 Formularz w przeglądarce
-- [ ] 2.3 Żądania przy przeglądaniu
-- [ ] 2.4 Kontrast komunikatów
-- [ ] 2.5 Brak poziomego przewijania z pułapką
+- [x] 2.1 Sprawdzenie z budową, testem out/ i krok 16 przechodzi
+- [x] 2.2 Formularz w przeglądarce
+- [x] 2.3 Żądania przy przeglądaniu
+- [x] 2.4 Kontrast komunikatów
+- [x] 2.5 Brak poziomego przewijania z pułapką
 
 ### Phase 3: Workflow publikacji w chronione/
 

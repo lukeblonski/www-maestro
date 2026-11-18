@@ -400,15 +400,10 @@ export const content = {
     label: "Email address",
     placeholder: "you@example.com",
     button: "Join the first release",
-    demoNote:
-      "Form preview only. Sign-ups are not open here yet; nothing is sent or saved.",
-    success:
-      "Preview complete. No details were sent or saved. The waiting list still needs to be connected before you can join.",
-    error: "Enter a valid email address to preview the form.",
-    todos: [
-      "[TODO: Connect the waiting list before accepting sign-ups.]",
-      "[TODO: Add the privacy notice and data controller details before collecting email addresses.]",
-    ],
+    sending: "Joining…",
+    success: "You're on the waiting list for the first release. Thank you!",
+    failure: "Your sign-up didn't go through. Please try again.",
+    error: "Enter a valid email address to join the waiting list.",
   },
   footer: {
     tagline: "Everyone can build their moonshot.",

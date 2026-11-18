@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { content as c } from "../../lib/content";
-import { otworzStrone, poFontach, poHydracji, przewinDoKonca } from "./pomoc";
+import { atrapaFunkcji, dokladnie, otworzStrone, poFontach, poHydracji, przewinDoKonca } from "./pomoc";
 
 const KLUCZ_MOTYWU = "maestro-theme";
 const MOTYWY = ["light", "dark"] as const;
@@ -153,6 +153,7 @@ async function zmierzKontrast(page: Page, selektor: string, motyw: Motyw): Promi
 
 test("krok 13 — kontrast co najmniej 4.5:1 w motywie jasnym i ciemnym", async ({ page }) => {
   const problemy: string[] = [];
+  const atrapa = await atrapaFunkcji(page);
   for (const motyw of MOTYWY) {
     await page.emulateMedia({ colorScheme: motyw, reducedMotion: "reduce" });
     await otworzStrone(page);
@@ -175,9 +176,16 @@ test("krok 13 — kontrast co najmniej 4.5:1 w motywie jasnym i ciemnym", async 
     await expect(pole).toHaveAttribute("aria-invalid", "true");
     problemy.push(...(await zmierzKontrast(page, "#waitlist-status", motyw)));
 
+    // Komunikat zapisano i komunikat niepowodzenia po odpowiedziach atrapy funkcji zapisu.
     await pole.fill("osoba@example.com");
+    atrapa.ustaw("sukces");
     await wyslij.click();
-    await expect(status, "komunikat podglądu po poprawnej wysyłce").toHaveText(c.waitlist.success);
+    await expect(status, "komunikat zapisano po odpowiedzi sukcesu").toHaveText(dokladnie(c.waitlist.success));
+    problemy.push(...(await zmierzKontrast(page, "#waitlist-status", motyw)));
+
+    atrapa.ustaw("blad");
+    await wyslij.click();
+    await expect(status, "komunikat niepowodzenia po odpowiedzi błędu").toHaveText(dokladnie(c.waitlist.failure));
     problemy.push(...(await zmierzKontrast(page, "#waitlist-status", motyw)));
   }
   expect(problemy, "elementy z kontrastem poniżej 4.5:1").toEqual([]);

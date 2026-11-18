@@ -26,6 +26,7 @@
   --on-forest: #f3f7ee;
   --forest-muted: #bfcec4;
   --accent-soft: #e8f1df;
+  --danger: #8a2a1f;
   --shadow: 0 22px 60px -25px #1a392b38;
   --radius: 16px;
   color-scheme: light;
@@ -43,6 +44,7 @@
   --on-forest: #f3f7ee;
   --forest-muted: #c5d2c9;
   --accent-soft: #2c422f;
+  --danger: #ffb4a8;
   --shadow: 0 22px 60px -25px #0008;
   color-scheme: dark;
 }
@@ -1378,10 +1380,17 @@ thead .maestro-column {
 .form-row .button:hover {
   background: #27583e;
 }
-.form-note {
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 13px;
+.form-row .button[disabled] {
+  opacity: 0.7;
+  cursor: progress;
+}
+.form-trap {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 .form-status {
   font-size: 12px;
@@ -1394,16 +1403,17 @@ thead .maestro-column {
   color: var(--ink);
   font-weight: 600;
 }
+.form-status.success {
+  color: var(--green);
+  font-weight: 600;
+}
+.form-status.failed {
+  color: var(--danger);
+  font-weight: 600;
+}
 .form-row input[aria-invalid="true"] {
   outline: 2px solid var(--green);
   outline-offset: 2px;
-}
-.todo-notes {
-  margin-top: 15px;
-  display: grid;
-  gap: 5px;
-  font-size: 10px;
-  color: var(--muted);
 }
 .footer {
   padding-block: 36px;
@@ -1972,12 +1982,6 @@ thead .maestro-column {
   .form-row input {
     font-size: 12px;
     padding: 12px;
-  }
-  .form-note {
-    font-size: 10px;
-  }
-  .todo-notes {
-    font-size: 9px;
   }
   .footer {
     padding-block: 28px;

@@ -34,7 +34,8 @@ fi
 
 if [ "$testy_przegladarki" -gt 0 ]; then
   echo "Budowa strony z prefiksem /www-maestro…"
-  NEXT_PUBLIC_BASE_PATH=/www-maestro NEXT_TELEMETRY_DISABLED=1 npm run build
+  # Adres funkcji zapisu to atrapa: ten sam adres przechwytują testy (ADRES_FUNKCJI w tests/e2e/pomoc.ts).
+  NEXT_PUBLIC_BASE_PATH=/www-maestro NEXT_PUBLIC_WAITLIST_URL=https://zapis.atrapa.invalid/ NEXT_TELEMETRY_DISABLED=1 npm run build
 
   if [ -n "${CI:-}" ]; then
     npx playwright install --with-deps chromium

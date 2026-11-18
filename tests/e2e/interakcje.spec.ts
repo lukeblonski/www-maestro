@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { content as c } from "../../lib/content";
-import { dokladnie, otworzStrone, poFontach, poHydracji, zapisuj } from "./pomoc";
+import { ADRES_FUNKCJI, atrapaFunkcji, dokladnie, otworzStrone, poFontach, poHydracji, zapisuj } from "./pomoc";
 
 // Wzór: stan początkowy → kliknięcie → stan widoczny dla odwiedzającego → granica.
 // Elementy po rolach, nazwach dostępnych i kotwicach; teksty z lib/content.ts.
@@ -141,16 +141,25 @@ test("krok 9 — każde pytanie FAQ otwiera się i zamyka", async ({ page }) => 
   }
 });
 
-test("krok 10 — formularz-demo: błędy, podgląd i brak żądań", async ({ page }) => {
+test("krok 10 — formularz zapisu: błędy bez żądań, wysyłanie, zapisano i niepowodzenie", async ({ page }) => {
   const w = c.waitlist;
   await poFontach(page);
+  const atrapa = await atrapaFunkcji(page, { odpowiedz: "sukces", wstrzymaj: true });
   // Zapis żądań od chwili, gdy strona jest załadowana.
   const zapis = zapisuj(page);
+  const zadaniaFunkcji = () =>
+    zapis.zadania.filter((z) => z.method() === "POST" && z.url().startsWith(ADRES_FUNKCJI));
 
   const sekcja = page.locator("#waitlist");
   const pole = sekcja.getByLabel(w.label, { exact: true });
   const wyslij = sekcja.getByRole("button", { name: w.button });
+  const wysylanie = sekcja.getByRole("button", { name: w.sending });
   const komunikat = sekcja.getByRole("status");
+
+  // Bez notatek dla autora i bez zdania o podglądzie (L4).
+  for (const tekst of ["[TODO: Connect the waiting list", "[TODO: Add the privacy notice", "Form preview only"]) {
+    await expect(sekcja, `#waitlist bez „${tekst}”`).not.toContainText(tekst);
+  }
 
   await expect(komunikat).toHaveAttribute("id", "waitlist-status");
   await expect(komunikat, "komunikat jest ogłaszany czytnikom ekranu").toHaveAttribute(
@@ -158,27 +167,53 @@ test("krok 10 — formularz-demo: błędy, podgląd i brak żądań", async ({ p
     /^(polite|assertive)$/,
   );
   await expect(pole, "stan początkowy: pole nie jest błędne").not.toHaveAttribute("aria-invalid", "true");
+  await expect(komunikat, "stan początkowy: komunikat pusty").toHaveText("");
 
-  // 1. Puste pole.
-  await pole.fill("");
-  await wyslij.click();
-  await expect(pole, "puste pole oznaczone jako błędne").toHaveAttribute("aria-invalid", "true");
-  await expect(komunikat, "puste pole: komunikat błędu").toHaveText(/\S/);
-
-  // 2. Adres bez „@”.
-  await pole.fill("adres-bez-malpy.example.com");
-  await wyslij.click();
-  await expect(pole, "adres bez @ oznaczony jako błędny").toHaveAttribute("aria-invalid", "true");
-  await expect(komunikat, "adres bez @: komunikat błędu").toHaveText(/\S/);
-
-  // 3. Poprawny adres.
-  await pole.fill("osoba@example.com");
-  await wyslij.click();
-  await expect(komunikat, "poprawny adres: komunikat podglądu").toHaveText(dokladnie(w.success));
-  await expect(pole, "poprawny adres: pole nie jest błędne").not.toHaveAttribute("aria-invalid", "true");
-
+  // Błędne adresy: komunikat błędu, pole oznaczone, bez żądań (L3).
+  for (const [opis, adres] of [
+    ["puste pole", ""],
+    ["adres bez @", "adres-bez-malpy.example.com"],
+    ["adres bez kropki w domenie", "anna@gmail"],
+  ]) {
+    await pole.fill(adres);
+    await wyslij.click();
+    await expect(pole, `${opis}: pole oznaczone jako błędne`).toHaveAttribute("aria-invalid", "true");
+    await expect(komunikat, `${opis}: komunikat błędu`).toHaveText(dokladnie(w.error));
+  }
   expect(
     zapis.zadania.map((z) => `${z.method()} ${z.url()}`),
-    "żądania przeglądarki przy trzech wysyłkach formularza",
+    "żądania przeglądarki przy trzech błędnych wysyłkach",
   ).toEqual([]);
+
+  // Poprawny adres: w czasie wysyłki przycisk „Joining…” jest nieaktywny (L17).
+  const adres = "osoba@example.com";
+  await pole.fill(adres);
+  await wyslij.click();
+  await expect(wysylanie, "w czasie wysyłki przycisk ma tekst wysyłania").toBeVisible();
+  await expect(wysylanie, "w czasie wysyłki przycisk jest nieaktywny").toBeDisabled();
+  await expect(komunikat, "w czasie wysyłki komunikat pusty").toHaveText("");
+  await expect.poll(() => atrapa.zadania.length, { message: "żądanie doszło do atrapy funkcji" }).toBe(1);
+
+  // Odpowiedź sukcesu: komunikat zapisano i dokładnie jedno POST z adresem w treści (L1).
+  atrapa.zwolnij();
+  await expect(komunikat, "po odpowiedzi sukcesu: komunikat zapisano").toHaveText(dokladnie(w.success));
+  await expect(wyslij, "po odpowiedzi przycisk wraca i działa").toBeEnabled();
+  await expect(pole, "po sukcesie pole nie jest błędne").not.toHaveAttribute("aria-invalid", "true");
+  const wyslane = zadaniaFunkcji();
+  expect(wyslane.length, `liczba żądań POST pod ${ADRES_FUNKCJI}`).toBe(1);
+  expect(wyslane[0].postData() ?? "", "treść żądania zawiera adres").toContain(adres);
+
+  // Odpowiedź błędu i przerwane żądanie: komunikat niepowodzenia, adres zostaje w polu (L2).
+  let oczekiwane = 1;
+  for (const odpowiedz of ["blad", "przerwane"] as const) {
+    atrapa.ustaw(odpowiedz);
+    await wyslij.click();
+    oczekiwane += 1;
+    await expect
+      .poll(() => atrapa.zadania.length, { message: `${odpowiedz}: żądanie doszło do atrapy funkcji` })
+      .toBe(oczekiwane);
+    await expect(komunikat, `${odpowiedz}: komunikat niepowodzenia`).toHaveText(dokladnie(w.failure));
+    await expect(pole, `${odpowiedz}: adres zostaje w polu`).toHaveValue(adres);
+    await expect(pole, `${odpowiedz}: pole nie jest błędne`).not.toHaveAttribute("aria-invalid", "true");
+  }
 });

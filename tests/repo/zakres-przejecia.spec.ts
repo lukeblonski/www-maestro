@@ -4,7 +4,8 @@ import { resolve } from "node:path";
 import { expect, test } from "@playwright/test";
 
 // Krok 16 scenariusza PRD, bez przeglądarki: kod strony, konfiguracja budowy i workflow
-// publikacji są takie jak w commicie właściciela, a package.json różni się tylko wpisami testów.
+// publikacji są takie jak w commicie właściciela (poza plikami zmian z PLIKI_ZMIAN), a package.json
+// różni się tylko wpisami testów.
 
 const KORZEN = resolve(__dirname, "..", "..");
 const BAZA = "5e4dcac";
@@ -18,6 +19,16 @@ const SCIEZKI = [
   "tsconfig.json",
   "postcss.config.mjs",
 ];
+// Pliki zmiany lista-oczekujacych (formularz zapisu i workflow publikacji funkcji): mogą się
+// różnić od bazy, ale nie muszą. Każdy inny plik w SCIEZKI zostaje jak w BAZA.
+const PLIKI_ZMIAN = [
+  "components/interactive.tsx",
+  "lib/waitlist.ts",
+  "lib/content.ts",
+  "app/globals.css",
+  ".github/workflows/pages.yml",
+];
+const WYJATKI = PLIKI_ZMIAN.map((plik) => `:(exclude)${plik}`);
 const WPISY_TESTOW: Record<string, string[]> = {
   scripts: ["test", "test:e2e", "verify"],
   devDependencies: ["@playwright/test"],
@@ -30,15 +41,15 @@ function git(...argumenty: string[]): string {
 }
 
 test("krok 16 — kod strony i konfiguracja budowy jak w 5e4dcac", () => {
-  const roznica = spawnSync("git", ["diff", "--quiet", BAZA, "--", ...SCIEZKI], {
+  const roznica = spawnSync("git", ["diff", "--quiet", BAZA, "--", ...SCIEZKI, ...WYJATKI], {
     cwd: KORZEN,
     encoding: "utf8",
   });
   const zmienione =
-    roznica.status === 0 ? "" : git("diff", "--stat", BAZA, "--", ...SCIEZKI) + (roznica.stderr ?? "");
+    roznica.status === 0 ? "" : git("diff", "--stat", BAZA, "--", ...SCIEZKI, ...WYJATKI) + (roznica.stderr ?? "");
   expect(roznica.status, `git diff ${BAZA} pokazuje zmiany:\n${zmienione}`).toBe(0);
 
-  const nowe = git("ls-files", "--others", "--exclude-standard", "--", ...SCIEZKI).trim();
+  const nowe = git("ls-files", "--others", "--exclude-standard", "--", ...SCIEZKI, ...WYJATKI).trim();
   expect(nowe, "nowe, nieśledzone pliki w ścieżkach strony").toBe("");
 
   const dawny = JSON.parse(git("show", `${BAZA}:package.json`)) as Pakiet;
