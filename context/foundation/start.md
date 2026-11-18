@@ -26,6 +26,9 @@ Repozytorium: https://github.com/lukeblonski/www-maestro
 - rodzaj: inne · krok: szkielet · pytanie: Jakie polecenie zapisać w ## Verify w CLAUDE.md, skoro projekt nie ma testów? · rekomendacja: polecenie kończące się kodem 1 z komunikatem, że testy dodaje pierwszy kawałek roadmapy; kawałek testów zmienia je na npm ci i uruchomienie testów · wybór: rekomendacja · rozstrzygnął: agent
 - rodzaj: zakres · krok: szkielet · pytanie: Czy w przejęciu dodać linter, formatowanie i .editorconfig, których projekt nie ma? · rekomendacja: nie; przejęcie nie zapowiadało tych plików, więc sprawa idzie do D-003 w context/foundation/limitations.md · wybór: rekomendacja · rozstrzygnął: agent
 - rodzaj: zakres · krok: szkielet · pytanie: Czy dodać testy i skan zależności do workflow publikacji, który ich nie ma? · rekomendacja: nie; workflow publikacji zostaje bez zmian (PRD: Non-Goals, krok 16 scenariusza), testy przed scaleniem uruchamia lokalnie autopilot, a sprawa idzie do D-004 w context/foundation/limitations.md · wybór: rekomendacja · rozstrzygnął: agent
+- rodzaj: zakres · krok: roadmapa · pytanie: Na ile kawałków podzielić roadmapę przejęcia, skoro jedyne pozycje [new] to testy (FR-011), opis w README (FR-012) i pliki fabryki (FR-013, już są)? · rekomendacja: jeden kawałek testy-zachowania-strony (kroki 1–16 scenariusza, README, polecenie testów w ## Verify), bez fundamentów, bo między tymi rzeczami nie ma punktu, w którym budowa i tak staje (zgody, warunku z zewnątrz, bramki ani osobnego dużego ryzyka) · wybór: rekomendacja · rozstrzygnął: agent
+- rodzaj: kryterium · krok: roadmapa · pytanie: Jaki cel kolejności i główne ryzyko zapisać w roadmapie przejęcia? · rekomendacja: cel quality (zachowanie strony ma być chronione testami przed każdą zmianą), główne ryzyko none (PRD nie ma blokujących pytań, usług z zewnątrz ani płatnych usług, przeglądarka testów jest na komputerze fabryki) · wybór: rekomendacja · rozstrzygnął: agent
+- rodzaj: zakres · krok: roadmapa · pytanie: Czy któraś sprawa z rejestru ograniczeń (D-001 lista oczekujących, D-002 wersje zależności, D-003 linter, D-004 testy w publikacji) musi trafić w Prerequisites kawałka? · rekomendacja: nie; żadna nie jest sprawą bezpieczeństwa (audyt 0 luk) ani nie musi być zrobiona przed używaniem strony, każda ma linię Kiedy wrócić i trafia do ## Parked roadmapy; brak context/foundation/infrastructure.md i verification.md bootstrapu · wybór: rekomendacja · rozstrzygnął: agent
 
 ## Decyzje bez podstawy
 
@@ -104,5 +107,8 @@ Repozytorium: https://github.com/lukeblonski/www-maestro
 | technologia | 87bc0beb-ee27-4cc9-9e41-3ee8dd651543 | 2026-11-18T07:18:33+00:00 | 182 | claude-opus-5-5 | 27 | 16030 | 908400 | 78716 | 88545 | 1.1321 | 178 | 3 | 0 | 0 | 0 |
 | przygotowanie-posiedzenia | eb474540-ee83-4f3b-b95a-0f60c365c932 | 2026-11-18T07:21:54+00:00 | 192 | claude-opus-5-5 | 28 | 17355 | 923539 | 80263 | 90092 | 1.1740 | 190 | 1 | 0 | 0 | 0 |
 | szkielet | 39dc0da7-215c-4eb1-9a02-c58daeffcafb | 2026-11-18T07:29:43+00:00 | 208 | claude-opus-5-5 | 33 | 13937 | 931264 | 60762 | 70591 | 0.9512 | 166 | 41 | 0 | 0 | 0 |
+| roadmapa | 6c30688a-96a0-4191-8314-bfc66ed7087b | 2026-11-18T07:33:31+00:00 | 128 | claude-opus-5-5 | 20 | 11971 | 777639 | 91543 | 101372 | 1.1274 | 127 | 1 | 0 | 0 | 0 |
 
 ## Pierwszy kawałek
+
+- testy-zachowania-strony
