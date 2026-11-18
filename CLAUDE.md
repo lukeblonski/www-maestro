@@ -30,6 +30,7 @@ Serwer deweloperski Next słucha tylko na `127.0.0.1`, na porcie ze zmiennej `PO
 
 - klucz API Resend: /home/fabryka/.secrets/www-maestro/resend-api-key
 - token API Cloudflare: /home/fabryka/.secrets/www-maestro/cloudflare-api-token
+- adres e-mail właściciela: /home/fabryka/.secrets/www-maestro/owner-email
 
 ## Wdrożenie
 
@@ -37,6 +38,9 @@ Pisze sesja główna przed autopilotem, razem ze zgodą człowieka w ## Zgody zm
 
 - workflow: pages.yml
 - krok wdrożenia: Deploy to GitHub Pages
-- narzędzia z sekretami:
+- narzędzia z sekretami: cloudflare/wrangler-action
+- sekret: `gh secret set CLOUDFLARE_API_TOKEN` < token API Cloudflare
+- sekret: `gh secret set RESEND_API_KEY` < klucz API Resend
+- sekret: `gh secret set OWNER_EMAIL` < adres e-mail właściciela
 - cofnięcie: brak
 - adres: https://lukeblonski.github.io/www-maestro/
