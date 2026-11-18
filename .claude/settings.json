@@ -1,0 +1,44 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3",
+            "args": [
+              "-I",
+              "-B",
+              "${CLAUDE_PROJECT_DIR}/.claude/hooks/guardrails/protect_paths.py"
+            ],
+            "timeout": 10,
+            "onFailure": "block"
+          },
+          {
+            "type": "command",
+            "command": "python3",
+            "args": [
+              "-I",
+              "-B",
+              "${CLAUDE_PROJECT_DIR}/.claude/hooks/guardrails/block_secrets.py"
+            ],
+            "timeout": 10,
+            "onFailure": "block"
+          },
+          {
+            "type": "command",
+            "command": "python3",
+            "args": [
+              "-I",
+              "-B",
+              "${CLAUDE_PROJECT_DIR}/.claude/hooks/guardrails/lock_tests.py"
+            ],
+            "timeout": 10,
+            "onFailure": "block"
+          }
+        ]
+      }
+    ]
+  }
+}

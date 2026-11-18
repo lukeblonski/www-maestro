@@ -5,3 +5,4 @@ out/
 *.tsbuildinfo
 .openai/*.local.*
 /.autopilot-local/
+__pycache__/

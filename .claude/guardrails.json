@@ -1,0 +1,9 @@
+{
+  "protected": [
+    ".env",
+    ".env.*",
+    "**/secrets/**",
+    ".github/workflows/**"
+  ],
+  "secret_allow": []
+}
