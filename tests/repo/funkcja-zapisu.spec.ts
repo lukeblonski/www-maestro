@@ -159,6 +159,62 @@ test("funkcja zapisu — sześć adresów IPv6 z jednej sieci /64 dzieli limit",
   expect((await funkcja.fetch(zapis({ email: ADRES }, { ip: "2001:db8:1:3::1" }), env)).status).toBe(200);
 });
 
+test("funkcja zapisu — adres IPv4 zapisany jako IPv6 dzieli limit z tym adresem IPv4", async () => {
+  const env = srodowisko();
+  for (let i = 0; i < 5; i++) {
+    expect((await funkcja.fetch(zapis({ email: ADRES }, { ip: "203.0.113.7" }), env)).status).toBe(200);
+  }
+  expect((await funkcja.fetch(zapis({ email: ADRES }, { ip: "::ffff:203.0.113.7" }), env)).status).toBe(429);
+  expect((await funkcja.fetch(zapis({ email: ADRES }, { ip: "::ffff:203.0.113.9" }), env)).status).toBe(200);
+});
+
+test("funkcja zapisu — jedenasty zapis z jednego IP w dobie i 91. zapis doby dostają 429 bez Resend", async () => {
+  const oryginalnyCzas = Date.now;
+  let teraz = oryginalnyCzas();
+  Date.now = () => teraz;
+  try {
+    // Jeden IP: po jednym zapisie co 61 s, więc limit minutowy nie działa, a dobowy tak.
+    const env = srodowisko();
+    const statusy: number[] = [];
+    for (let i = 0; i < 11; i++) {
+      statusy.push((await funkcja.fetch(zapis({ email: ADRES }, { ip: "203.0.113.7" }), env)).status);
+      teraz += 61_000;
+    }
+    expect(statusy).toEqual([...Array<number>(10).fill(200), 429]);
+    expect(atrapa.wywolania).toHaveLength(20);
+
+    // Wiele adresów IP: wspólny limit doby zatrzymuje 91. zapis.
+    atrapa.wywolania = [];
+    const wspolne = srodowisko();
+    const wyniki: number[] = [];
+    for (let i = 1; i <= 91; i++) {
+      wyniki.push((await funkcja.fetch(zapis({ email: ADRES }, { ip: `198.51.100.${i}` }), wspolne)).status);
+    }
+    expect(wyniki.slice(0, 90).every((s) => s === 200)).toBe(true);
+    expect(wyniki[90]).toBe(429);
+    expect(atrapa.wywolania).toHaveLength(180);
+  } finally {
+    Date.now = oryginalnyCzas;
+  }
+});
+
+test("funkcja zapisu — błąd obiektu limitu daje 500 z nagłówkiem CORS bez Resend", async () => {
+  const env = srodowisko({
+    LIMIT: {
+      idFromName: (nazwa) => nazwa,
+      get: () => ({
+        fetch: async () => {
+          throw new Error("atrapa: obiekt limitu niedostępny");
+        },
+      }),
+    },
+  });
+  const odpowiedz = await funkcja.fetch(zapis({ email: ADRES }), env);
+  expect(odpowiedz.status).toBe(500);
+  expect(odpowiedz.headers.get("Access-Control-Allow-Origin")).toBe(ORIGIN_STRONY);
+  expect(atrapa.wywolania).toEqual([]);
+});
+
 test("funkcja zapisu — błąd Resend daje 5xx", async () => {
   for (const zla of ["https://api.resend.com/contacts", "https://api.resend.com/emails"]) {
     atrapa.wywolania = [];

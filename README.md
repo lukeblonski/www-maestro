@@ -65,7 +65,7 @@ Strona jest statyczna (`output: 'export'`), więc zapisów nie obsługuje sama. 
 
 1. Formularz `WaitlistForm` (`components/interactive.tsx`) sprawdza format adresu. Pusty albo błędny adres daje komunikat błędu bez żadnego żądania.
 2. Adapter `lib/waitlist.ts` wysyła poprawny adres jednym żądaniem `POST` do funkcji zapisu w Cloudflare Workers (kod w `worker/index.ts`, konfiguracja w `worker/wrangler.toml`). Adres funkcji strona dostaje przy budowie ze zmiennej `NEXT_PUBLIC_WAITLIST_URL`.
-3. Funkcja przyjmuje zapis tylko z adresu strony (nagłówek `Origin`), pomija zgłoszenia z wypełnionym ukrytym polem-pułapką i przyjmuje najwyżej 5 zapisów na minutę z jednego adresu IP.
+3. Funkcja przyjmuje zapis tylko z adresu strony (nagłówek `Origin`), pomija zgłoszenia z wypełnionym ukrytym polem-pułapką i przyjmuje najwyżej 5 zapisów na minutę i 10 na dobę z jednego adresu IP oraz najwyżej 90 zapisów na dobę łącznie (poniżej 100 e-maili dziennie planu Resend Free).
 4. Funkcja dodaje adres do listy kontaktów Resend i wysyła właścicielowi e-mail z tym adresem. Klucz Resend i adres właściciela są sekretami funkcji, a nie częścią strony ani repozytorium.
 5. Strona pokazuje „Joining…” na przycisku w czasie wysyłki, a potem komunikat, że adres jest zapisany, albo że zapis nie przeszedł. Wpisany adres zostaje w polu, więc można spróbować ponownie.
 
