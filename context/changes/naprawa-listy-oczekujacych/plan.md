@@ -314,8 +314,8 @@ Bez migracji danych. Publikacja przez istniejący workflow czyta nowe `[observab
 
 #### Automated
 
-- [x] 2.1 Test skryptu na atrapie przechodzi
-- [x] 2.2 `CLAUDE.md` ma dokładnie jedną linię ścieżki z jednym poleceniem bez powłoki
-- [x] 2.3 Skrypt nie importuje nic spoza modułów wbudowanych Node i `../worker/index.ts`
-- [x] 2.4 `package.json` jest bez zmian
-- [x] 2.5 Pełne sprawdzenie przechodzi: `npm ci && npm run verify`
+- [x] 2.1 Test skryptu na atrapie przechodzi — c2b0ed3
+- [x] 2.2 `CLAUDE.md` ma dokładnie jedną linię ścieżki z jednym poleceniem bez powłoki — c2b0ed3
+- [x] 2.3 Skrypt nie importuje nic spoza modułów wbudowanych Node i `../worker/index.ts` — c2b0ed3
+- [x] 2.4 `package.json` jest bez zmian — c2b0ed3
+- [x] 2.5 Pełne sprawdzenie przechodzi: `npm ci && npm run verify` — c2b0ed3

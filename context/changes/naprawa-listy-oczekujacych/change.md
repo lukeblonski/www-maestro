@@ -1,7 +1,7 @@
 ---
 change_id: naprawa-listy-oczekujacych
 title: Naprawa listy oczekujących po błędzie 502 z Resend
-status: implementing
+status: implemented
 created: 2026-11-18
 updated: 2026-11-18
 archived_at: null
