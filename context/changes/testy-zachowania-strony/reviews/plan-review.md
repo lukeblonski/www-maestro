@@ -62,7 +62,7 @@ Grounding: 14/14 paths ✓; 6/6 symbols ✓ (`5e4dcac` commit, `.header-actions 
   - Confidence: HIGH — `change.md:80`, `:116` i brak sekcji `## Wymaga Twojej decyzji`.
   - Blind spot: Czy reguła „Kiedy pytać człowieka” w ogóle pozwala agentowi zmienić pole Sprawdzenie kryterium bez pytania. Ocenia to triage.
   - Intent: within
-- **Decision**: AUTO-ESCALATE (bramka 1): Przeniesienie sprawdzenia T15 z `npm run verify` do `npm run test:e2e -- --grep "krok 15\b"` i nowy krok 4 scenariusza zmieniają kryterium akceptacji i scenariusz w `change.md`, a rozstrzygnął to agent (`rozstrzygnął: agent`); każde wyjście z konfliktu T15 i T17 zmienia któreś kryterium, więc decyzję podejmuje człowiek przed implementacją. · Recommendation: A (wariant (a)), bo tylko on zachowuje oba cele z „Oczekiwany efekt” (jedno polecenie wszystkich testów, które naprawdę przechodzi, i `verify` bez Dockera).
+- **Decision**: FIXED (Fix) — człowiek zatwierdził wariant (a) dla T15: „Dobra, akceptuję rekomendację, kontynuuj.”; plan i plan-brief odnotowują potwierdzenie (było: AUTO-ESCALATE (bramka 1))
 
 ### F4 — Zielone `typecheck` w świeżym worktree zależy od `skipLibCheck`
 
