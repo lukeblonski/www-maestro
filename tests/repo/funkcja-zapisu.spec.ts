@@ -325,6 +325,30 @@ test("funkcja zapisu — odmowa Resend na /contacts i /emails daje 502 i jeden w
   expect(atrapa.wywolania.map((w) => `${w.metoda} ${w.url}`)).not.toContain(`POST ${EMAILE}`);
 });
 
+test("funkcja zapisu — wpis logu ukrywa dokładny adres odwiedzającego, którego ogólny wzorzec nie obejmuje", async () => {
+  // Formularz przyjmuje `"anna"@example.com`, a ogólny wzorzec adresu zatrzymuje się na cudzysłowie.
+  const adres = '"Anna"@example.com';
+  atrapa.wywolania = [];
+  atrapa.odpowiedz = (url, metoda) =>
+    url === KONTAKTY && metoda === "POST"
+      ? Response.json(
+          { statusCode: 422, name: "validation_error", message: `Invalid contact "anna"@example.com, ${encodeURIComponent(adres)}` },
+          { status: 422 },
+        )
+      : url.startsWith(`${KONTAKTY}/`)
+        ? Response.json({ statusCode: 404, name: "not_found", message: "Contact not found" }, { status: 404 })
+        : Response.json({ id: "atrapa" });
+  const { wynik: odpowiedz, wpisy } = await zWpisami(() => funkcja.fetch(zapis({ email: adres }), srodowisko()));
+
+  expect(odpowiedz.status).toBe(502);
+  expect(wpisy).toHaveLength(1);
+  expect(wpisy[0]).toContain("validation_error");
+  expect(wpisy[0]).toContain("<adres>");
+  expect(wpisy[0].toLowerCase()).not.toContain('"anna"');
+  expect(wpisy[0].toLowerCase()).not.toContain(encodeURIComponent(adres).toLowerCase());
+  bezSekretow(wpisy[0]);
+});
+
 test("funkcja zapisu — wyjątek sieci przy Resend daje 502 i jeden wpis logu z rodzajem błędu", async () => {
   for (const [zla, sciezka] of [
     [KONTAKTY, "/contacts"],

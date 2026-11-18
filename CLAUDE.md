@@ -8,11 +8,11 @@ Uruchom `npm ci && npm run verify` przed każdym commitem. Polecenie sprawdza ty
 Last passing run (2026-11-18):
 
 ```
-  ✓  17 [repo] › tests/repo/na-zywo.spec.ts:198:1 › skrypt na żywo — brak linii klucza Resend w ## Dostępy daje nie przeszło (46ms)
-  ✓  18 [repo] › tests/repo/zakres-przejecia.spec.ts:43:1 › krok 16 — kod strony i konfiguracja budowy jak w 5e4dcac (13ms)
-  ✓  19 [repo] › tests/repo/zbudowana-strona.spec.ts:20:1 › zbudowana strona — bez adresu Resend i nazwy klucza (5ms)
-  19 passed (1.1s)
-2:39PM INF no leaks found
+  ✓  19 [repo] › tests/repo/na-zywo.spec.ts:218:1 › skrypt na żywo — brak linii klucza Resend w ## Dostępy daje nie przeszło (44ms)
+  ✓  20 [repo] › tests/repo/zakres-przejecia.spec.ts:43:1 › krok 16 — kod strony i konfiguracja budowy jak w 5e4dcac (12ms)
+  ✓  21 [repo] › tests/repo/zbudowana-strona.spec.ts:20:1 › zbudowana strona — bez adresu Resend i nazwy klucza (4ms)
+  21 passed (1.2s)
+2:54PM INF no leaks found
 ```
 
 ## Testy w CI

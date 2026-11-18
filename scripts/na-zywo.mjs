@@ -6,7 +6,7 @@
 //   Z folderu roboczego czyta CLAUDE.md (ścieżki klucza Resend i adresu właściciela z „## Dostępy”) i
 //   context/foundation/start.md (stan końcowy z „## Ścieżki na żywo”).
 // - Kroki: (1) diagnostyka: `POST /contacts` przez `node:https` bez nagłówka `User-Agent`, jak funkcja w Workers
-//   przed poprawką; (2) obserwator wywołań funkcji do Resend (odpowiedzi bez zmian); (3) funkcja z `worker/index.ts`
+//   przed poprawką, a przed nią (0) sprawdzenie, czy kontakt właściciela już był; (2) obserwator wywołań funkcji do Resend (odpowiedzi bez zmian); (3) funkcja z `worker/index.ts`
 //   na 127.0.0.1:<PORT>; (4) zapis adresem właściciela z `Origin` strony; (5) kontakt w Resend; (6) stan e-maila.
 // - Wynik: plik NA_ZYWO_WYNIK (sciezka, adres, atrapy, uslugi, stan_koncowy, dowod, wynik, powod) i na stdout
 //   jedna linia na każde wywołanie Resend oraz końcowa linia `wynik: <wynik> — <powod>`. Kod 0 tylko przy `przeszło`.
@@ -191,11 +191,19 @@ const sciezkaBezAdresu = (sciezkaUrl) => sciezkaUrl.replace(/^\/contacts\/.+$/, 
 
 const udane = (wynik) => !wynik.blad && wynik.status >= 200 && wynik.status <= 299;
 
-// Odmowa za kluczem albo kontem (działanie człowieka w panelu Resend): 401, 403 albo 429 z JSON Resend (`name`)
-// i 400 z `message` o kluczu API. 403 bez JSON (Cloudflare 1010) to błąd kodu, nie odmowa Resend.
+// Odmowa za kluczem albo kontem (działanie człowieka w panelu Resend): 401, 403 albo 429 z JSON Resend i `name`
+// z listy niżej oraz 400 z `message` o kluczu API. 403 bez JSON (Cloudflare 1010), 401 `missing_api_key`
+// (kod zgubił nagłówek) i 429 `rate_limit_exceeded` (chwilowe) to błąd kodu albo przebiegu, nie odmowa za kontem.
+const ODMOWY_ZA_KONTEM = new Set([
+  "restricted_api_key",
+  "invalid_api_key",
+  "validation_error",
+  "daily_quota_exceeded",
+  "monthly_quota_exceeded",
+]);
 function odmowaResend(wynik) {
   if (wynik.blad || !wynik.dane) return false;
-  if ([401, 403, 429].includes(wynik.status) && typeof wynik.dane.name === "string") return true;
+  if ([401, 403, 429].includes(wynik.status) && ODMOWY_ZA_KONTEM.has(wynik.dane.name)) return true;
   return wynik.status === 400 && typeof wynik.dane.message === "string" && /api key/i.test(wynik.dane.message);
 }
 
@@ -256,6 +264,35 @@ async function glowny() {
     return finish(NIE_PRZESZLO, `Node ${process.version} nie ładuje plików .ts (process.features.typescript); potrzebny Node z mise.toml`);
   }
 
+  // Własne zapytania skryptu do Resend, z `User-Agent`, poza obserwatorem.
+  const fetchBezObserwatora = globalThis.fetch;
+  const resend = async (sciezkaResend) => {
+    const wywolanie = { metoda: "GET", sciezka: sciezkaBezAdresu(sciezkaResend.split("?")[0]) };
+    try {
+      const wynik = await fetchBezObserwatora(`${RESEND}${sciezkaResend}`, {
+        headers: { Authorization: `Bearer ${klucz}`, "User-Agent": USER_AGENT },
+        signal: AbortSignal.timeout(LIMIT_ZADANIA_MS),
+      });
+      Object.assign(wywolanie, wynikHttp(wynik.status, await wynik.text()));
+    } catch (blad) {
+      wywolanie.blad = nazwaBledu(blad);
+    }
+    return wywolanie;
+  };
+  const sciezkaKontaktu = `/contacts/${encodeURIComponent(wlasciciel)}`;
+  const toKontaktWlasciciela = (wynik) =>
+    wynik.status === 200 &&
+    typeof wynik.dane?.email === "string" &&
+    wynik.dane.email.toLowerCase() === wlasciciel.toLowerCase();
+
+  // (0) Czy kontakt właściciela był przed przebiegiem: przy istniejącym kontakcie zapis funkcji sprawdza
+  // ponowny zapis (N3), a nie dodanie nowego adresu, więc wynik mówi to wprost w `powod`.
+  const przed = await resend(sciezkaKontaktu);
+  const kontaktPrzed = toKontaktWlasciciela(przed) ? "był" : przed.status === 404 ? "nie było" : "nieznany";
+  const liniaPrzed = `kontakt przed zapisem: GET ${przed.sciezka} ${opis(przed)} — ${kontaktPrzed}`;
+  console.log(liniaPrzed);
+  dowod.push(liniaPrzed);
+
   // (1) Diagnostyka przed zapisem: gdy utworzy kontakt, zapis funkcji sprawdza ponowny zapis (N3).
   const wynikDiagnostyki = await diagnostyka();
   const liniaDiagnostyki = `diagnostyka (jak w Workers, bez User-Agent): POST /contacts ${opis(wynikDiagnostyki)}`;
@@ -263,7 +300,6 @@ async function glowny() {
   dowod.push(liniaDiagnostyki);
 
   // (2) Obserwator wywołań funkcji do Resend: przepuszcza żądanie i odpowiedź bez zmian, zapisuje klon.
-  const fetchBezObserwatora = globalThis.fetch;
   const wywolania = [];
   globalThis.fetch = async (wejscie, init) => {
     const url = new URL(wejscie instanceof Request ? wejscie.url : String(wejscie));
@@ -382,25 +418,19 @@ async function glowny() {
     return finish(NIE_PRZESZLO, `funkcja odpowiedziała ${status} zamiast 200 {"ok":true}; ${zResend}`);
   }
 
-  // Własne zapytania skryptu do Resend, z `User-Agent`, poza obserwatorem.
-  const resend = async (sciezkaResend) => {
-    const wywolanie = { metoda: "GET", sciezka: sciezkaBezAdresu(sciezkaResend.split("?")[0]) };
-    try {
-      const wynik = await fetchBezObserwatora(`${RESEND}${sciezkaResend}`, {
-        headers: { Authorization: `Bearer ${klucz}`, "User-Agent": USER_AGENT },
-        signal: AbortSignal.timeout(LIMIT_ZADANIA_MS),
-      });
-      Object.assign(wywolanie, wynikHttp(wynik.status, await wynik.text()));
-    } catch (blad) {
-      wywolanie.blad = nazwaBledu(blad);
-    }
-    return wywolanie;
-  };
+  // Dodanie nowego kontaktu: gdy kontaktu właściciela przed przebiegiem nie było, a diagnostyka go nie dodała,
+  // `POST /contacts` funkcji musi się udać. Przy istniejącym kontakcie jego odpowiedź idzie do `powod`.
+  const dodanie = wywolania.find((wywolanie) => wywolanie.metoda === "POST" && wywolanie.sciezka === "/contacts");
+  const opisDodania = dodanie ? `POST /contacts funkcji ${opis(dodanie)}` : "bez POST /contacts funkcji";
+  if (kontaktPrzed === "nie było" && !udane(wynikDiagnostyki) && !(dodanie && udane(dodanie))) {
+    return finish(NIE_PRZESZLO, `kontaktu właściciela nie było, a funkcja go nie dodała: ${opisDodania}`);
+  }
+  const ponownyZapis = dodanie && !udane(dodanie) ? `; ponowny zapis istniejącego kontaktu: ${opisDodania}` : "";
+  if (ponownyZapis) dowod.push(`ponowny zapis istniejącego kontaktu (kontakt przed zapisem: ${kontaktPrzed}): ${opisDodania}`);
 
   // (5) Kontakt z adresem właściciela w Resend.
-  const kontakt = await resend(`/contacts/${encodeURIComponent(wlasciciel)}`);
-  const emailKontaktu = typeof kontakt.dane?.email === "string" ? kontakt.dane.email : "";
-  const jestKontakt = kontakt.status === 200 && emailKontaktu.toLowerCase() === wlasciciel.toLowerCase();
+  const kontakt = await resend(sciezkaKontaktu);
+  const jestKontakt = toKontaktWlasciciela(kontakt);
   const liniaKontaktu = `kontakt w Resend: GET ${kontakt.sciezka} ${opis(kontakt)}${jestKontakt ? " — kontakt z adresem właściciela jest" : ""}`;
   console.log(liniaKontaktu);
   dowod.push(liniaKontaktu);
@@ -436,7 +466,10 @@ async function glowny() {
     await new Promise((rozwiaz) => setTimeout(rozwiaz, ODPYTYWANIE_CO_MS));
   }
 
-  return finish(PRZESZLO, "stan końcowy osiągnięty: funkcja 200 {\"ok\":true}, kontakt w Resend, e-mail wysłany albo dostarczony");
+  return finish(
+    PRZESZLO,
+    `stan końcowy osiągnięty: funkcja 200 {"ok":true}, kontakt w Resend, e-mail wysłany albo dostarczony${ponownyZapis}`,
+  );
 }
 
 glowny().catch((blad) => finish(NIE_PRZESZLO, `błąd skryptu: ${nazwaBledu(blad)} ${blad?.message ?? ""}`));

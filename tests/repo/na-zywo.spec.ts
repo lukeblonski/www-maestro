@@ -161,9 +161,11 @@ test("skrypt na żywo — zapis przez funkcję do stanu końcowego daje przeszł
   expect(String(wynik.dowod)).toContain("1010");
   expect(p.stdout).toMatch(/^diagnostyka \(jak w Workers, bez User-Agent\): POST \/contacts 403 error code: 1010$/m);
 
-  // Pierwsze wywołanie to diagnostyka przez node:https bez User-Agent; wywołania funkcji i skryptu go mają.
-  const [pierwsze, ...reszta] = p.wywolania;
-  expect(pierwsze).toEqual({ droga: "https", metoda: "POST", sciezka: "/contacts", userAgent: false });
+  // Najpierw sprawdzenie kontaktu przed zapisem, potem diagnostyka przez node:https bez User-Agent;
+  // wywołania funkcji i skryptu przez fetch mają User-Agent.
+  const [przed, diagnostyczne, ...reszta] = p.wywolania;
+  expect(przed).toEqual({ droga: "fetch", metoda: "GET", sciezka: `/contacts/${encodeURIComponent(WLASCICIEL)}`, userAgent: true });
+  expect(diagnostyczne).toEqual({ droga: "https", metoda: "POST", sciezka: "/contacts", userAgent: false });
   expect(reszta.length).toBeGreaterThan(0);
   for (const wywolanie of reszta) expect(wywolanie, JSON.stringify(wywolanie)).toMatchObject({ droga: "fetch", userAgent: true });
   expect(reszta.map((w) => `${w.metoda} ${w.sciezka}`)).toEqual([
@@ -172,9 +174,27 @@ test("skrypt na żywo — zapis przez funkcję do stanu końcowego daje przeszł
     `GET /contacts/${encodeURIComponent(WLASCICIEL)}`,
     "GET /emails/atrapa-email",
   ]);
+  expect(p.stdout).toMatch(/^kontakt przed zapisem: GET \/contacts\/<adres> 404 not_found: .* — nie było$/m);
   expect(p.stdout).toMatch(/^funkcja → Resend: POST \/contacts 201$/m);
+  expect(String(wynik.powod)).not.toContain("ponowny zapis");
   expect(p.stdout).toMatch(/^funkcja → Resend: POST \/emails 200$/m);
   expect(p.stdout).toMatch(/^wynik: przeszło — /m);
+  bezSekretow(p);
+});
+
+test("skrypt na żywo — istniejący kontakt właściciela daje przeszło z odpowiedzią POST /contacts funkcji w powodzie", async () => {
+  const p = await przebieg("kontakt-istnieje");
+  const opis = `stdout:\n${p.stdout}\nstderr:\n${p.stderr}`;
+
+  expect(p.kod, opis).toBe(0);
+  const wynik = p.wynik as Wynik;
+  expect(wynik.wynik, opis).toBe("przeszło");
+  expect(p.stdout).toMatch(/^kontakt przed zapisem: GET \/contacts\/<adres> 200 — był$/m);
+  expect(p.stdout).toMatch(/^funkcja → Resend: POST \/contacts 409 conflict: Contact already exists$/m);
+  const powod = String(wynik.powod);
+  expect(powod).toContain("ponowny zapis istniejącego kontaktu");
+  expect(powod).toContain("POST /contacts funkcji 409 conflict");
+  expect(String(wynik.dowod)).toContain("ponowny zapis istniejącego kontaktu");
   bezSekretow(p);
 });
 

@@ -3,8 +3,10 @@
 // oznacza się w `globalThis.ATRAPY_NA_ZYWO` i odrzuca każdy inny host niż 127.0.0.1, więc test biegnie bez sieci.
 //
 // Zmienne czyta tylko atrapa, nie skrypt:
-// - ATRAPA_RESEND_SCENARIUSZ: `sukces` (403 `error code: 1010` bez `User-Agent`, potem kontakt, e-mail i stan
-//   `delivered`) albo `klucz-tylko-wysylka` (każde `/contacts` dostaje 401 `restricted_api_key` z adresem w `message`);
+// - ATRAPA_RESEND_SCENARIUSZ: `sukces` (403 `error code: 1010` bez `User-Agent`; kontaktu nie ma, dopóki
+//   `POST /contacts` z `User-Agent` go nie doda, potem e-mail i stan `delivered`), `kontakt-istnieje` (jak `sukces`,
+//   ale kontakt jest od początku, a `POST /contacts` z `User-Agent` dostaje 409 „already exists”) albo
+//   `klucz-tylko-wysylka` (każde `/contacts` dostaje 401 `restricted_api_key` z adresem w `message`);
 // - ATRAPA_RESEND_ZAPIS: plik, do którego każde wywołanie trafia jako linia JSON (droga, metoda, ścieżka, czy był
 //   `User-Agent`).
 
@@ -21,6 +23,8 @@ const ID_KONTAKTU = "atrapa-kontakt";
 const ID_EMAILA = "atrapa-email";
 
 globalThis.ATRAPY_NA_ZYWO = [HOST];
+
+let kontaktJest = SCENARIUSZ === "kontakt-istnieje";
 
 const json = (status, dane) => ({ status, typ: "application/json", tresc: JSON.stringify(dane) });
 
@@ -47,8 +51,13 @@ function odpowiedzResend(droga, metoda, sciezka, maUserAgent, tresc) {
     });
   }
   if (!maUserAgent) return { status: 403, typ: "text/plain; charset=UTF-8", tresc: "error code: 1010" };
-  if (metoda === "POST" && sciezka === "/contacts") return json(201, { object: "contact", id: ID_KONTAKTU });
+  if (metoda === "POST" && sciezka === "/contacts") {
+    if (kontaktJest) return json(409, { statusCode: 409, name: "conflict", message: "Contact already exists" });
+    kontaktJest = true;
+    return json(201, { object: "contact", id: ID_KONTAKTU });
+  }
   if (metoda === "GET" && sciezka.startsWith("/contacts/")) {
+    if (!kontaktJest) return json(404, { statusCode: 404, name: "not_found", message: "Contact not found" });
     return json(200, { object: "contact", id: ID_KONTAKTU, email: adresZadania(sciezka, "") });
   }
   if (metoda === "POST" && sciezka === "/emails") return json(200, { id: ID_EMAILA });

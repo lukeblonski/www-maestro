@@ -180,17 +180,28 @@ async function wywolajResend(metoda: string, sciezka: string, klucz: string, tre
   }
 }
 
-// Zastępuje dokładny klucz znacznikiem `<klucz>`, a każdy adres e-mail (z `@` albo `%40`) znacznikiem `<adres>`.
-function ukryj(tekst: string, klucz: string): string {
-  return tekst.split(klucz).join("<klucz>").replace(WZORZEC_ADRESU_W_TEKSCIE, "<adres>");
+const doWzorca = (tekst: string): string => tekst.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+// Zastępuje dokładny klucz znacznikiem `<klucz>`, a znane adresy (odwiedzającego i właściciela, w każdej
+// wielkości liter i w postaci z `encodeURIComponent`) i potem każdy inny adres e-mail (z `@` albo `%40`)
+// znacznikiem `<adres>`. Dokładne adresy idą przed ogólnym wzorcem, bo formularz przyjmuje adresy,
+// których wzorzec nie obejmuje w całości (np. `"anna"@example.com`).
+function ukryj(tekst: string, klucz: string, adresy: readonly string[]): string {
+  let wynik = klucz ? tekst.split(klucz).join("<klucz>") : tekst;
+  for (const adres of adresy) {
+    for (const forma of new Set([adres, encodeURIComponent(adres)])) {
+      if (forma) wynik = wynik.replace(new RegExp(doWzorca(forma), "gi"), "<adres>");
+    }
+  }
+  return wynik.replace(WZORZEC_ADRESU_W_TEKSCIE, "<adres>");
 }
 
 // Jedyne miejsce, które loguje niepowodzenie wywołania Resend: jeden wpis `console.error`
 // ze ścieżką, statusem, `name` i `message` Resend (albo początkiem treści, gdy to nie JSON),
 // bez klucza i adresów.
-function zalogujOdmowe(sciezka: string, wynik: WynikResend, klucz: string): void {
+function zalogujOdmowe(sciezka: string, wynik: WynikResend, klucz: string, adresy: readonly string[]): void {
   if ("blad" in wynik) {
-    console.error(ukryj(`Resend niedostępny: ${sciezka} ${wynik.blad}`, klucz));
+    console.error(ukryj(`Resend niedostępny: ${sciezka} ${wynik.blad}`, klucz, adresy));
     return;
   }
   const { name, message } = (typeof wynik.dane === "object" && wynik.dane !== null ? wynik.dane : {}) as {
@@ -200,8 +211,8 @@ function zalogujOdmowe(sciezka: string, wynik: WynikResend, klucz: string): void
   const opis =
     typeof name === "string" || typeof message === "string"
       ? `${String(name ?? "")}: ${String(message ?? "")}`
-      : ukryj(wynik.tekst, klucz).replace(/\s+/g, " ").trim().slice(0, NAJDLUZSZA_TRESC_W_LOGU);
-  console.error(ukryj(`Resend odmówił: ${sciezka} ${wynik.status} ${opis}`, klucz));
+      : ukryj(wynik.tekst, klucz, adresy).replace(/\s+/g, " ").trim().slice(0, NAJDLUZSZA_TRESC_W_LOGU);
+  console.error(ukryj(`Resend odmówił: ${sciezka} ${wynik.status} ${opis}`, klucz, adresy));
 }
 
 // Po nieudanym `POST /contacts`: kontakt istnieje tylko przy 200 z tym samym adresem
@@ -253,14 +264,15 @@ export default {
     }
 
     const kluczResend = env.RESEND_API_KEY;
+    const znaneAdresy = [adres, env.OWNER_EMAIL];
     const kontakt = await wywolajResend("POST", "/contacts", kluczResend, { email: adres });
     if ("blad" in kontakt) {
-      zalogujOdmowe("/contacts", kontakt, kluczResend);
+      zalogujOdmowe("/contacts", kontakt, kluczResend, znaneAdresy);
       return odpowiedz(502, false, cors);
     }
     // Ponowny zapis: odmowa dodania istniejącego kontaktu nie jest niepowodzeniem zapisu.
     if (!kontakt.ok && !(await kontaktIstnieje(adres, kluczResend))) {
-      zalogujOdmowe("/contacts", kontakt, kluczResend);
+      zalogujOdmowe("/contacts", kontakt, kluczResend, znaneAdresy);
       return odpowiedz(502, false, cors);
     }
 
@@ -271,7 +283,7 @@ export default {
       text: `Email: ${adres}`,
     });
     if ("blad" in powiadomienie || !powiadomienie.ok) {
-      zalogujOdmowe("/emails", powiadomienie, kluczResend);
+      zalogujOdmowe("/emails", powiadomienie, kluczResend, znaneAdresy);
       return odpowiedz(502, false, cors);
     }
 
