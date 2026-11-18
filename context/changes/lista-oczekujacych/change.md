@@ -127,3 +127,6 @@ archived_at: null
 - czas: 2026-11-18 12:25 · kto: człowiek · zgoda: sekrety · czego dotyczy: kawałek: lista-oczekujacych, autopilot przekazuje token Cloudflare, klucz Resend i adres e-mail właściciela do sekretów repozytorium GitHub poleceniami gh secret set z ## Wdrożenie, a workflow do sekretów funkcji Cloudflare; wartości nie przechodzą przez rozmowę · odpowiedź: „Akceptuję (Recommended)”
 - czas: 2026-11-18 12:25 · kto: człowiek · zgoda: dane GitHub (sekrety repozytorium) · czego dotyczy: kawałek: lista-oczekujacych, token Cloudflare, klucz Resend i adres e-mail właściciela w sekretach repozytorium GitHub lukeblonski/www-maestro · odpowiedź: „Akceptuję (Recommended)”
 
+## Zatrzymania autopilota
+
+- czas: 2026-11-18 12:26 · krok: start · powód: polecenie python3 /home/fabryka/fabryka/skills/intent/scripts/check_intent.py context/changes/lista-oczekujacych/change.md; git symbolic-ref --short -q HEAD; git rev-parse --verify -q refs/heads/main; test ! -e context/changes/lista-oczekujacych/research.md zakończyło się kodem 1: / Warunki startu … · zrobiono: — · skutek: —
