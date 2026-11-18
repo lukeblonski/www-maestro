@@ -3,7 +3,14 @@ Gdy człowiek w rozmowie mówi „zrób zmianę”, „zrób <ID kawałka>”, �
 
 ## Verify
 
-`echo "Projekt nie ma jeszcze testów; dodaje je pierwszy kawałek roadmapy." >&2; exit 1`
+Uruchom `npm ci && npm run verify` przed każdym commitem. Polecenie sprawdza typy, uruchamia bez przeglądarki test „krok 16” (kod strony i konfiguracja budowy jak w `5e4dcac`) i skanuje historię git programem `gitleaks`; nie potrzebuje Dockera ani innych usług lokalnych i kończy się kodem różnym od 0, gdy cokolwiek nie przejdzie.
+
+Last passing run (2026-11-18):
+
+```
+  ✓  1 [repo] › tests/repo/zakres-przejecia.spec.ts:32:1 › krok 16 — kod strony i konfiguracja budowy jak w 5e4dcac (20ms)
+10:27AM INF no leaks found
+```
 
 ## Wdrożenie
 

@@ -436,6 +436,19 @@ Nie dotyczy: strona i dane się nie zmieniają. Cofnięcie zmiany to usunięcie 
 
 > Append-only. One entry per departure from the plan, written in the same commit as the phase. See `references/progress-format.md`.
 
+- **PC1 (Phase 1)**: `package-lock.json` uzupełniony z wyniku `npm install --package-lock-only --ignore-scripts`, ale tylko o wpisy nowe (`node_modules/@playwright/test`, `node_modules/playwright`, `node_modules/playwright-core` i `@playwright/test` w `devDependencies` korzenia); wszystkie dotychczasowe wpisy wzięte bez zmian z pliku sprzed polecenia.
+  - **Why**: npm 10.9.10 z mise przy przepisaniu pliku usuwał 28 pól `libc` z wpisów pakietów opcjonalnych (plik zapisał nowszy npm), więc w diffie byłoby więcej niż trzy nowe pakiety, wbrew kontraktowi „przybywają tylko”. Po scaleniu diff to 46 dodanych linii i zero usuniętych; `npm ci --dry-run` i `npm ci` przechodzą.
+  - **Criteria**: T19
+  - **Files**: `package-lock.json`
+- **PC2 (Phase 1)**: `scripts/test-e2e.sh` liczy testy konfiguracji bez przeglądarki tylko w projekcie `readme` (`--project readme`), czyli w tym, który skrypt potem uruchamia; ta sama liczba decyduje o kroku 1 (zero w obu → kod 1) i kroku 4.
+  - **Why**: liczenie całej konfiguracji łapałoby projekt `repo`, którego `test:e2e` nie uruchamia, i `npm run test:e2e -- --grep "krok 16\b"` kończyłoby się zielono bez żadnego testu (plan-review F5). Zawężenie usuwa tę fałszywą zieleń bez dodatkowego wywołania `--list`. Potwierdzone w 1.65.0: `--list` nie uruchamia `webServer` (lista przeszła bez `out/`), więc zmienna z Critical Implementation Details nie jest potrzebna.
+  - **Criteria**: T14
+  - **Files**: `scripts/test-e2e.sh`
+- **PC3 (Phase 1)**: Przed commitem fazy wiersz 1.4 biegnie z `xargs -0 -r -n1 cp --parents …` (jeden `cp` na plik) zamiast `xargs -0 -r cp --parents …`; reszta polecenia bez zmian. Po commicie fazy polecenie z planu biegnie dosłownie, a jego wynik trafia do raportu przebiegu.
+  - **Why**: GNU coreutils 9.7 (`cp --parents`) po utworzeniu nowego katalogu rodzica otwiera następny plik z `O_EXCL`, więc istniejący w worktree `CLAUDE.md` po `tests/repo/zakres-przejecia.spec.ts` kończy się „File exists” i kodem 123, zanim `verify` w ogóle ruszy (odtworzone na dwóch plikach w katalogu tymczasowym; `-f` nie pomaga). Osobny `cp` na plik kopiuje te same pliki, więc sprawdzenie zostaje to samo. Po commicie nowe pliki są już w `HEAD`, więc dosłowne polecenie nie trafia na ten błąd.
+  - **Criteria**: T17
+  - **Files**: none
+
 ## Progress
 
 > Convention: `- [ ]` pending, `- [x]` done. Append ` — <commit sha>` when a step lands. Do not rename step titles. See `references/progress-format.md`.
@@ -444,13 +457,13 @@ Nie dotyczy: strona i dane się nie zmieniają. Cofnięcie zmiany to usunięcie 
 
 #### Automated
 
-- [ ] 1.1 Dokładna wersja i plik zablokowanych wersji
-- [ ] 1.2 Typy przechodzą z testami i konfiguracjami
-- [ ] 1.3 Polecenie sprawdzające przechodzi bez Dockera
-- [ ] 1.4 Polecenie z `## Verify` przechodzi w świeżym worktree
-- [ ] 1.5 Zasoby pod prefiksem na obu ekranach
-- [ ] 1.6 Argumenty bez żadnego testu kończą się błędem
-- [ ] 1.7 Kod strony jak w `5e4dcac`
+- [x] 1.1 Dokładna wersja i plik zablokowanych wersji
+- [x] 1.2 Typy przechodzą z testami i konfiguracjami
+- [x] 1.3 Polecenie sprawdzające przechodzi bez Dockera
+- [x] 1.4 Polecenie z `## Verify` przechodzi w świeżym worktree
+- [x] 1.5 Zasoby pod prefiksem na obu ekranach
+- [x] 1.6 Argumenty bez żadnego testu kończą się błędem
+- [x] 1.7 Kod strony jak w `5e4dcac`
 
 ### Phase 2: Sekcje, linki, układ, motyw, sieć, ruch i kontrast
 

@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "next dev --webpack --hostname 127.0.0.1",
     "build": "next build --webpack",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "npm run verify && npm run test:e2e",
+    "test:e2e": "bash scripts/test-e2e.sh",
+    "verify": "npm run typecheck && playwright test -c playwright.bez-przegladarki.config.ts --project repo && gitleaks git --redact --no-banner ."
   },
   "dependencies": {
     "next": "latest",
@@ -19,6 +22,7 @@
     "typescript": "latest",
     "@types/node": "latest",
     "@types/react": "latest",
-    "@types/react-dom": "latest"
+    "@types/react-dom": "latest",
+    "@playwright/test": "1.65.0"
   }
 }
