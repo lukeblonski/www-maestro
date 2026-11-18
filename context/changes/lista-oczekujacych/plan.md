@@ -392,9 +392,9 @@ Pierwsza publikacja po scaleniu tworzy funkcję i migrację `v1` Durable Object.
 
 #### Automated
 
-- [ ] 1.1 Testy funkcji przechodzą
-- [ ] 1.2 Pełne sprawdzenie przechodzi
-- [ ] 1.3 W worker/ nie ma adresu e-mail poza nadawcą Resend
+- [x] 1.1 Testy funkcji przechodzą
+- [x] 1.2 Pełne sprawdzenie przechodzi
+- [x] 1.3 W worker/ nie ma adresu e-mail poza nadawcą Resend
 
 ### Phase 2: Formularz na stronie
 

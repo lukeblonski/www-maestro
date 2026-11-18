@@ -1,0 +1,16 @@
+# Funkcja zapisu na listę oczekujących (Cloudflare Workers), publikowana z CI
+# akcją cloudflare/wrangler-action. Bez account_id: wrangler wybiera jedyne konto tokenu.
+# Klucz Resend i adres właściciela są sekretami funkcji (RESEND_API_KEY, OWNER_EMAIL),
+# ustawianymi przy publikacji, a nie w tym pliku.
+name = "maestro-waitlist"
+main = "index.ts"
+compatibility_date = "2026-11-01"
+workers_dev = true
+
+[[durable_objects.bindings]]
+name = "LIMIT"
+class_name = "LimitZapisow"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["LimitZapisow"]
