@@ -4,6 +4,10 @@
 
 ## Opis właściciela
 
+Repozytorium: https://github.com/lukeblonski/www-maestro
+
+> „Zaczniemy od strony www dzisiaj. I w związku z tym, że mam już wstępną propozycję tej strony, kod, to potraktujemy to też jako test przejęcia projektu.”
+
 ## Pytania do człowieka
 
 ## Decyzje bez podstawy
