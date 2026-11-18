@@ -139,3 +139,15 @@ Repozytorium: https://github.com/lukeblonski/www-maestro
 ## Pierwszy kawałek
 
 - testy-zachowania-strony
+
+## Lista końcowa
+
+- Technologia: strona w TypeScript (tryb ścisły) na Next.js 16 z React 19 i Tailwind CSS 4, eksportowana jako gotowe pliki statyczne i publikowana na GitHub Pages; przyjazna agentowi z kompensacją (stack-assessment.md).
+- Stan projektu: strona buduje się tak jak do publikacji (z adresem /www-maestro), typy przechodzą, w paczkach 0 znanych luk; testów jeszcze nie ma (health-check.md).
+- Polecenie sprawdzające (## Verify): kończy się kodem 1 z komunikatem „Projekt nie ma jeszcze testów; dodaje je pierwszy kawałek roadmapy.” — tak ma być, dopóki S-01 nie doda testów.
+- Roadmapa: jeden kawałek, S-01 testy-zachowania-strony (testy dzisiejszego zachowania strony na telefonie i komputerze, opis uruchomienia w README, prawdziwe polecenie testów); polecany pierwszy kawałek: S-01.
+- Pytania rozstrzygnięte przez agenta: 24 linie z rozstrzygnął: agent w ## Pytania do człowieka (prd 4, technologia 4, przygotowanie-posiedzenia 3, szkielet 4, roadmapa 3, plan-testow 6).
+- Kod: https://github.com/lukeblonski/www-maestro (gałąź main, bez pull requestu).
+- Prośba z wiadomości przejęcia: brak
+- Żeby cała roadmapa poszła bez ciebie, przygotuj: nic (S-01 potrzebuje: nic).
+- Dalej: zrób S-01
