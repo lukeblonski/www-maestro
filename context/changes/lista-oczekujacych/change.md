@@ -1,7 +1,7 @@
 ---
 change_id: lista-oczekujacych
 title: Prawdziwa lista oczekujących z powiadomieniem właściciela
-status: implemented
+status: impl_reviewed
 created: 2026-11-18
 updated: 2026-11-18
 archived_at: null
@@ -146,3 +146,15 @@ archived_at: null
 - F2 — Szczegóły, które wywrócą `typecheck` albo zostawią zgadywanie (OBSERVATION, Phase 1 — §1 Kod funkcji, §3 Testy funkcji): AUTO-FIX (normalne używanie): Import `…/index.ts` z rozszerzeniem wywraca `tsc --noEmit` w `npm run verify`, a `stub.fetch` bez pełnego adresu pada przy każdym zapisie, więc oba błędy zdarzą się przy zwykłym przebiegu L7–L11; dopisanie zachowania przy braku `CF-Connecting-IP` usuwa zgadywanie w tym samym miejscu §1 i §3. · commit 0142aaa
 - F3 — Numer wpisu D-013 zapisany na sztywno (OBSERVATION, Phase 4 — §3 Rejestr ograniczeń): AUTO-FIX (normalne używanie): Ten triage dopisuje do rejestru wpis z F4, więc numer D-013 może być zajęty przed fazą 4 i wpis dostałby powtórzony numer. Branie następnego wolnego numeru z trzech plików rejestru zapobiega temu tanim kosztem. · commit 0142aaa
 - F4 — Limit z jednego IP liczony po pełnym adresie IPv6 (OBSERVATION, Phase 1 — §1 Kod funkcji): AUTO-FIX (bezpieczeństwo B): Zabezpieczyłem limit zapisów przed obejściem przez zmianę adresu w jednej sieci IPv6, stosując standardowe liczenie limitu po prefiksie `/64` dla IPv6 i po pełnym adresie dla IPv4, z przypadkiem testowym dwóch adresów z tej samej `/64` w L10. · commit 0142aaa
+
+### context/changes/lista-oczekujacych/reviews/impl-review.md
+
+- F1 — Jedno źródło może wyczerpać dzienny limit e-maili Resend (WARNING, worker/index.ts:16-17, 156-170): AUTO-FIX (bezpieczeństwo B): Zabezpieczyłem dzienny limit e-maili i kontaktów Resend przed wyczerpaniem z jednego źródła albo z wielu adresów IP, stosując w `LimitZapisow` drugie, dobowe okno limitu na klucz IP i wspólny dobowy licznik w jednym obiekcie; oba są sprawdzane przed wywołaniem Resend, przekroczenie daje odpowiedź 429, a poprawka ma test w `tests/repo/funkcja-zapisu.spec.ts`. · commit 64e93d2
+- F2 — Błąd wywołania Durable Object daje odpowiedź bez nagłówka CORS (OBSERVATION, worker/index.ts:157): AUTO-FIX (bezpieczeństwo B): razem z F1: Zabezpieczyłem odpowiedź funkcji przy błędzie Durable Object, stosując w tej samej poprawce `try/catch` wokół wywołań `LimitZapisow` z odpowiedzią `odpowiedz(500, false, cors)` z nagłówkiem CORS. · commit 64e93d2
+- F3 — Brak limitu rozmiaru treści żądania (OBSERVATION, worker/index.ts:141): AUTO-LIMIT (przypadek szczególny): Duża treść z podrobionym `Origin` przerywa tylko żądanie, które ją wysłało, i nie zużywa limitów Resend, a w `change.md` nie ma modelu zagrożenia, więc przyjmuję „przypadkowy błąd agenta, nie celowe obejście” i to nie jest ani zwykłe używanie, ani atak z „Chroni przed”. · D-014
+- F4 — Szczegóły licznika zapisów (OBSERVATION, worker/index.ts:57-69, 102-107): AUTO-FIX (bezpieczeństwo B): razem z F1: Zabezpieczyłem licznik `LimitZapisow`, stosując w tej samej poprawce dwie rzeczy: odmowa 429 nie zapisuje już nic do `storage`, a adres z prefiksem `::ffff:` dostaje jako klucz wbudowany adres IPv4 w `kluczLimitu`. · commit 64e93d2
+- F5 — Akcja z sekretami przypięta tagiem, a nie SHA (OBSERVATION, context/changes/lista-oczekujacych/chronione/.github/workflows/pages.yml:28): AUTO-FIX (bezpieczeństwo A): Zabezpieczyłem token Cloudflare, klucz Resend i adres e-mail właściciela przed podmianą ruchomego tagu akcji, stosując przypięcie `cloudflare/wrangler-action` w `context/changes/lista-oczekujacych/chronione/.github/workflows/pages.yml` do SHA commita tagu `v4` z komentarzem `# v4`. · commit 64e93d2
+- F6 — „krok 16” trwale wyłącza z ochrony całe pliki formularza (OBSERVATION, tests/repo/zakres-przejecia.spec.ts:22-31): AUTO-LIMIT (przypadek szczególny): Wyjątki „krok 16” na całe pliki formularza są dokładnie tym, czego wymagają L13 i „Ograniczenia”, a słabsza ochrona zacznie mieć znaczenie dopiero przy kolejnej zmianie tych plików, nie przy zwykłym używaniu strony. · D-015
+- F7 — Opisy w fundamentach mówią dalej o formularzu-demo (OBSERVATION, context/foundation/test-plan.md:46, 48, 54, 156; context/foundation/streszczenie.md:38): AUTO-SKIP (styl): To nieaktualny opis w dokumentach fundamentów (`streszczenie.md`, `test-plan.md`), bez wpływu na działanie strony, funkcji ani kryteriów akceptacji.
+- F8 — README nazywa wyjątki „krok 16” plikami formularza (OBSERVATION, README.md:41): AUTO-SKIP (styl): To niedokładne sformułowanie w README o wyjątkach testu „krok 16”, czyli sam opis, bez wpływu na zachowanie i testy.
+- F9 — Etykieta pola-pułapki wpisana w komponencie (OBSERVATION, components/interactive.tsx:326): AUTO-SKIP (styl): Etykieta ukrytego pola-pułapki wpisana w komponencie to sprawa miejsca tekstu w kodzie, a nikt jej nie widzi (`aria-hidden`).

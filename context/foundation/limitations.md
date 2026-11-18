@@ -105,3 +105,23 @@
 - Źródło: lista-oczekujacych — `context/changes/lista-oczekujacych/plan.md` (Decyzje planu, Phase 4 §3)
 - Status: obowiązuje
 - Zmiana: lista-oczekujacych
+
+## D-014 Ograniczenie: Brak limitu rozmiaru treści żądania
+- Pytanie: czy naprawić teraz to, że funkcja zapisu czyta i parsuje treść żądania dowolnej wielkości (`request.text()`, `JSON.parse`), więc duża treść z podrobionym `Origin` może przekroczyć limit CPU planu Free?
+- Wybór: nie; ograniczenie zostaje. Duża treść przerywa tylko żądanie, które ją wysłało, i nie zużywa limitów Resend.
+- Kto zdecydował: model (10x-impl-review)
+- Podstawa: context/changes/lista-oczekujacych/reviews/impl-review.md F3, reguła przypadek szczególny
+- Kiedy wrócić: logi funkcji w Cloudflare pokażą błędy 1102 (przekroczony limit CPU) albo zmiana dotknie odczytu treści żądania (`request.text()` / `JSON.parse`) w `worker/index.ts`.
+- Źródło: lista-oczekujacych — `context/changes/lista-oczekujacych/reviews/impl-review.md` F3
+- Status: obowiązuje
+- Zmiana: lista-oczekujacych
+
+## D-015 Ograniczenie: „krok 16” trwale wyłącza z ochrony całe pliki formularza
+- Pytanie: czy naprawić teraz to, że test „krok 16” pomija w całości `components/interactive.tsx`, `lib/content.ts`, `app/globals.css` i `.github/workflows/pages.yml`, więc zmiana nagłówka, FAQ, demo albo stylów poza formularzem też go przejdzie?
+- Wybór: nie; ograniczenie zostaje. Wyjątki na całe pliki są tym, czego wymagają L13 i „Ograniczenia” zmiany lista-oczekujacych, a słabsza ochrona ma znaczenie dopiero przy kolejnej zmianie tych plików.
+- Kto zdecydował: model (10x-impl-review)
+- Podstawa: context/changes/lista-oczekujacych/reviews/impl-review.md F6, reguła przypadek szczególny
+- Kiedy wrócić: zmiana dotknie `components/interactive.tsx`, `lib/content.ts` albo `app/globals.css` poza sekcją `#waitlist` albo zmieni listę `PLIKI_ZMIAN` w `tests/repo/zakres-przejecia.spec.ts`.
+- Źródło: lista-oczekujacych — `context/changes/lista-oczekujacych/reviews/impl-review.md` F6
+- Status: obowiązuje
+- Zmiana: lista-oczekujacych
