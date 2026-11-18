@@ -4,3 +4,13 @@ Gdy człowiek w rozmowie mówi „zrób zmianę”, „zrób <ID kawałka>”, �
 ## Verify
 
 `echo "Projekt nie ma jeszcze testów; dodaje je pierwszy kawałek roadmapy." >&2; exit 1`
+
+## Wdrożenie
+
+Pisze sesja główna przed autopilotem, razem ze zgodą człowieka w ## Zgody zmiany. Autopilot czyta te pola i uruchamia ich polecenia (kroki przygotowanie-wdrozenia i wynik-wdrozenia). Zmiana tej sekcji wymaga nowej zgody człowieka; krok agenta jej nie zmienia.
+
+- workflow: pages.yml
+- krok wdrożenia: Deploy to GitHub Pages
+- narzędzia z sekretami:
+- cofnięcie: brak
+- adres: https://lukeblonski.github.io/www-maestro/
