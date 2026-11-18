@@ -8,8 +8,8 @@ const ORIGIN_STRONY = "https://lukeblonski.github.io";
 const ADRES_FUNKCJI = "https://maestro-waitlist.atrapa.invalid/";
 const ADRES = "anna@example.com";
 
-type Wywolanie = { url: string; tresc: Record<string, unknown>; naglowki: Headers };
-type Atrapa = { wywolania: Wywolanie[]; odpowiedz: (url: string) => Response | Promise<Response> };
+type Wywolanie = { url: string; tresc: Record<string, unknown>; naglowki: Headers; metoda: string };
+type Atrapa = { wywolania: Wywolanie[]; odpowiedz: (url: string, metoda: string) => Response | Promise<Response> };
 
 const oryginalnyFetch = globalThis.fetch;
 let atrapa: Atrapa;
@@ -23,8 +23,9 @@ test.beforeEach(() => {
       url,
       tresc: JSON.parse(String(init?.body ?? "{}")) as Record<string, unknown>,
       naglowki: new Headers(init?.headers),
+      metoda: init?.method ?? "GET",
     });
-    return atrapa.odpowiedz(url);
+    return atrapa.odpowiedz(url, init?.method ?? "GET");
   }) as typeof fetch;
 });
 
@@ -239,4 +240,169 @@ test("funkcja zapisu — brak ustawień funkcji daje 500 bez Resend", async () =
     expect(odpowiedz.status).toBe(500);
   }
   expect(atrapa.wywolania).toEqual([]);
+});
+
+// Nowe testy (naprawa-listy-oczekujacych): log odmów Resend, User-Agent, istniejący kontakt.
+
+const KONTAKTY = "https://api.resend.com/contacts";
+const EMAILE = "https://api.resend.com/emails";
+const KONTAKT_ADRESU = "https://api.resend.com/contacts/anna%40example.com";
+// Wartości, których wpis logu nie może zawierać: klucz, adres odwiedzającego i właściciela.
+const SEKRETY = ["klucz-atrapy", "anna@example.com", "wlasciciel@example.com", "anna%40example.com"];
+
+// Zbiera wpisy `console.error` na czas działania i zawsze przywraca oryginał.
+async function zWpisami<T>(dzialanie: () => Promise<T>): Promise<{ wynik: T; wpisy: string[] }> {
+  const oryginalny = console.error;
+  const wpisy: string[] = [];
+  console.error = (...argumenty: unknown[]) => {
+    wpisy.push(argumenty.map(String).join(" "));
+  };
+  try {
+    return { wynik: await dzialanie(), wpisy };
+  } finally {
+    console.error = oryginalny;
+  }
+}
+
+function bezSekretow(wpis: string): void {
+  for (const sekret of SEKRETY) expect(wpis.toLowerCase(), wpis).not.toContain(sekret.toLowerCase());
+}
+
+const odmowa401 = () =>
+  Response.json(
+    {
+      statusCode: 401,
+      name: "restricted_api_key",
+      message:
+        "This API key klucz-atrapy is restricted to only send emails from wlasciciel@example.com, not anna@example.com (anna%40example.com)",
+    },
+    { status: 401 },
+  );
+
+test("funkcja zapisu — odmowa Resend na /contacts i /emails daje 502 i jeden wpis logu bez klucza i adresów", async () => {
+  for (const [zla, sciezka] of [
+    [KONTAKTY, "/contacts"],
+    [EMAILE, "/emails"],
+  ] as const) {
+    atrapa.wywolania = [];
+    atrapa.odpowiedz = (url, metoda) => {
+      if (url === zla && metoda === "POST") return odmowa401();
+      if (url === KONTAKT_ADRESU)
+        return Response.json({ statusCode: 404, name: "not_found", message: "Contact not found" }, { status: 404 });
+      return Response.json({ id: "atrapa" });
+    };
+    const { wynik: odpowiedz, wpisy } = await zWpisami(() => funkcja.fetch(zapis({ email: ADRES }), srodowisko()));
+
+    expect(odpowiedz.status, sciezka).toBe(502);
+    expect(await odpowiedz.json()).toEqual({ ok: false });
+    expect(wpisy, sciezka).toHaveLength(1);
+    const [wpis] = wpisy;
+    expect(wpis).toContain(sciezka);
+    expect(wpis).toContain("401");
+    expect(wpis).toContain("restricted_api_key");
+    expect(wpis).toContain("<adres>");
+    bezSekretow(wpis);
+  }
+
+  // Treść, która nie jest JSON (strona Cloudflare 1010 przed API Resend).
+  atrapa.wywolania = [];
+  atrapa.odpowiedz = (url, metoda) =>
+    url === KONTAKTY && metoda === "POST"
+      ? new Response("<html>\n  <title>Access denied</title>\n  error code: 1010\n</html>", {
+          status: 403,
+          headers: { "Content-Type": "text/html" },
+        })
+      : url === KONTAKT_ADRESU
+        ? new Response("error code: 1010", { status: 403 })
+        : Response.json({ id: "atrapa" });
+  const { wynik: odpowiedz, wpisy } = await zWpisami(() => funkcja.fetch(zapis({ email: ADRES }), srodowisko()));
+  expect(odpowiedz.status).toBe(502);
+  expect(wpisy).toHaveLength(1);
+  expect(wpisy[0]).toContain("/contacts");
+  expect(wpisy[0]).toContain("403");
+  expect(wpisy[0]).toContain("1010");
+  bezSekretow(wpisy[0]);
+  expect(atrapa.wywolania.map((w) => `${w.metoda} ${w.url}`)).not.toContain(`POST ${EMAILE}`);
+});
+
+test("funkcja zapisu — wyjątek sieci przy Resend daje 502 i jeden wpis logu z rodzajem błędu", async () => {
+  for (const [zla, sciezka] of [
+    [KONTAKTY, "/contacts"],
+    [EMAILE, "/emails"],
+  ] as const) {
+    atrapa.wywolania = [];
+    atrapa.odpowiedz = (url) => {
+      if (url === zla) throw new TypeError("atrapa: brak sieci do anna@example.com z kluczem klucz-atrapy");
+      return Response.json({ id: "atrapa" });
+    };
+    const { wynik: odpowiedz, wpisy } = await zWpisami(() => funkcja.fetch(zapis({ email: ADRES }), srodowisko()));
+
+    expect(odpowiedz.status, sciezka).toBe(502);
+    expect(wpisy, sciezka).toHaveLength(1);
+    expect(wpisy[0]).toContain(sciezka);
+    expect(wpisy[0]).toContain("TypeError");
+    bezSekretow(wpisy[0]);
+  }
+  // Wyjątek na `POST /contacts` nie prowadzi do `GET /contacts/{adres}`.
+  atrapa.wywolania = [];
+  atrapa.odpowiedz = (url) => {
+    if (url === KONTAKTY) throw new TypeError("atrapa: brak sieci");
+    return Response.json({ id: "atrapa" });
+  };
+  await zWpisami(() => funkcja.fetch(zapis({ email: ADRES }), srodowisko()));
+  expect(atrapa.wywolania.map((w) => `${w.metoda} ${w.url}`)).toEqual([`POST ${KONTAKTY}`]);
+});
+
+test("funkcja zapisu — ponowny zapis istniejącego kontaktu wysyła e-mail i daje 200", async () => {
+  for (const status of [409, 422]) {
+    atrapa.wywolania = [];
+    atrapa.odpowiedz = (url, metoda) => {
+      if (url === KONTAKTY && metoda === "POST")
+        return Response.json(
+          { statusCode: status, name: "already_exists", message: "Contact already exists" },
+          { status },
+        );
+      if (url === KONTAKT_ADRESU && metoda === "GET")
+        return Response.json({ object: "contact", id: "kontakt-atrapy", email: "Anna@Example.com" });
+      return Response.json({ id: "atrapa" });
+    };
+    const { wynik: odpowiedz, wpisy } = await zWpisami(() => funkcja.fetch(zapis({ email: ADRES }), srodowisko()));
+
+    expect(odpowiedz.status, String(status)).toBe(200);
+    expect(await odpowiedz.json()).toEqual({ ok: true });
+    expect(atrapa.wywolania.map((w) => `${w.metoda} ${w.url}`)).toEqual([
+      `POST ${KONTAKTY}`,
+      `GET ${KONTAKT_ADRESU}`,
+      `POST ${EMAILE}`,
+    ]);
+    expect(atrapa.wywolania[2].tresc.to).toEqual(["wlasciciel@example.com"]);
+    expect(wpisy).toEqual([]);
+  }
+
+  // Kontakt o innym adresie nie jest istniejącym kontaktem: 502 i jeden wpis.
+  atrapa.wywolania = [];
+  atrapa.odpowiedz = (url, metoda) => {
+    if (url === KONTAKTY && metoda === "POST")
+      return Response.json(
+        { statusCode: 409, name: "already_exists", message: "Contact already exists" },
+        { status: 409 },
+      );
+    if (url === KONTAKT_ADRESU) return Response.json({ object: "contact", id: "inny", email: "ktos@example.com" });
+    return Response.json({ id: "atrapa" });
+  };
+  const { wynik: odpowiedz, wpisy } = await zWpisami(() => funkcja.fetch(zapis({ email: ADRES }), srodowisko()));
+  expect(odpowiedz.status).toBe(502);
+  expect(wpisy).toHaveLength(1);
+  expect(wpisy[0]).toContain("/contacts");
+  expect(wpisy[0]).toContain("409");
+  bezSekretow(wpisy[0]);
+  expect(atrapa.wywolania.map((w) => `${w.metoda} ${w.url}`)).not.toContain(`POST ${EMAILE}`);
+});
+
+test("funkcja zapisu — oba wywołania Resend mają nagłówek User-Agent", async () => {
+  const odpowiedz = await funkcja.fetch(zapis({ email: ADRES, website: "" }), srodowisko());
+
+  expect(odpowiedz.status).toBe(200);
+  expect(atrapa.wywolania).toHaveLength(2);
+  for (const w of atrapa.wywolania) expect(w.naglowki.get("User-Agent"), w.url).toBe("maestro-waitlist/1.0");
 });

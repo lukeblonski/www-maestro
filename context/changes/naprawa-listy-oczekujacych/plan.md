@@ -288,6 +288,11 @@ Bez migracji danych. Publikacja przez istniejący workflow czyta nowe `[observab
 
 > Append-only. One entry per departure from the plan, written in the same commit as the phase. See `references/progress-format.md`.
 
+- **PC1 (Phase 1)**: Kryterium 1.1 biegnie jako `npx playwright test -c playwright.bez-przegladarki.config.ts --project=repo tests/repo/funkcja-zapisu.spec.ts` (`--project=repo` zamiast `--project repo`).
+  - **Why**: w Playwright 1.65 `--project` przyjmuje wiele wartości, więc polecenie z planu bierze ścieżkę pliku za nazwę projektu i kończy się błędem `Project(s) "tests/repo/funkcja-zapisu.spec.ts" not found`, zanim uruchomi testy; `--project=repo` uruchamia ten sam plik w tym samym projekcie. To samo dotyczy kryterium 2.1 fazy 2.
+  - **Criteria**: N1, N2, N3, N9
+  - **Files**: none
+
 ## Progress
 
 > Convention: `- [ ]` pending, `- [x]` done. Append ` — <commit sha>` when a step lands. Do not rename step titles. See `references/progress-format.md`.
@@ -296,10 +301,10 @@ Bez migracji danych. Publikacja przez istniejący workflow czyta nowe `[observab
 
 #### Automated
 
-- [ ] 1.1 Testy funkcji przechodzą, w tym nowe testy N1–N3 i `User-Agent`
-- [ ] 1.2 Stare testy z `tests/repo/funkcja-zapisu.spec.ts` mają te same oczekiwania co przed fazą
-- [ ] 1.3 `worker/wrangler.toml` ma `[observability]` z `enabled = true`
-- [ ] 1.4 Pełne sprawdzenie przechodzi: `npm ci && npm run verify`
+- [x] 1.1 Testy funkcji przechodzą, w tym nowe testy N1–N3 i `User-Agent`
+- [x] 1.2 Stare testy z `tests/repo/funkcja-zapisu.spec.ts` mają te same oczekiwania co przed fazą
+- [x] 1.3 `worker/wrangler.toml` ma `[observability]` z `enabled = true`
+- [x] 1.4 Pełne sprawdzenie przechodzi: `npm ci && npm run verify`
 
 ### Phase 2: Ścieżka na żywo `zapis-na-liste`
 

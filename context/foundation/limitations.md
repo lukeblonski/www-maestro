@@ -96,9 +96,10 @@
 - Status: obowiązuje
 - Zmiana: testy-zachowania-strony
 
-## D-013 Ograniczenie: Ponowny zapis tego samego adresu i dzienny limit e-maili Resend Free
-- Pytanie: czy naprawić teraz to, że funkcja zapisu może odpowiedzieć niepowodzeniem przy ponownym zapisie tego samego adresu oraz po wyczerpaniu dziennego limitu 100 e-maili planu Resend Free?
-- Wybór: nie; ograniczenie zostaje. Funkcja wywołuje najpierw `POST /contacts`, potem `POST /emails`, a każdy błąd Resend daje kod 502 i komunikat „Your sign-up didn't go through. Please try again.” (L11). Dokumentacja Resend nie mówi, co zwraca dodanie istniejącego kontaktu, więc w najgorszym przypadku powtórny zapis tego samego adresu pokaże niepowodzenie, choć adres już jest na liście. Po 100 e-mailach w ciągu dnia (plan Free) 101. zapis dnia dostanie niepowodzenie przy wysyłce e-maila, choć kontakt mógł zostać dodany. Ruch przed premierą jest daleko od 100 zapisów dziennie, a zmiana L11 byłaby zmianą kryterium akceptacji.
+## D-013 Ograniczenie: Dzienny limit e-maili Resend Free
+- Pytanie: czy naprawić teraz to, że funkcja zapisu odpowiada niepowodzeniem po wyczerpaniu dziennego limitu 100 e-maili planu Resend Free?
+- Wybór: nie; ograniczenie zostaje. Funkcja wywołuje najpierw `POST /contacts`, potem `POST /emails`, a błąd wysyłki e-maila daje kod 502 i komunikat „Your sign-up didn't go through. Please try again.” (L11). Po 100 e-mailach w ciągu dnia (plan Free) 101. zapis dnia dostanie niepowodzenie przy wysyłce e-maila, choć kontakt mógł zostać dodany. Ruch przed premierą jest daleko od 100 zapisów dziennie.
+- Dopisek: część o ponownym zapisie tego samego adresu rozwiązała zmiana naprawa-listy-oczekujacych (N3): po odmowie dodania kontaktu funkcja pyta Resend o kontakt z tym adresem i przy istniejącym kontakcie wysyła e-mail i odpowiada sukcesem.
 - Kto zdecydował: model (10x-plan)
 - Podstawa: context/changes/lista-oczekujacych/plan.md, Decyzje planu (Open Question 3 i 4 z research.md), reguła najgorszy przypadek
 - Kiedy wrócić: właściciel zgłosi niepowodzenie przy ponownym zapisie albo zapisów będzie blisko 100 dziennie; zmiana dotyka kolejności wywołań Resend w `worker/index.ts` albo plan Resend się zmienia.

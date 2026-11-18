@@ -6,6 +6,10 @@
 // i wspólny dobowy limit wszystkich zapisów (90, poniżej 100 e-maili dziennie Resend Free),
 // oba w obiektach `LimitZapisow`.
 // Dopiero potem dodaje adres do kontaktów Resend i wysyła właścicielowi e-mail.
+// Gdy Resend odmówi dodania kontaktu, funkcja pyta o kontakt z tym adresem: istniejący
+// kontakt (ponowny zapis) nie jest niepowodzeniem i e-mail idzie dalej.
+// Każda odmowa Resend i każdy wyjątek sieci przy wywołaniu Resend zostawia jeden wpis
+// `console.error` (Workers Logs) ze ścieżką, statusem i błędem Resend, bez klucza i adresów.
 // Klucz Resend i adres odbiorcy pochodzą tylko z sekretów funkcji (`env`), nigdy z kodu.
 //
 // Plik nie importuje `cloudflare:workers`, bo testy (`tests/repo/funkcja-zapisu.spec.ts`)
@@ -25,6 +29,12 @@ const KLUCZ_WSZYSTKICH = "wszystkie-zapisy";
 const RESEND = "https://api.resend.com";
 const NADAWCA = "Maestro waitlist <onboarding@resend.dev>";
 const TEMAT = "New sign-up on the Maestro waiting list";
+// Resend wymaga nagłówka `User-Agent`, a workerd go sam nie dodaje (bez niego Cloudflare
+// przed API Resend odpowiada 403, kod 1010).
+const USER_AGENT = "maestro-waitlist/1.0";
+// Adres e-mail w dowolnym tekście, także zakodowany w adresie URL (`%40`).
+const WZORZEC_ADRESU_W_TEKSCIE = /[^\s@"'<>()[\]{},;:]+(?:@|%40)[^\s@"'<>()[\]{},;:/?#&]+/gi;
+const NAJDLUZSZA_TRESC_W_LOGU = 300;
 
 export interface IdObiektuLimitu {
   toString(): string;
@@ -144,17 +154,63 @@ function odpowiedz(status: number, ok: boolean, cors: Record<string, string>): R
   });
 }
 
-async function wywolajResend(sciezka: string, klucz: string, tresc: unknown): Promise<boolean> {
+// Wynik wywołania Resend: odpowiedź HTTP (treść JSON w `dane` albo null, gdy to nie JSON)
+// albo wyjątek sieci z nazwą błędu.
+type WynikResend = { status: number; ok: boolean; dane: unknown; tekst: string } | { blad: string };
+
+async function wywolajResend(metoda: string, sciezka: string, klucz: string, tresc?: unknown): Promise<WynikResend> {
+  const naglowki: Record<string, string> = { Authorization: `Bearer ${klucz}`, "User-Agent": USER_AGENT };
+  if (tresc !== undefined) naglowki["Content-Type"] = "application/json";
   try {
-    const wynik = await fetch(`${RESEND}${sciezka}`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${klucz}`, "Content-Type": "application/json" },
-      body: JSON.stringify(tresc),
+    const odpowiedzResend = await fetch(`${RESEND}${sciezka}`, {
+      method: metoda,
+      headers: naglowki,
+      body: tresc === undefined ? undefined : JSON.stringify(tresc),
     });
-    return wynik.ok;
-  } catch {
-    return false;
+    const tekst = await odpowiedzResend.text();
+    let dane: unknown = null;
+    try {
+      dane = JSON.parse(tekst);
+    } catch {
+      dane = null;
+    }
+    return { status: odpowiedzResend.status, ok: odpowiedzResend.ok, dane, tekst };
+  } catch (blad) {
+    return { blad: blad instanceof Error ? blad.name : typeof blad };
   }
+}
+
+// Zastępuje dokładny klucz znacznikiem `<klucz>`, a każdy adres e-mail (z `@` albo `%40`) znacznikiem `<adres>`.
+function ukryj(tekst: string, klucz: string): string {
+  return tekst.split(klucz).join("<klucz>").replace(WZORZEC_ADRESU_W_TEKSCIE, "<adres>");
+}
+
+// Jedyne miejsce, które loguje niepowodzenie wywołania Resend: jeden wpis `console.error`
+// ze ścieżką, statusem, `name` i `message` Resend (albo początkiem treści, gdy to nie JSON),
+// bez klucza i adresów.
+function zalogujOdmowe(sciezka: string, wynik: WynikResend, klucz: string): void {
+  if ("blad" in wynik) {
+    console.error(ukryj(`Resend niedostępny: ${sciezka} ${wynik.blad}`, klucz));
+    return;
+  }
+  const { name, message } = (typeof wynik.dane === "object" && wynik.dane !== null ? wynik.dane : {}) as {
+    name?: unknown;
+    message?: unknown;
+  };
+  const opis =
+    typeof name === "string" || typeof message === "string"
+      ? `${String(name ?? "")}: ${String(message ?? "")}`
+      : ukryj(wynik.tekst, klucz).replace(/\s+/g, " ").trim().slice(0, NAJDLUZSZA_TRESC_W_LOGU);
+  console.error(ukryj(`Resend odmówił: ${sciezka} ${wynik.status} ${opis}`, klucz));
+}
+
+// Po nieudanym `POST /contacts`: kontakt istnieje tylko przy 200 z tym samym adresem
+// (bez rozróżniania wielkości liter), bez względu na to, jak Resend odmówił dodania.
+async function kontaktIstnieje(adres: string, klucz: string): Promise<boolean> {
+  const wynik = await wywolajResend("GET", `/contacts/${encodeURIComponent(adres)}`, klucz);
+  if ("blad" in wynik || wynik.status !== 200) return false;
+  const email = (typeof wynik.dane === "object" && wynik.dane !== null ? wynik.dane : {}) as { email?: unknown };
+  return typeof email.email === "string" && email.email.toLowerCase() === adres.toLowerCase();
 }
 
 export default {
@@ -196,16 +252,28 @@ export default {
       if (status < 200 || status > 299) return odpowiedz(500, false, cors);
     }
 
-    const kontakt = await wywolajResend("/contacts", env.RESEND_API_KEY, { email: adres });
-    if (!kontakt) return odpowiedz(502, false, cors);
+    const kluczResend = env.RESEND_API_KEY;
+    const kontakt = await wywolajResend("POST", "/contacts", kluczResend, { email: adres });
+    if ("blad" in kontakt) {
+      zalogujOdmowe("/contacts", kontakt, kluczResend);
+      return odpowiedz(502, false, cors);
+    }
+    // Ponowny zapis: odmowa dodania istniejącego kontaktu nie jest niepowodzeniem zapisu.
+    if (!kontakt.ok && !(await kontaktIstnieje(adres, kluczResend))) {
+      zalogujOdmowe("/contacts", kontakt, kluczResend);
+      return odpowiedz(502, false, cors);
+    }
 
-    const powiadomienie = await wywolajResend("/emails", env.RESEND_API_KEY, {
+    const powiadomienie = await wywolajResend("POST", "/emails", kluczResend, {
       from: NADAWCA,
       to: [env.OWNER_EMAIL],
       subject: TEMAT,
       text: `Email: ${adres}`,
     });
-    if (!powiadomienie) return odpowiedz(502, false, cors);
+    if ("blad" in powiadomienie || !powiadomienie.ok) {
+      zalogujOdmowe("/emails", powiadomienie, kluczResend);
+      return odpowiedz(502, false, cors);
+    }
 
     return odpowiedz(200, true, cors);
   },
