@@ -107,6 +107,7 @@ Repozytorium: https://github.com/lukeblonski/www-maestro
 - czas: 2026-11-18 07:25 · krok: akceptacja · powód: czeka na pytanie przejęcia: zacommitowany context/foundation/start.md nie ma w ## Akceptacja linii z kto: człowiek i akceptacja: przejęcie zapisanej po pytaniu o stan z commita cd75582abd24. Zadaj człowiekowi pytanie przejęcia według sekcji „Pytanie przejęcia” w /home/fabryka/fabryka/docs/start-pro… · zrobiono: — · skutek: —
 - czas: 2026-11-18 07:33 · krok: szkielet · powód: odmowa uprawnień: Bash: cat package.json CLAUDE.md AGENTS.md mise.toml .github/workflows/pages.yml; ls .github; sed -n '/Kiedy pytać człowieka/,/^## /p' /home/fabryka/fabryka/CLAUDE.md | head -60 · zrobiono: przyjęcie · skutek: krok przyjęty, łańcuch dalej
 - czas: 2026-11-18 07:40 · krok: plan-testow · powód: programy kroków z wynikiem nie działa (kroki kawałków też ich nie uruchomią): - polecenie sprawdzające (## Verify w CLAUDE.md), `bash -c 'echo "Projekt nie ma jeszcze testów; dodaje je pierwszy kawałek roadmapy." >&2; exit 1'`, nie działa: kod wyjścia 1, „Projekt nie ma jeszcze testów; dodaje je pi… · zrobiono: — · skutek: —
+- czas: 2026-11-18 07:48 · krok: lista · powód: lista końcowa czeka na sesję: zacommitowany context/foundation/start.md nie ma sekcji ## Lista końcowa. Pokaż człowiekowi listę końcową według sekcji „Lista końcowa” w /home/fabryka/fabryka/docs/start-projektu.md, zapisz ją w nowej sekcji ## Lista końcowa na końcu context/foundation/start.md, zacom… · zrobiono: — · skutek: —
 
 ## Koszty kroków
 
