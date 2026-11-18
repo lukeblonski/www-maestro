@@ -136,3 +136,13 @@
 - Źródło: naprawa-listy-oczekujacych — `context/changes/naprawa-listy-oczekujacych/reviews/plan-review.md` F4
 - Status: obowiązuje
 - Zmiana: naprawa-listy-oczekujacych
+
+## D-017 Ograniczenie: Zajęty port wychodzi dopiero po prawdziwym wywołaniu Resend
+- Pytanie: czy naprawić teraz to, że skrypt `scripts/na-zywo.mjs` wysyła diagnostyczne `POST /contacts` do prawdziwego Resend, zanim sprawdzi, że `PORT` jest wolny?
+- Wybór: nie; ograniczenie zostaje. Zajęty `PORT` przy przebiegu autopilota to rzadki przypadek, a jego skutek to jedno dodatkowe wywołanie diagnostyczne adresem właściciela w ramach udzielonej zgody.
+- Kto zdecydował: model (10x-impl-review)
+- Podstawa: context/changes/naprawa-listy-oczekujacych/reviews/impl-review.md F4, reguła przypadek szczególny
+- Kiedy wrócić: log kroku `przygotowanie-wdrozenia` albo `merge` pokazuje `EADDRINUSE` na porcie skryptu `scripts/na-zywo.mjs`, albo zmiana dotyka sposobu, w jaki autopilot przydziela `PORT` sprawdzeniu na żywo.
+- Źródło: naprawa-listy-oczekujacych — `context/changes/naprawa-listy-oczekujacych/reviews/impl-review.md` F4
+- Status: obowiązuje
+- Zmiana: naprawa-listy-oczekujacych
