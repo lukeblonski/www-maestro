@@ -45,3 +45,53 @@
 - Źródło: testy-zachowania-strony — `context/changes/testy-zachowania-strony/reviews/plan-review.md` F6
 - Status: obowiązuje
 - Zmiana: testy-zachowania-strony
+
+## D-008 Ograniczenie: `test:e2e` pada na argumentach Playwright innych niż `--grep`
+- Pytanie: czy naprawić teraz to, że `npm run test:e2e` ze ścieżką pliku testów albo z `--project` kończy się kodem 1 przed budową, bo liczenie testów README dokleja te argumenty do `--project readme`?
+- Wybór: nie; ograniczenie zostaje. Scenariusz, kryteria i `## Testy w CI` wybierają testy tylko przez `--grep`, który działa, więc to przypadek spoza zwykłej pracy.
+- Kto zdecydował: model (10x-impl-review)
+- Podstawa: context/changes/testy-zachowania-strony/reviews/impl-review.md F1, reguła przypadek szczególny
+- Kiedy wrócić: zmiana dotyka `scripts/test-e2e.sh` albo wiersz Automated planu, `README.md` lub `## Testy w CI` w `CLAUDE.md` każe uruchomić `npm run test:e2e` ze ścieżką pliku testów albo z `--project`.
+- Źródło: testy-zachowania-strony — `context/changes/testy-zachowania-strony/reviews/impl-review.md` F1
+- Status: obowiązuje
+- Zmiana: testy-zachowania-strony
+
+## D-009 Ograniczenie: Serwer statyczny bez obsługi błędu strumienia pliku
+- Pytanie: czy naprawić teraz to, że `scripts/serwer-statyczny.mjs` kończy się nieobsłużonym błędem, gdy plik z `out/` zniknie między sprawdzeniem a otwarciem?
+- Wybór: nie; ograniczenie zostaje. Skrypt buduje stronę przed testami, więc w zwykłym przebiegu `out/` się nie zmienia, a serwer słucha tylko lokalnie.
+- Kto zdecydował: model (10x-impl-review)
+- Podstawa: context/changes/testy-zachowania-strony/reviews/impl-review.md F4, reguła przypadek szczególny
+- Kiedy wrócić: zmiana dotyka `scripts/serwer-statyczny.mjs` albo `scripts/test-e2e.sh` tak, że budowa albo zapis do `out/` może biec w trakcie testów (np. budowa równoległa, tryb obserwowania).
+- Źródło: testy-zachowania-strony — `context/changes/testy-zachowania-strony/reviews/impl-review.md` F4
+- Status: obowiązuje
+- Zmiana: testy-zachowania-strony
+
+## D-010 Ograniczenie: Krok 16 nie porównuje `package-lock.json`
+- Pytanie: czy naprawić teraz to, że test „krok 16” nie wykrywa zmiany wersji zależności strony w `package-lock.json`?
+- Wybór: nie; ograniczenie zostaje. T16 obejmuje pliki budowy i `package.json`, a diff tej zmiany w pliku blokady to same dodania pakietów testów; aktualizacja zależności strony jest wyłączona z przejęcia (D-002).
+- Kto zdecydował: model (10x-impl-review)
+- Podstawa: context/changes/testy-zachowania-strony/reviews/impl-review.md F5, reguła przypadek szczególny
+- Kiedy wrócić: zmiana dotyka `package-lock.json` poza wpisami `@playwright/test`, `playwright` i `playwright-core` albo uruchamia `npm install` lub `npm update` zależności strony (D-002).
+- Źródło: testy-zachowania-strony — `context/changes/testy-zachowania-strony/reviews/impl-review.md` F5
+- Status: obowiązuje
+- Zmiana: testy-zachowania-strony
+
+## D-011 Ograniczenie: Błąd typów w testach zablokuje publikację strony
+- Pytanie: czy naprawić teraz to, że `npm run typecheck` w workflow publikacji sprawdza też testy, więc błąd typów w teście zatrzyma publikację strony?
+- Wybór: nie; ograniczenie zostaje. Przy zwykłej pracy `verify` z `typecheck` biegnie przed commitem i przed scaleniem, więc to przypadek z obszaru D-004.
+- Kto zdecydował: model (10x-impl-review)
+- Podstawa: context/changes/testy-zachowania-strony/reviews/impl-review.md F6, reguła przypadek szczególny
+- Kiedy wrócić: zmiany zaczynają trafiać na `main` poza autopilotem albo zmiana dotyka `tsconfig.json` (`include`) lub `.github/workflows/pages.yml`.
+- Źródło: testy-zachowania-strony — `context/changes/testy-zachowania-strony/reviews/impl-review.md` F6
+- Status: obowiązuje
+- Zmiana: testy-zachowania-strony
+
+## D-012 Ograniczenie: Brak śladu przy nieudanym teście w przeglądarce
+- Pytanie: czy naprawić teraz to, że test, który padnie w kontenerze, nie zostawia śladu (`trace`) do analizy?
+- Wybór: nie; ograniczenie zostaje. Brak śladu utrudnia tylko szukanie przyczyny błędu i nie zmienia wyniku testów, które dziś przechodzą.
+- Kto zdecydował: model (10x-impl-review)
+- Podstawa: context/changes/testy-zachowania-strony/reviews/impl-review.md F8, reguła przypadek szczególny
+- Kiedy wrócić: test w przeglądarce pada w kontenerze z niejasną przyczyną albo zmiana dotyka `use` lub `outputDir` w `playwright.config.ts`.
+- Źródło: testy-zachowania-strony — `context/changes/testy-zachowania-strony/reviews/impl-review.md` F8
+- Status: obowiązuje
+- Zmiana: testy-zachowania-strony

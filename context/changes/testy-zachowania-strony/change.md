@@ -1,7 +1,7 @@
 ---
 change_id: testy-zachowania-strony
 title: Testy dzisiejszego zachowania strony, README i polecenie testów
-status: implemented
+status: impl_reviewed
 created: 2026-11-18
 updated: 2026-11-18
 archived_at: null
@@ -135,6 +135,17 @@ archived_at: null
 - F4 — Zielone `typecheck` w świeżym worktree zależy od `skipLibCheck` (OBSERVATION, Current State Analysis; Phase 1, wiersz 1.4): AUTO-LIMIT (przypadek szczególny): Dziś `typecheck` przechodzi w świeżym worktree, a T16 zamraża `tsconfig.json`, więc błąd TS2882 wyszedłby tylko po wyłączeniu `skipLibCheck` albo po dopisaniu podobnych importów `.d.ts`; to przypadek wymyślony, którego nie ma w scenariuszu ani w „Chroni przed”. · D-005
 - F5 — Strażnik „zero testów” liczy projekt `repo`, którego `test:e2e` nie uruchamia (OBSERVATION, Phase 1 — Changes Required #4, kroki 1 i 4): AUTO-LIMIT (przypadek szczególny): Fałszywa zieleń wychodzi tylko wtedy, gdy ktoś uruchomi `npm run test:e2e` z `--grep`, który wybiera wyłącznie test projektu `repo` (np. „krok 16”); w `change.md` krok 16 sprawdza `npm run verify`, więc przy zwykłej pracy to się nie zdarza. · D-006
 - F6 — Zagnieżdżone przebiegi Playwright czyszczą wspólny `outputDir` (OBSERVATION, Decyzje planu, „Wyniki Playwright”; Phase 4 — `krok 15`): AUTO-LIMIT (przypadek szczególny): Zagnieżdżony przebieg w teście „krok 15” czyści wspólny `outputDir`, ale zewnętrzny przebieg projektu `readme` nie zapisuje tam artefaktów, więc dziś nic się nie psuje; szkoda pojawiłaby się dopiero przy artefaktach, których plan nie przewiduje. · D-007
+
+### context/changes/testy-zachowania-strony/reviews/impl-review.md
+
+- F1 — `test:e2e` pada na argumentach Playwright innych niż `--grep` (WARNING, scripts/test-e2e.sh:26): AUTO-LIMIT (przypadek szczególny): Scenariusz, kryteria T1–T15 i `## Testy w CI` wybierają testy tylko przez `--grep`, który działa, a `context/foundation/test-plan.md` §6.1 już opisuje, że ścieżki plików jako argumenty nie działają, więc ścieżka pliku albo `--project` w `npm run test:e2e` to przypadek spoza zwykłej pracy i spoza „Chroni przed” (zmiana nie ma modelu zagrożenia, przyjęto przypadkowy błąd agenta). · D-008
+- F2 — Kontrast nie mierzy linków wyglądających jak przyciski (WARNING, tests/e2e/motyw-siec-dostepnosc.spec.ts:166): AUTO-FIX (normalne używanie): T13 wymaga kontrastu co najmniej 4.5:1 dla przycisków, a plan wymienia `.button-primary` wśród mierzonych przycisków; selektor testu pomija jednak widoczne przyciski-linki `a.button` (hero, roadmapa, CTA nagłówka na 1280 px). Test kroku 13 nie dowodzi więc kryterium na dzisiejszej stronie. Poprawka dotyczy tylko testu i mieści się w intencji. · commit 1820ed4
+- F3 — Wpisy w `context/foundation/` nieaktualne po tej zmianie (OBSERVATION, context/foundation/limitations.md (D-006); context/foundation/test-plan.md:78, 89, 93-94): AUTO-SKIP (styl): Nieaktualny status D-006 w `limitations.md` i nieaktualne opisy w `test-plan.md` (§3 wiersz 1, profil i notatki §4) to sprawa opisu w dokumentach. Nie zmieniają one zachowania strony, testów ani poleceń zmiany.
+- F4 — Serwer statyczny bez obsługi błędu strumienia pliku (OBSERVATION, scripts/serwer-statyczny.mjs:80): AUTO-LIMIT (przypadek szczególny): Serwer statyczny padłby tylko wtedy, gdy plik w `out/` zniknie między sprawdzeniem a otwarciem. Skrypt najpierw buduje stronę, a dopiero potem uruchamia testy, więc w zwykłym przebiegu `out/` się nie zmienia, a serwer słucha tylko lokalnie i nie dotyczy bezpieczeństwa. · D-009
+- F5 — Krok 16 nie porównuje `package-lock.json` (OBSERVATION, tests/repo/zakres-przejecia.spec.ts:10-19): AUTO-LIMIT (przypadek szczególny): T16 i decyzja z góry obejmują pliki budowy i `package.json`, nie `package-lock.json`, a diff tej zmiany w pliku blokady to same dodania pakietów testów. Podbicie wersji `next` w pliku blokady zdarzyłoby się dopiero w zmianie, która aktualizuje zależności strony, a D-002 wyklucza to z przejęcia. · D-010
+- F6 — Błąd typów w testach zablokuje publikację strony (OBSERVATION, .github/workflows/pages.yml:36-42 (bez zmian) z `tsconfig.json` `include: **/*.ts`): AUTO-LIMIT (przypadek szczególny): Błąd typów w testach zatrzyma publikację tylko wtedy, gdy commit trafi na `main` bez `npm run verify`. Przy zwykłej pracy autopilot uruchamia `verify` z `typecheck` przed commitem i przed scaleniem, więc to przypadek z obszaru D-004. · D-011
+- F7 — `gitleaks git` nie skanuje plików przed commitem (OBSERVATION, package.json (`scripts.verify`)): AUTO-FIX (bezpieczeństwo A): Zabezpieczyłem skan sekretów przed commitem, stosując dodatkowe wywołanie `gitleaks git --staged --redact --no-banner .` w skrypcie `verify` w `package.json`. Poprawka jest tania i tylko zaostrza: sprawdziłem, że gitleaks 8.30.1 na komputerze fabryki ma flagę `--staged`, i nie potrzeba nowej zależności. · commit 1820ed4
+- F8 — Brak śladu przy nieudanym teście w przeglądarce (OBSERVATION, playwright.config.ts): AUTO-LIMIT (przypadek szczególny): Brak śladu przy nieudanym teście utrudnia tylko szukanie przyczyny błędu w kontenerze i nie zmienia wyniku testów. Dziś wszystkie testy przechodzą, a dodanie śladu jest też warunkiem powrotu do D-007, więc nie warto go dokładać bez potrzeby. · D-012
 
 ## Interwencje
 
