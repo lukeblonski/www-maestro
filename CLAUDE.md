@@ -24,6 +24,13 @@ Testy kroków 1–14 scenariusza z `tests/e2e/` w Chromium, na stronie zbudowane
 
 Serwer deweloperski Next słucha tylko na `127.0.0.1`, na porcie ze zmiennej `PORT` (domyślnie 3000), np. `PORT=3001 npm run dev`. `next dev` przepisuje `next-env.d.ts`, więc po zatrzymaniu serwera przywróć plik: `git checkout -- next-env.d.ts`.
 
+## Dostępy
+
+Ścieżki do plików z sekretami, poza repo. Kroki i sesja nie czytają tych plików i nie wypisują ich treści. Czyta je tylko polecenie z `## Uruchomienie lokalne`, polecenie ścieżki z `## Sprawdzenie na żywo`, które uruchamia tylko skrypt autopilota, i krok autopilota `przygotowanie-wdrozenia`, który podaje wartość na wejście polecenia z `## Wdrożenie` i jej nie wypisuje. Testy używają atrapy usługi.
+
+- klucz API Resend: /home/fabryka/.secrets/www-maestro/resend-api-key
+- token API Cloudflare: /home/fabryka/.secrets/www-maestro/cloudflare-api-token
+
 ## Wdrożenie
 
 Pisze sesja główna przed autopilotem, razem ze zgodą człowieka w ## Zgody zmiany. Autopilot czyta te pola i uruchamia ich polecenia (kroki przygotowanie-wdrozenia i wynik-wdrozenia). Zmiana tej sekcji wymaga nowej zgody człowieka; krok agenta jej nie zmienia.

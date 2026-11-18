@@ -171,6 +171,6 @@ Repozytorium: https://github.com/lukeblonski/www-maestro
 - zakres: cała roadmapa
 - zgoda na ## Wdrożenie (publikacja GitHub Pages po scaleniu): zrobione
 - zapis ## Wdrożenie w CLAUDE.md: zrobione
-- konto Resend i klucz API (urządzenie człowieka): czeka, przed S-02 (rekomendacja przyjęta przez człowieka: konta przed S-02)
-- konto Cloudflare i token API (urządzenie człowieka): czeka, przed S-02
-- zapis ## Dostępy w CLAUDE.md: czeka, po zapisaniu kluczy
+- konto Resend i klucz API (urządzenie człowieka): zrobione (2026-11-18, odpowiedź człowieka „zrobione”; plik sprawdzony stat: zwykły, niepusty, prawa 600)
+- konto Cloudflare i token API (urządzenie człowieka): zrobione (2026-11-18, odpowiedź człowieka „zrobione”; plik sprawdzony stat: zwykły, niepusty, prawa 600)
+- zapis ## Dostępy w CLAUDE.md: zrobione
