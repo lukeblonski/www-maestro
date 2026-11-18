@@ -292,6 +292,10 @@ Bez migracji danych. Publikacja przez istniejący workflow czyta nowe `[observab
   - **Why**: w Playwright 1.65 `--project` przyjmuje wiele wartości, więc polecenie z planu bierze ścieżkę pliku za nazwę projektu i kończy się błędem `Project(s) "tests/repo/funkcja-zapisu.spec.ts" not found`, zanim uruchomi testy; `--project=repo` uruchamia ten sam plik w tym samym projekcie. To samo dotyczy kryterium 2.1 fazy 2.
   - **Criteria**: N1, N2, N3, N9
   - **Files**: none
+- **PC2 (Phase 2)**: Kryterium 2.1 biegnie jako `npx playwright test -c playwright.bez-przegladarki.config.ts --project=repo tests/repo/na-zywo.spec.ts` (`--project=repo` zamiast `--project repo`), jak kryterium 1.1 w PC1.
+  - **Why**: Playwright 1.65 bierze ścieżkę pliku po `--project repo` za drugą nazwę projektu i kończy się błędem `Project(s) "tests/repo/na-zywo.spec.ts" not found`, zanim uruchomi testy; `--project=repo` uruchamia ten sam plik w tym samym projekcie.
+  - **Criteria**: N6
+  - **Files**: none
 
 ## Progress
 
@@ -301,17 +305,17 @@ Bez migracji danych. Publikacja przez istniejący workflow czyta nowe `[observab
 
 #### Automated
 
-- [x] 1.1 Testy funkcji przechodzą, w tym nowe testy N1–N3 i `User-Agent`
-- [x] 1.2 Stare testy z `tests/repo/funkcja-zapisu.spec.ts` mają te same oczekiwania co przed fazą
-- [x] 1.3 `worker/wrangler.toml` ma `[observability]` z `enabled = true`
-- [x] 1.4 Pełne sprawdzenie przechodzi: `npm ci && npm run verify`
+- [x] 1.1 Testy funkcji przechodzą, w tym nowe testy N1–N3 i `User-Agent` — ac4712e
+- [x] 1.2 Stare testy z `tests/repo/funkcja-zapisu.spec.ts` mają te same oczekiwania co przed fazą — ac4712e
+- [x] 1.3 `worker/wrangler.toml` ma `[observability]` z `enabled = true` — ac4712e
+- [x] 1.4 Pełne sprawdzenie przechodzi: `npm ci && npm run verify` — ac4712e
 
 ### Phase 2: Ścieżka na żywo `zapis-na-liste`
 
 #### Automated
 
-- [ ] 2.1 Test skryptu na atrapie przechodzi
-- [ ] 2.2 `CLAUDE.md` ma dokładnie jedną linię ścieżki z jednym poleceniem bez powłoki
-- [ ] 2.3 Skrypt nie importuje nic spoza modułów wbudowanych Node i `../worker/index.ts`
-- [ ] 2.4 `package.json` jest bez zmian
-- [ ] 2.5 Pełne sprawdzenie przechodzi: `npm ci && npm run verify`
+- [x] 2.1 Test skryptu na atrapie przechodzi
+- [x] 2.2 `CLAUDE.md` ma dokładnie jedną linię ścieżki z jednym poleceniem bez powłoki
+- [x] 2.3 Skrypt nie importuje nic spoza modułów wbudowanych Node i `../worker/index.ts`
+- [x] 2.4 `package.json` jest bez zmian
+- [x] 2.5 Pełne sprawdzenie przechodzi: `npm ci && npm run verify`

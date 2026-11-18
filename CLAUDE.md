@@ -3,15 +3,16 @@ Gdy człowiek w rozmowie mówi „zrób zmianę”, „zrób <ID kawałka>”, �
 
 ## Verify
 
-Uruchom `npm ci && npm run verify` przed każdym commitem. Polecenie sprawdza typy, buduje stronę z `NEXT_PUBLIC_BASE_PATH=/www-maestro` i adresem atrapy funkcji zapisu `NEXT_PUBLIC_WAITLIST_URL=https://zapis.atrapa.invalid/`, uruchamia bez przeglądarki testy projektu `repo` i skanuje programem `gitleaks` historię git oraz pliki przygotowane do commita. Testy `repo` to: testy funkcji zapisu z `worker/` na atrapie Resend, bez sieci („funkcja zapisu — …”), test zbudowanego `out/` bez adresu `api.resend.com` i nazwy `RESEND_API_KEY`, z adresem atrapy („zbudowana strona — …”), i „krok 16” (kod strony i konfiguracja budowy jak w `5e4dcac`, poza plikami zmiany lista-oczekujacych wymienionymi w teście z nazwy). Polecenie nie potrzebuje Dockera ani innych usług lokalnych i kończy się kodem różnym od 0, gdy cokolwiek nie przejdzie.
+Uruchom `npm ci && npm run verify` przed każdym commitem. Polecenie sprawdza typy, buduje stronę z `NEXT_PUBLIC_BASE_PATH=/www-maestro` i adresem atrapy funkcji zapisu `NEXT_PUBLIC_WAITLIST_URL=https://zapis.atrapa.invalid/`, uruchamia bez przeglądarki testy projektu `repo` i skanuje programem `gitleaks` historię git oraz pliki przygotowane do commita. Testy `repo` to: testy funkcji zapisu z `worker/` na atrapie Resend, bez sieci („funkcja zapisu — …”), testy skryptu ścieżki na żywo `scripts/na-zywo.mjs` na atrapie Resend (`tests/repo/atrapa-resend.mjs`), bez sieci („skrypt na żywo — …”), test zbudowanego `out/` bez adresu `api.resend.com` i nazwy `RESEND_API_KEY`, z adresem atrapy („zbudowana strona — …”), i „krok 16” (kod strony i konfiguracja budowy jak w `5e4dcac`, poza plikami zmiany lista-oczekujacych wymienionymi w teście z nazwy). Polecenie nie potrzebuje Dockera ani innych usług lokalnych i kończy się kodem różnym od 0, gdy cokolwiek nie przejdzie.
 
 Last passing run (2026-11-18):
 
 ```
-  ✓  8 [repo] › tests/repo/zakres-przejecia.spec.ts:43:1 › krok 16 — kod strony i konfiguracja budowy jak w 5e4dcac (14ms)
-  ✓  9 [repo] › tests/repo/zbudowana-strona.spec.ts:20:1 › zbudowana strona — bez adresu Resend i nazwy klucza (7ms)
-  9 passed (516ms)
-1:13PM INF no leaks found
+  ✓  17 [repo] › tests/repo/na-zywo.spec.ts:198:1 › skrypt na żywo — brak linii klucza Resend w ## Dostępy daje nie przeszło (46ms)
+  ✓  18 [repo] › tests/repo/zakres-przejecia.spec.ts:43:1 › krok 16 — kod strony i konfiguracja budowy jak w 5e4dcac (13ms)
+  ✓  19 [repo] › tests/repo/zbudowana-strona.spec.ts:20:1 › zbudowana strona — bez adresu Resend i nazwy klucza (5ms)
+  19 passed (1.1s)
+2:39PM INF no leaks found
 ```
 
 ## Testy w CI
@@ -25,6 +26,12 @@ Testy kroków 1–14 scenariusza z `tests/e2e/` w Chromium, na stronie zbudowane
 `npm run dev`
 
 Serwer deweloperski Next słucha tylko na `127.0.0.1`, na porcie ze zmiennej `PORT` (domyślnie 3000), np. `PORT=3001 npm run dev`. `next dev` przepisuje `next-env.d.ts`, więc po zatrzymaniu serwera przywróć plik: `git checkout -- next-env.d.ts`.
+
+## Sprawdzenie na żywo
+
+- zapis-na-liste: `node scripts/na-zywo.mjs`
+
+Skrypt wysyła do Resend jedno żądanie diagnostyczne bez nagłówka `User-Agent` (jak funkcja w Workers przed poprawką), uruchamia funkcję zapisu z `worker/index.ts` na `127.0.0.1:$PORT` z kluczem Resend i adresem właściciela z plików z `## Dostępy`, zapisuje się adresem właściciela, sprawdza w Resend kontakt i stan e-maila i zapisuje wynik w pliku `$NA_ZYWO_WYNIK`; uruchamia go tylko skrypt autopilota, nigdy kroki agenta ani testy.
 
 ## Dostępy
 
