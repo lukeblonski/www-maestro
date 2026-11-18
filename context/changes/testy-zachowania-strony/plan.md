@@ -496,10 +496,10 @@ Nie dotyczy: strona i dane się nie zmieniają. Cofnięcie zmiany to usunięcie 
 
 #### Automated
 
-- [x] 4.1 README i polecenie wszystkich testów
-- [x] 4.2 Wszystkie testy jednym poleceniem z README
-- [x] 4.3 Polecenie sprawdzające nadal przechodzi
-- [x] 4.4 Polecenie uruchomienia słucha tylko na 127.0.0.1 z portem z `PORT`
-- [x] 4.5 `next-env.d.ts` niezmieniony
-- [x] 4.6 Bez czekania stałym czasem
-- [x] 4.7 Zmiana dotyka tylko plików z planu
+- [x] 4.1 README i polecenie wszystkich testów — 3e4f405
+- [x] 4.2 Wszystkie testy jednym poleceniem z README — 3e4f405
+- [x] 4.3 Polecenie sprawdzające nadal przechodzi — 3e4f405
+- [x] 4.4 Polecenie uruchomienia słucha tylko na 127.0.0.1 z portem z `PORT` — 3e4f405
+- [x] 4.5 `next-env.d.ts` niezmieniony — 3e4f405
+- [x] 4.6 Bez czekania stałym czasem — 3e4f405
+- [x] 4.7 Zmiana dotyka tylko plików z planu — 3e4f405
