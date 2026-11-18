@@ -151,3 +151,8 @@ Repozytorium: https://github.com/lukeblonski/www-maestro
 - Prośba z wiadomości przejęcia: brak
 - Żeby cała roadmapa poszła bez ciebie, przygotuj: nic (S-01 potrzebuje: nic).
 - Dalej: zrób S-01
+
+## Pytania do właściciela
+
+- zbędne pytania: 1
+- niepełne pytania: 1
