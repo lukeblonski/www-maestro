@@ -1,17 +1,17 @@
 ---
 project: "Maestro — strona www"
-version: 1
+version: 2
 status: draft
 created: 2026-11-18
 updated: 2026-11-18
-prd_version: 1
+prd_version: 2
 main_goal: quality
 top_blocker: none
 ---
 
 # Roadmap: Maestro — strona www (przejęcie)
 
-> Derived from `context/foundation/prd.md` (v1) + auto-researched codebase baseline.
+> Derived from `context/foundation/prd.md` (v2) + auto-researched codebase baseline.
 > Edit-in-place; archive when superseded.
 > Slices below are listed in dependency order. The "At a glance" table is the index.
 
@@ -30,6 +30,7 @@ Maestro ma jednostronicową, angielską stronę zapowiedzi, publikowaną automat
 | ID   | Change ID                | Outcome (user can …) | Prerequisites | PRD refs | Status |
 | ---- | ------------------------ | -------------------- | ------------- | -------- | ------ |
 | S-01 | testy-zachowania-strony  | właściciel i Factory uruchamiają jednym poleceniem testy dzisiejszego zachowania strony (360 px i 1280 px, strona zbudowana z `/www-maestro`), a README opisuje uruchomienie strony i testów | obraz przeglądarki testów i program kontenerów bez roota na komputerze fabryki (są) | US-01, FR-011, FR-012, FR-013, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, FR-009, FR-010 | ready |
+| S-02 | lista-oczekujacych       | odwiedzający zapisuje się na listę oczekujących, a właściciel dostaje e-mail z każdym nowym adresem i ma je zebrane w jednej liście | S-01 | FR-014, FR-015, FR-016 | proposed |
 
 ## Baseline
 
@@ -72,21 +73,41 @@ Brak. Narzędzie testów, ustawienia ekranów 360 px i 1280 px oraz podawanie zb
 - **Risk:** stoi pierwszy, bo bez testów żadna następna zmiana strony nie jest sprawdzana; ryzyko to testy zależne od dokładnych tekstów i czasów animacji (kruche) oraz scalenie na `main`, które od razu uruchamia publikację (strona się nie zmienia, bo kod strony zostaje); kawałek kończy roadmapę przejęcia (koniec PRD) — kolejne zmiany człowieka idą zwykłą drogą zmiany.
 - **Status:** ready
 
+### S-02: Prawdziwa lista oczekujących z powiadomieniem właściciela
+
+- **Outcome:** odwiedzający wpisuje e-mail w formularz na stronie i jest zapisany na listę oczekujących; właściciel dostaje e-mail z każdym nowym adresem na adres swojego konta w usłudze wysyłki, a adresy są zebrane w liście kontaktów tej usługi.
+- **Change ID:** lista-oczekujacych
+- **Prośba człowieka:** podłączyć formularz listy oczekujących tak, żeby adresy trafiały na e-mail właściciela, wysyłka przez Resend (chyba że fabryka zdecyduje inaczej), bez informacji o prywatności na razie.
+- **PRD refs:** FR-014, FR-015, FR-016 (PRD v2, „Zmiana po przejęciu: prawdziwa lista oczekujących”)
+- **Zakres:** mała funkcja w Cloudflare Workers z kluczem Resend jako sekretem (dodaje adres do listy kontaktów Resend i wysyła właścicielowi powiadomienie; przyjmuje tylko żądania z adresu strony, pole-pułapka na boty, limit zapisów z jednego IP); `lib/waitlist.ts` wysyła adres do tej funkcji; komunikaty sukcesu i błędu zapisu w `lib/content.ts`; zniknięcie zdania „Form preview only…” i obu znaczników TODO (drugi ukryty decyzją człowieka „Ukryć (Recommended)”, sprawa prywatności zostaje w D-001); testy S-01 dla kroków 10 i 11 scenariusza zmienione na nowe zachowanie (jedno żądanie do punktu zapisu, w testach podstawionego); wdrożenie funkcji opisane w README. Bez informacji o prywatności.
+- **Prerequisites:** S-01
+- **Parallel with:** —
+- **Blockers:** —
+- **Unknowns:**
+  - Jak publikować funkcję: z komputera fabryki poleceniem narzędzia Cloudflare czy krokiem w workflow publikacji? — Owner: team (ustala `/10x-plan`; workflow publikacji bez zmian, jeśli się da, D-004). Block: no.
+- **Pytania do człowieka (przenieść do `## Pytania do człowieka` w change.md przy `/intent`):**
+  - rodzaj: zakres · krok: akceptacja-prd · pytanie: Strona www-maestro, plan pierwszej zmiany (lista oczekujących). Factory zapisała prośbę jako plan; nic nie jest zbudowane ani zacommitowane. Kolejność: najpierw A (S-47 w laboratorium), potem B (S-01, testy obecnego zachowania strony), potem nowa pozycja S-02 lista-oczekujacych (S-02 wymaga S-01). Zmiany w plikach (PRD w wersji 2, nowa pozycja S-02): formularz zapisuje adres na listę i pokazuje „jesteś zapisany”, a gdy zapis się nie uda — komunikat, że można spróbować jeszcze raz; właściciel dostaje e-mail z każdym nowym adresem, a wszystkie adresy są też w jednej liście w Resend; ze strony znika „[TODO: Connect the waiting list…]” i zdanie „Form preview only… nothing is sent or saved”; informacji o prywatności nie robimy; adresu e-mail właściciela nie ma w plikach (repo jest publiczne), tylko w ustawieniach usługi. Decyzja fabryki co do techniki: zostajemy przy Resend, ale strona na GitHub Pages nie może trzymać klucza Resend (każdy mógłby go podejrzeć). Formularz wysyła adres do małej funkcji na Cloudflare (plan darmowy), która trzyma klucz i wysyła maile. Resend bez własnej domeny wysyła maile tylko na adres właściciela konta, a tu więcej nie trzeba. Funkcja przyjmuje zapisy tylko z adresu strony, ma pułapkę na boty i limit zapisów z jednego adresu IP. Na później, przed budową S-02: konto Resend na Twój e-mail z kluczem API i konto Cloudflare z tokenem; oba klucze zapiszesz jednym poleceniem w terminalu, nie przez rozmowę. Rekomendacja Factory: akceptować — działająca lista przed premierą 30.11; ryzyko: Cloudflare to drugie konto do założenia. Alternatywa: gotowy serwis formularzy bez własnej funkcji — prostszy, ale darmowy plan ma około 50 zapisów miesięcznie. Pytanie 1: Czy akceptujesz zmieniony plan: S-02 po S-01, zapis przez funkcję Cloudflare i Resend, bez informacji o prywatności? Odpowiedzi: „Akceptuję (Recommended)”, „Zmień technikę”. (odpowiedź człowieka: „Akceptuję (Recommended)”) · rekomendacja: akceptować PRD v2 i S-02 (funkcja Cloudflare i Resend) · wybór: rekomendacja · rozstrzygnął: człowiek · granica: 20 pytaj mnie (akceptacja zmienionego opisu produktu i roadmapy)
+  - rodzaj: zakres · krok: akceptacja-prd · pytanie: Strona www-maestro, drugi znacznik TODO. Czy „[TODO: Add the privacy notice and data controller details before collecting email addresses.]” ma zostać widoczny, kiedy formularz już naprawdę zbiera adresy? Rekomendacja Factory: ukryć go ze strony i zostawić sprawę jako zapisane ograniczenie — odwiedzający nie zobaczy notatki dla autora, która przeczy temu, co robi formularz. Ryzyko się nie zmienia: zbieranie adresów bez informacji o prywatności narusza RODO, a w roadmapie zostaje to zapisane jako ryzyko. Druga droga: zostawić go widocznym — uczciwe wobec odwiedzających, ale wygląda na niedokończoną stronę. Odpowiedzi: „Ukryć (Recommended)”, „Zostawić widoczny”. (odpowiedź człowieka: „Ukryć (Recommended)”) · rekomendacja: ukryć drugi znacznik TODO ze strony · wybór: rekomendacja · rozstrzygnął: człowiek · granica: 20 pytaj mnie (rozstrzygnięcie widoczne w aplikacji)
+- **Potrzebuje:** konto Resend założone na adres e-mail właściciela, z kluczem API (plik klucza w `/home/fabryka/.secrets/www-maestro/`); konto Cloudflare z tokenem API do publikacji funkcji (plik klucza w tym samym folderze).
+- **Risk:** strona zaczyna zbierać adresy e-mail bez informacji o prywatności i administratorze danych (decyzja człowieka „tego na razie nie robimy”; RODO wymaga tej informacji przy zbieraniu, rejestr ograniczeń D-001); pierwsza usługa zewnętrzna i pierwsze dane odwiedzających; scalenie na `main` od razu publikuje stronę z działającym formularzem.
+- **Status:** proposed (PRD v2 i pozycja zaakceptowane przez człowieka 2026-11-18: „Akceptuję (Recommended)”; budowa dopiero na słowo człowieka „buduj”, po S-47 w laboratorium i S-01)
+
 ## Backlog Handoff
 
 | Roadmap ID | Change ID               | Suggested issue title                                                        | Ready for `/10x-plan` | Notes |
 | ---------- | ----------------------- | ---------------------------------------------------------------------------- | --------------------- | ----- |
 | S-01       | testy-zachowania-strony | Testy dzisiejszego zachowania strony (360/1280 px, `/www-maestro`), README i polecenie testów | yes                   | Run `/10x-plan testy-zachowania-strony` |
+| S-02       | lista-oczekujacych      | Prawdziwa lista oczekujących: zapis przez funkcję Cloudflare i Resend, powiadomienie właściciela | no (po S-01)          | Intencja przez `/intent` z człowiekiem |
 
 ## Open Roadmap Questions
 
 1. **Czy plik konfiguracji hostingu innego narzędzia (`.openai/hosting.json`) jest dziś używany jako drugie miejsce publikacji?** — Owner: właściciel. Block: no (przejęcie zostawia plik bez zmian).
 2. **Czy strona ma docelowo własną domenę zamiast dzisiejszego adresu publikacji?** — Owner: właściciel. Block: no.
-3. **Jaką zmianę strony człowiek chce zrobić „dzisiaj”?** — Owner: właściciel. Block: no (idzie po przejęciu zwykłą drogą zmiany, poza tą roadmapą).
+3. ~~Jaką zmianę strony człowiek chce zrobić „dzisiaj”?~~ — rozstrzygnięte 2026-11-18: S-02 lista-oczekujacych.
 
 ## Parked
 
-- **Podłączenie prawdziwej listy oczekujących i informacji o prywatności** — Why parked: PRD ## Non-Goals; rejestr ograniczeń D-001 (zwykła droga zmiany po przejęciu, najpóźniej przed ogłoszeniem pierwszego wydania, jeśli strona ma zbierać zapisy).
+- **Informacja o prywatności i administratorze danych** — Why parked: człowiek 2026-11-18: „tego na razie nie robimy”; rejestr ograniczeń D-001 (podłączenie listy przeszło do S-02).
 - **Zmiany treści, wyglądu, nazwy produktu i tłumaczenia strony** — Why parked: PRD ## Non-Goals; zmiany człowieka po przejęciu.
 - **Zmiana sposobu i miejsca publikacji, testy i skan zależności w workflow publikacji** — Why parked: PRD ## Non-Goals, krok 16 scenariusza; rejestr ograniczeń D-004.
 - **Przypięcie wersji zależności i aktualizacje frameworka** — Why parked: PRD ## Non-Goals; rejestr ograniczeń D-002.

@@ -1,14 +1,15 @@
 ---
 project: "Maestro — strona www"
-version: 1
+version: 2
 status: draft
 created: 2026-11-18
+updated: 2026-11-18
 context_type: brownfield
 product_type: web-app
 target_scale:
   users: medium
   qps: niski (statyczna strona z ruchem z udostępnień i ogłoszeń premiery)
-  data_volume: brak danych użytkowników (strona nie zapisuje niczego poza preferencją motywu w przeglądarce)
+  data_volume: adresy e-mail z listy oczekujących (od S-02), trzymane poza stroną, w usłudze wysyłki maili; strona sama nie zapisuje niczego poza preferencją motywu w przeglądarce
 timeline_budget:
   delivery_weeks: 1
   hard_deadline: null
@@ -61,6 +62,8 @@ Problem, który przejęcie rozwiązuje: strona nie ma dziś żadnych testów aut
 - README ma opis uruchomienia strony i uruchomienia testów, z którego Factory i właściciel mogą korzystać przy kolejnych zmianach.
 
 ### Guardrails
+
+Poniższe granice obowiązują przejęcie (S-01). Zmiana „prawdziwa lista oczekujących” (S-02, sekcja „Zmiana po przejęciu” niżej) świadomie zmienia dwie z nich: formularz wysyła adres, a strona wykonuje jedno żądanie do własnego punktu zapisu.
 
 - Treść, wygląd i interakcje strony bez zmian — przejęcie nie dotyka kodu strony.
 - Publikacja działa dalej tak samo (ten sam adres, ta sama automatyczna publikacja przy każdym wypchnięciu na `main`).
@@ -137,6 +140,17 @@ Przed przejęciem: to samo zachowanie — przejęcie go nie zmienia, tylko dokł
 - [preserved] FR-009: Odwiedzający otwiera i zamyka odpowiedzi FAQ. Priority: must-have
 - [preserved] FR-010: Odwiedzający wpisuje e-mail w formularz listy oczekujących i dostaje dostępny komunikat błędu (pusty/błędny adres) albo komunikat, że to tylko podgląd i nic nie zostało wysłane ani zapisane. Priority: must-have
 
+### Zmiana po przejęciu: prawdziwa lista oczekujących (S-02)
+
+Prośba człowieka (2026-11-18): „na stronie trzeba obsluzyc: [TODO: Connect the waiting list before accepting sign-ups.]”; „adresy maja trafic na <adres e-mail właściciela>. Wysylka maili moze byc obsluzona przez https://resend.com chyba ze fabryka zdecyduje inaczej. [Add the privacy notice and data controller details before collecting email addresses.] - tego na razie nie robimy.” (adres w repo zastąpiony opisem, bo repo jest publiczne).
+
+- [changed] FR-010 → FR-014: Odwiedzający wpisuje e-mail w formularz listy oczekujących; pusty albo błędny adres daje jak dziś dostępny komunikat błędu, poprawny adres trafia na listę, a odwiedzający dostaje dostępny komunikat, że jest zapisany. Gdy zapis się nie uda, dostaje dostępny komunikat, że zapis nie przeszedł i może spróbować ponownie. Priority: must-have
+- [new] FR-015: Właściciel dostaje e-mail z każdym nowym adresem z listy na swój adres (adres konta w usłudze wysyłki), a adresy są też zebrane w jednej liście w tej usłudze. Priority: must-have
+- [new] FR-016: Klucz usługi wysyłki i adres właściciela nie są w kodzie strony ani w repo; strona zna tylko publiczny adres punktu zapisu. Priority: must-have
+- [changed] Usunięty z widoku pierwszy znacznik TODO („Connect the waiting list…”) i zdanie formularza „Form preview only… nothing is sent or saved”. Drugi znacznik TODO (informacja o prywatności i administratorze danych) też znika z widoku — człowiek: „Ukryć (Recommended)”; informacji o prywatności na razie nie robimy (człowiek: „tego na razie nie robimy”), ryzyko zostaje w rejestrze ograniczeń D-001.
+
+**Technika (zaproponował agent, zaakceptował człowiek 2026-11-18: „Akceptuję (Recommended)”).** Strona zostaje statyczna na GitHub Pages. Klucza usługi wysyłki nie można trzymać w plikach strony (każdy odwiedzający by go zobaczył), więc formularz wysyła adres do małej funkcji w chmurze (Cloudflare Workers, plan darmowy), która trzyma klucz Resend jako sekret, dodaje adres do listy kontaktów Resend i wysyła właścicielowi e-mail z nowym adresem. Resend bez własnej domeny wysyła tylko na adres właściciela konta — dokładnie to, czego ta zmiana potrzebuje. Funkcja przyjmuje żądania tylko z adresu strony, ma pole-pułapkę na boty i limit zapisów z jednego adresu IP.
+
 ### Dokładane przez przejęcie
 
 - [new] FR-011: Właściciel (i Factory) uruchamia testy dzisiejszego zachowania strony jednym poleceniem. Priority: must-have
@@ -165,7 +179,7 @@ Przed przejęciem: to samo zachowanie — przejęcie go nie zmienia, tylko dokł
 - Automatyczna publikacja przy każdym wypchnięciu na `main` zostaje bez zmian. Uwaga: każdy commit Factory scalony na `main` uruchomi publikację — sama strona się nie zmieni, bo przejęcie nie rusza jej kodu.
 - Instalacja zależności tylko z pliku zablokowanych wersji, bo plik zależności projektu ma wersje „najnowsza”. rozstrzygnął: agent (technika)
 
-**Zachowanie, którego przejęcie nie może zepsuć:**
+**Zachowanie, którego przejęcie nie może zepsuć** (S-02 zmienia punkty o formularzu i o usługach zewnętrznych — sekcja „Zmiana po przejęciu”):
 
 - Kod strony (katalogi strony, komponentów, treści, plików publicznych i style) zostaje bez zmian w przejęciu.
 - Strona działa jako same pliki statyczne, bez zaplecza; budowa daje katalog gotowych plików z prefiksem adresu ustawianym przy budowie.
@@ -190,7 +204,7 @@ Strona jest publiczna, bez logowania, kont i ról. Nie zbiera danych odwiedzają
 
 ## Non-Goals
 
-- Podłączenie prawdziwej listy oczekujących i informacji o prywatności — to zmiana, idzie po przejęciu zwykłą drogą zmiany.
+- Informacja o prywatności i administratorze danych — człowiek: „tego na razie nie robimy” (rejestr ograniczeń D-001). Podłączenie prawdziwej listy oczekujących przeszło do zakresu jako S-02, po przejęciu.
 - Zmiany treści, wyglądu, nazwy produktu i tłumaczenia strony — po przejęciu, zwykłą drogą zmiany.
 - Zmiana sposobu i miejsca publikacji — dzisiejsza publikacja zostaje.
 - Przypięcie wersji zależności w pliku zależności projektu i aktualizacje frameworka — poza przejęciem.
@@ -200,4 +214,4 @@ Strona jest publiczna, bez logowania, kont i ról. Nie zbiera danych odwiedzają
 
 1. **Czy plik konfiguracji hostingu innego narzędzia (opisany w Current System Overview) jest dziś używany jako drugie miejsce publikacji?** — z kodu nie da się tego ustalić; wpływa na to, czy przejęcie zostawia jedno czy dwa wdrożenia. Owner: właściciel. Block: no (przejęcie zostawia plik bez zmian).
 2. **Czy strona ma docelowo własną domenę zamiast dzisiejszego adresu publikacji?** — w repo brak pliku domeny; wpływa na opis adresu strony. Owner: właściciel. Block: no.
-3. **Jaką zmianę strony człowiek chce zrobić „dzisiaj”?** — słowa człowieka jej nie nazywają; idzie po przejęciu zwykłą drogą zmiany. Owner: właściciel. Block: no.
+3. ~~Jaką zmianę strony człowiek chce zrobić „dzisiaj”?~~ — rozstrzygnięte 2026-11-18: prawdziwa lista oczekujących (S-02).
