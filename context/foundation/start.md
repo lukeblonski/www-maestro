@@ -29,6 +29,12 @@ Repozytorium: https://github.com/lukeblonski/www-maestro
 - rodzaj: zakres · krok: roadmapa · pytanie: Na ile kawałków podzielić roadmapę przejęcia, skoro jedyne pozycje [new] to testy (FR-011), opis w README (FR-012) i pliki fabryki (FR-013, już są)? · rekomendacja: jeden kawałek testy-zachowania-strony (kroki 1–16 scenariusza, README, polecenie testów w ## Verify), bez fundamentów, bo między tymi rzeczami nie ma punktu, w którym budowa i tak staje (zgody, warunku z zewnątrz, bramki ani osobnego dużego ryzyka) · wybór: rekomendacja · rozstrzygnął: agent
 - rodzaj: kryterium · krok: roadmapa · pytanie: Jaki cel kolejności i główne ryzyko zapisać w roadmapie przejęcia? · rekomendacja: cel quality (zachowanie strony ma być chronione testami przed każdą zmianą), główne ryzyko none (PRD nie ma blokujących pytań, usług z zewnątrz ani płatnych usług, przeglądarka testów jest na komputerze fabryki) · wybór: rekomendacja · rozstrzygnął: agent
 - rodzaj: zakres · krok: roadmapa · pytanie: Czy któraś sprawa z rejestru ograniczeń (D-001 lista oczekujących, D-002 wersje zależności, D-003 linter, D-004 testy w publikacji) musi trafić w Prerequisites kawałka? · rekomendacja: nie; żadna nie jest sprawą bezpieczeństwa (audyt 0 luk) ani nie musi być zrobiona przed używaniem strony, każda ma linię Kiedy wrócić i trafia do ## Parked roadmapy; brak context/foundation/infrastructure.md i verification.md bootstrapu · wybór: rekomendacja · rozstrzygnął: agent
+- rodzaj: zakres · krok: plan-testow · pytanie: Jaki zakres skanu gorących katalogów przyjąć w planie testów? · rekomendacja: app/, components/, lib/ (kod pisany ręcznie), bez public/, context/, dokumentów i katalogów budowy; 6 commitów w 30 dniach wystarcza na sygnał (lib/ 6, app/ 3, components/ 3) · wybór: rekomendacja · rozstrzygnął: agent
+- rodzaj: inne · krok: plan-testow · pytanie: Kto odpowiada na pytania wywiadu planu testów, skoro nikt nie odpowiada w trakcie kroku? · rekomendacja: agent z opisu właściciela, notatek kształtowania, PRD, roadmapy i VERIFICATION.md (obawa: cicha regresja interakcji i układu na telefonie przed wydaniem 30 listopada 2026; czego nie testować: publikacji na prawdziwym adresie, pełnego audytu dostępności i przeglądarek, dokładnego brzmienia treści, workflow publikacji); pytanie o to, co jest słabo przetestowane, pominięte, bo testów nie ma · wybór: rekomendacja · rozstrzygnął: agent
+- rodzaj: zakres · krok: plan-testow · pytanie: Na ile etapów podzielić wdrażanie testów, skoro testy powstają w kawałkach roadmapy (D-304), a roadmapa ma jeden kawałek? · rekomendacja: jeden etap równy kawałkowi S-01 testy-zachowania-strony, pokrywający 7 ryzyk; kolejność ochrony w nim to wskazówka dla podfaz planu, bez osobnych folderów zmian · wybór: rekomendacja · rozstrzygnął: agent
+- rodzaj: zakres · krok: plan-testow · pytanie: Czy dokładać do testów osobne narzędzie dostępności albo porównań zrzutów ekranu? · rekomendacja: nie; jedyna zależność testów to @playwright/test 1.65.0 (zgodny z obrazem przeglądarki), kontrast liczony z wyliczonych kolorów, testy bez przeglądarki w tym samym narzędziu — mieści się w tym, co zapowiedziało pytanie przejęcia · wybór: rekomendacja · rozstrzygnął: agent
+- rodzaj: zakres · krok: plan-testow · pytanie: Czy przyjąć szkic planu testów (7 ryzyk z kolejnością, wskazówki odpowiedzi na ryzyka, bramki bez CI, wykluczenia)? · rekomendacja: tak, po przeglądzie, który usunął z mapy ryzyka bez powierzchni (autoryzacja i nadużycie zasobów — strona nie ma zaplecza) i awarię hostingu (obserwacja, nie test) · wybór: rekomendacja · rozstrzygnął: agent
+- rodzaj: kryterium · krok: plan-testow · pytanie: Jaki wynik wpisać w ## Programy kroków dla polecenia sprawdzającego, które z założenia kończy się kodem 1, dopóki kawałek S-01 nie doda testów? · rekomendacja: nie działa z treścią błędu, bez zmiany polecenia; polecenie zmienia kawałek S-01 · wybór: rekomendacja · rozstrzygnął: agent
 
 ## Decyzje bez podstawy
 
@@ -98,6 +104,7 @@ Repozytorium: https://github.com/lukeblonski/www-maestro
 
 - czas: 2026-11-18 07:25 · krok: akceptacja · powód: czeka na pytanie przejęcia: zacommitowany context/foundation/start.md nie ma w ## Akceptacja linii z kto: człowiek i akceptacja: przejęcie zapisanej po pytaniu o stan z commita cd75582abd24. Zadaj człowiekowi pytanie przejęcia według sekcji „Pytanie przejęcia” w /home/fabryka/fabryka/docs/start-pro… · zrobiono: — · skutek: —
 - czas: 2026-11-18 07:33 · krok: szkielet · powód: odmowa uprawnień: Bash: cat package.json CLAUDE.md AGENTS.md mise.toml .github/workflows/pages.yml; ls .github; sed -n '/Kiedy pytać człowieka/,/^## /p' /home/fabryka/fabryka/CLAUDE.md | head -60 · zrobiono: przyjęcie · skutek: krok przyjęty, łańcuch dalej
+- czas: 2026-11-18 07:40 · krok: plan-testow · powód: programy kroków z wynikiem nie działa (kroki kawałków też ich nie uruchomią): - polecenie sprawdzające (## Verify w CLAUDE.md), `bash -c 'echo "Projekt nie ma jeszcze testów; dodaje je pierwszy kawałek roadmapy." >&2; exit 1'`, nie działa: kod wyjścia 1, „Projekt nie ma jeszcze testów; dodaje je pi… · zrobiono: — · skutek: —
 
 ## Koszty kroków
 
@@ -108,6 +115,23 @@ Repozytorium: https://github.com/lukeblonski/www-maestro
 | przygotowanie-posiedzenia | eb474540-ee83-4f3b-b95a-0f60c365c932 | 2026-11-18T07:21:54+00:00 | 192 | claude-opus-5-5 | 28 | 17355 | 923539 | 80263 | 90092 | 1.1740 | 190 | 1 | 0 | 0 | 0 |
 | szkielet | 39dc0da7-215c-4eb1-9a02-c58daeffcafb | 2026-11-18T07:29:43+00:00 | 208 | claude-opus-5-5 | 33 | 13937 | 931264 | 60762 | 70591 | 0.9512 | 166 | 41 | 0 | 0 | 0 |
 | roadmapa | 6c30688a-96a0-4191-8314-bfc66ed7087b | 2026-11-18T07:33:31+00:00 | 128 | claude-opus-5-5 | 20 | 11971 | 777639 | 91543 | 101372 | 1.1274 | 127 | 1 | 0 | 0 | 0 |
+| plan-testow | f0914f75-a3d3-44bf-8d25-dedbca6b8cbd | 2026-11-18T07:35:51+00:00 | 251 | claude-opus-5-5 | 28 | 20913 | 1230981 | 104176 | 114004 | 1.4980 | 235 | 16 | 0 | 0 | 0 |
+
+## Programy kroków
+
+- polecenie sprawdzające (## Verify w CLAUDE.md), `bash -c 'echo "Projekt nie ma jeszcze testów; dodaje je pierwszy kawałek roadmapy." >&2; exit 1'`, nie działa: kod wyjścia 1, „Projekt nie ma jeszcze testów; dodaje je pierwszy kawałek roadmapy.” (polecenie zastępcze do czasu kawałka S-01, który wpisuje polecenie testów)
+- bash (powłoka polecenia sprawdzającego), `command -v bash` → /usr/bin/bash, działa
+- echo (program polecenia sprawdzającego), `echo ok`, działa
+- git, `git --version` → git version 2.53.0, działa
+- python3, `python3 --version` → Python 3.14.4, działa
+- gitleaks, `gitleaks version` → 8.30.1; `gitleaks git --no-banner .` → 18 commits scanned, no leaks found, działa
+- mise, `mise --version` → 2026.11.4, działa
+- node, `node --version` → v22.23.5, działa
+- npm (menedżer pakietów), `npm --version` → 10.9.10; `npm view @playwright/test@1.65.0 version` → 1.65.0, działa
+- sprawdzenie typów, `npm run typecheck` → kod 0, działa
+- budowa z prefiksem publikacji, `NEXT_PUBLIC_BASE_PATH=/www-maestro npm run build` → kod 0, strony statyczne w out/, działa
+- docker (program kontenerów bez roota), `docker info` → serwer 29.9.3, rootless, działa
+- Playwright (program testów), `docker run --rm --network none mcr.microsoft.com/playwright:v1.65.0-noble bash -c 'node --version && ls /ms-playwright'` → v26.13.0, chromium-1254, firefox-1572, webkit-2388, działa (paczkę @playwright/test 1.65.0 do projektu dokłada kawałek S-01)
 
 ## Pierwszy kawałek
 
