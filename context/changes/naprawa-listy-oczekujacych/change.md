@@ -1,7 +1,7 @@
 ---
 change_id: naprawa-listy-oczekujacych
 title: Naprawa listy oczekujących po błędzie 502 z Resend
-status: preparing
+status: planned
 created: 2026-11-18
 updated: 2026-11-18
 archived_at: null
@@ -90,6 +90,10 @@ archived_at: null
 ## Pytania do człowieka
 
 - rodzaj: zakres · krok: intent · pytanie: Strona www-maestro, naprawa listy oczekujących. zależy: naprawa. Opis: Przyczyny jeszcze nie znamy: funkcja nie zapisuje, co odpowiedział Resend, a logi w Cloudflare są wyłączone. Najbardziej prawdopodobne: klucz Resend ma uprawnienie tylko do wysyłki maili i Resend odrzuca dodanie kontaktu (hipoteza, nie dowód). Factory naprawi zapis tak: 1. Funkcja zacznie zapisywać w logach Cloudflare, co odpowiedział Resend, bez klucza i bez adresów e-mail. 2. Przed scaleniem Factory zrobi prawdziwy zapis Twoim adresem na prawdziwym Resend i sprawdzi, czy adres jest w kontaktach i czy mail do Ciebie wyszedł. 3. Ponowny zapis tego samego adresu da sukces, a nie błąd. 4. Po publikacji obserwator zrobi jeszcze jeden prawdziwy zapis na opublikowanej stronie i sprawdzi Twój Gmail. Strona wygląda tak samo, więc bez makiety. Każde sprawdzenie dodaje Twój adres do Twojej listy kontaktów w Resend (dane w USA) i wysyła Ci jeden mail. Jeśli przyczyną jest klucz, Factory poprosi o nowy klucz z pełnym dostępem („Full access” w Resend → API Keys), zapisany jednym poleceniem jak poprzednio. Rekomendacja: akceptować — przyczyna ustalona na prawdziwym Resend, poprawka sprawdzona przed publikacją. Ryzyko: kilka maili testowych i możliwa prośba o nowy klucz. Pytanie: Czy akceptujesz naprawę, sprawdzanie prawdziwym zapisem Twoim adresem przed scaleniem i po publikacji oraz przekazanie nowego klucza Resend, jeśli będzie potrzebny? (odpowiedź człowieka: „Akceptuję (Recommended)”) · rekomendacja: akceptować intencję, bez makiety, sprawdzanie prawdziwym zapisem adresem właściciela przed scaleniem i po publikacji, nowy klucz Resend gdy potrzebny · wybór: rekomendacja · rozstrzygnął: człowiek · granica: 20 pytaj mnie (akceptacja intencji zmiany), 10 pytaj mnie (wysyłka danych: prawdziwy zapis adresem właściciela do Resend i Cloudflare), 14 pytaj mnie (nowy klucz Resend, jeśli potrzebny)
+- rodzaj: inne · krok: plan · pytanie: Co dokładnie zwraca POST /contacts Resend dla istniejącego adresu (Open Questions 1 w research.md)? · rekomendacja: funkcja nie zależy od tej odpowiedzi: po nieudanym POST /contacts pyta GET /contacts/{email} i idzie dalej przy 200 z tym samym email; atrapa N3 odpowiada 409 i 422, a prawdziwą odpowiedź zapisze dowod ścieżki na żywo · wybór: rekomendacja · rozstrzygnął: agent
+- rodzaj: inne · krok: plan · pytanie: Czy adres z pliku owner-email jest adresem konta Resend (Open Questions 2 w research.md)? · rekomendacja: nie pytać teraz; odmowa 403 validation_error na /emails daje w skrypcie ścieżki wynik zablokowane, a sesja pyta wtedy człowieka przez obserwatora · wybór: rekomendacja · rozstrzygnął: agent
+- rodzaj: inne · krok: plan · pytanie: Czy skrypt ścieżki pod atrapą testu zgłasza atrapy niepuste (Open Questions 3 w research.md)? · rekomendacja: tak; moduł atrapy ładowany przez node --import ustawia globalThis.ATRAPY_NA_ZYWO, a skrypt zgłasza tę listę albo [], więc oznaczenie nie pochodzi ze zmiennej środowiska · wybór: rekomendacja · rozstrzygnął: agent
+- rodzaj: inne · krok: plan · pytanie: Czy console.error trafia do Workers Logs (Open Questions 4 w research.md)? · rekomendacja: funkcja loguje przez console.error, jak wymaga N1; wpis w Workers Logs potwierdzi publikacja i zapis obserwatora (N10) · wybór: rekomendacja · rozstrzygnął: agent
 
 ## Zgody
 
