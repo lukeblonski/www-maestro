@@ -116,3 +116,5 @@ Brak. Narzędzie testów, ustawienia ekranów 360 px i 1280 px oraz podawanie zb
 
 ## Done
 
+- **S-01: właściciel i Factory uruchamiają jednym poleceniem testy, które na stronie zbudowanej tak jak do publikacji (prefiks `/www-maestro`), na ekranie telefonu (360 px) i komputera (1280 px), potwierdzają dzisiejsze zachowanie strony — kroki 1–16 scenariusza pierwszej wersji z PRD; README opisuje uruchomienie strony i testów, a polecenie z `## Verify` w `CLAUDE.md` przestaje kończyć się komunikatem o braku testów i uruchamia testy projektu.** — Archived 2026-11-18 → `context/archive/2026-11-18-testy-zachowania-strony/`. Lesson: —.
+
