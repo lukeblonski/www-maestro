@@ -117,3 +117,7 @@ archived_at: null
 ## Zgody
 
 - czas: 2026-11-18 09:48 · kto: człowiek · zgoda: wdrożenie · czego dotyczy: kawałek: wszystkie, sekcja ## Wdrożenie w CLAUDE.md (workflow pages.yml, krok Deploy to GitHub Pages, bez narzędzi z sekretami, cofnięcie: brak, adres https://lukeblonski.github.io/www-maestro/); po każdym scaleniu na main fabryka sprawdza wynik publikacji i przy porażce staje bez cofania (posiedzenie dostępów, start.md) · odpowiedź: „Na reszte sie zgadzam. Kontynuj”
+
+## Zatrzymania autopilota
+
+- czas: 2026-11-18 10:00 · krok: plan · powód: odmowa uprawnień: Bash: sed -n '/^## Ścieżki/,/^## [^ŚP]/p' docs/zgoda-czlowieka.md | head -120; echo ----; grep -n "^## Płatne testy skilli" -A 30 docs/zgoda-czlowieka.md | head -40; echo ----; grep -n "^6\.\|^## " docs/zasady-budowy.md | head -40; brak pliku context/changes/testy-zachowania-stron… · zrobiono: — · skutek: —
