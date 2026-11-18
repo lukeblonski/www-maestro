@@ -137,6 +137,7 @@ archived_at: null
 ## Zatrzymania autopilota
 
 - czas: 2026-11-18 12:26 · krok: start · powód: polecenie python3 /home/fabryka/fabryka/skills/intent/scripts/check_intent.py context/changes/lista-oczekujacych/change.md; git symbolic-ref --short -q HEAD; git rev-parse --verify -q refs/heads/main; test ! -e context/changes/lista-oczekujacych/research.md zakończyło się kodem 1: / Warunki startu … · zrobiono: — · skutek: —
+- czas: 2026-11-18 13:40 · krok: impl-review · powód: odmowa uprawnień: Bash: sed -n '/## Ścieżki/,/^## [^Ś]/p' /home/fabryka/fabryka/docs/zgoda-czlowieka.md | head -60 · zrobiono: przyjęcie · skutek: krok przyjęty, łańcuch dalej
 
 ## Decyzje triage
 
