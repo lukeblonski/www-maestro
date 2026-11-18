@@ -469,28 +469,28 @@ Nie dotyczy: strona i dane się nie zmieniają. Cofnięcie zmiany to usunięcie 
 
 #### Automated
 
-- [x] 2.1 Sekcje i konsola
-- [x] 2.2 Linki wewnętrzne
-- [x] 2.3 Przewijanie
-- [x] 2.4 Nagłówek
-- [x] 2.5 Motyw
-- [x] 2.6 Żądania sieciowe
-- [x] 2.7 Ograniczony ruch
-- [x] 2.8 Kontrast
-- [x] 2.9 Bez czekania stałym czasem
-- [x] 2.10 Typy
+- [x] 2.1 Sekcje i konsola — 41c5a50
+- [x] 2.2 Linki wewnętrzne — 41c5a50
+- [x] 2.3 Przewijanie — 41c5a50
+- [x] 2.4 Nagłówek — 41c5a50
+- [x] 2.5 Motyw — 41c5a50
+- [x] 2.6 Żądania sieciowe — 41c5a50
+- [x] 2.7 Ograniczony ruch — 41c5a50
+- [x] 2.8 Kontrast — 41c5a50
+- [x] 2.9 Bez czekania stałym czasem — 41c5a50
+- [x] 2.10 Typy — 41c5a50
 
 ### Phase 3: Interakcje — demo rozmowy, 8 kroków, podgląd, FAQ i formularz
 
 #### Automated
 
-- [ ] 3.1 Demo rozmowy
-- [ ] 3.2 Osiem kroków
-- [ ] 3.3 Podgląd obiadu
-- [ ] 3.4 FAQ
-- [ ] 3.5 Formularz
-- [ ] 3.6 Bez czekania stałym czasem
-- [ ] 3.7 Typy
+- [x] 3.1 Demo rozmowy
+- [x] 3.2 Osiem kroków
+- [x] 3.3 Podgląd obiadu
+- [x] 3.4 FAQ
+- [x] 3.5 Formularz
+- [x] 3.6 Bez czekania stałym czasem
+- [x] 3.7 Typy
 
 ### Phase 4: README, krok 15, sekcje `CLAUDE.md` i plan testów
 
