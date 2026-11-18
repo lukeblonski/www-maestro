@@ -122,6 +122,7 @@ archived_at: null
 ## Zatrzymania autopilota
 
 - czas: 2026-11-18 10:00 · krok: plan · powód: odmowa uprawnień: Bash: sed -n '/^## Ścieżki/,/^## [^ŚP]/p' docs/zgoda-czlowieka.md | head -120; echo ----; grep -n "^## Płatne testy skilli" -A 30 docs/zgoda-czlowieka.md | head -40; echo ----; grep -n "^6\.\|^## " docs/zasady-budowy.md | head -40; brak pliku context/changes/testy-zachowania-stron… · zrobiono: pytanie planu o T15 spoza bramek rozstrzygnięte przez agenta: wariant (a); odmowa dotyczyła tylko odczytu nieistniejących plików docs/ w repo aplikacji · skutek: krok idzie od nowa z odpowiedzią
+- czas: 2026-11-18 10:18 · krok: plan-review · powód: w ## Wymaga Twojej decyzji przybyły wpisy: - **context/changes/testy-zachowania-strony/reviews/plan-review.md F3 — Potwierdzenie zmiany T15 przez człowieka nie czeka nigdzie w kolejce**; Reguła: bramka 1 · zrobiono: — · skutek: —
 
 ## Decyzje triage
 
