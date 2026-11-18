@@ -12,7 +12,33 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  worker:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      url: ${{ steps.publish.outputs.deployment-url }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Publish sign-up function
+        id: publish
+        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0 # cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          workingDirectory: worker
+          wranglerVersion: "4.164.0"
+          secrets: |
+            RESEND_API_KEY
+            OWNER_EMAIL
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          OWNER_EMAIL: ${{ secrets.OWNER_EMAIL }}
+
   build:
+    needs: worker
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -20,6 +46,7 @@ jobs:
     env:
       NEXT_PUBLIC_BASE_PATH: /www-maestro
       NEXT_TELEMETRY_DISABLED: 1
+      NEXT_PUBLIC_WAITLIST_URL: ${{ needs.worker.outputs.url }}
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -38,6 +65,8 @@ jobs:
         run: npm exec next -- typegen
       - name: Check types
         run: npm run typecheck
+      - name: Check sign-up function address
+        run: test -n "$NEXT_PUBLIC_WAITLIST_URL"
       - name: Export static site
         run: npm run build
       - name: Upload site
