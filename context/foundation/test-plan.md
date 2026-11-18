@@ -115,10 +115,10 @@ phase lands; before that, the gate is `planned`.
 | typecheck (`npm run typecheck`) | local (autopilot) + workflow publikacji | required | błędy typów |
 | budowa z prefiksem `/www-maestro` | local (autopilot) + workflow publikacji | required | zepsuta budowa statyczna |
 | skan sekretów (gitleaks, hooki zabezpieczeń) | local (agent loop) | required | sekrety w repo |
-| testy w przeglądarce 360 px + 1280 px na stronie zbudowanej | local (autopilot, kontener Playwright), polecenie z `## Verify` | required after §3 Phase 1 | regresje #1–#6 |
-| test bez przeglądarki (README, zakres przejęcia) | local (autopilot), polecenie z `## Verify` | required after §3 Phase 1 | #7 |
+| testy w przeglądarce 360 px + 1280 px na stronie zbudowanej (kroki 1–14) i test „krok 15” | local, kontener Playwright: `npm run test:e2e` (polecenie z `## Testy w CI`), uruchamiane w wierszach Automated planu zmiany (`npm run test:e2e -- --grep "krok N\b"`) | required after §3 Phase 1 | regresje #1–#6, #7 (README i `npm test`) |
+| test bez przeglądarki „krok 16” (zakres przejęcia), typy i gitleaks | local (autopilot): `npm run verify` (polecenie z `## Verify`, `npm ci && npm run verify`), bez Dockera | required after §3 Phase 1 | #7 |
 
-Brak bramki w CI: workflow publikacji zostaje bez testów (D-004 w `context/foundation/limitations.md`).
+Autopilot przy scaleniu bramkuje tylko polecenie z `## Verify`; polecenie z `## Testy w CI` przy scaleniu nie biegnie, więc testy w przeglądarce uruchamiają wiersze Automated planu każdej zmiany strony. Brak bramki w CI: workflow publikacji zostaje bez testów (D-004 w `context/foundation/limitations.md`).
 
 ## 6. Cookbook Patterns
 
@@ -128,23 +128,38 @@ the relevant rollout phase ships; before that, the sub-section reads
 
 ### 6.1 Uruchomienie testów
 
-- TBD — see §3 Phase 1 (jedno polecenie z README i `## Verify`: budowa z `/www-maestro`, potem testy w kontenerze Playwright).
+- Wszystkie testy: `npm test` (= `npm run verify && npm run test:e2e`), polecenie z README.
+- `npm run verify` — typy, test „krok 16” (`playwright.bez-przegladarki.config.ts`, projekt `repo`, `tests/repo/`) i `gitleaks git --redact --no-banner .`; bez Dockera.
+- `npm run test:e2e [-- <argumenty Playwright>]` (`scripts/test-e2e.sh`): liczy testy przez `--list`, przy zerze kończy się kodem 1; buduje stronę z `NEXT_PUBLIC_BASE_PATH=/www-maestro`; uruchamia `playwright.config.ts` (`tests/e2e/`, projekty `telefon-360` i `komputer-1280`) w kontenerze `mcr.microsoft.com/playwright:v<wersja @playwright/test>-noble` z `--network none` (w CI wprost po `npx playwright install --with-deps chromium`); na koniec na komputerze projekt `readme` (`tests/readme/`, krok 15).
+- Stronę podaje `scripts/serwer-statyczny.mjs` z `out/` tylko pod `/www-maestro/`; reszta ścieżek daje 404.
+- Jeden krok: `npm run test:e2e -- --grep "krok 6\b"` (`\b`, żeby „krok 1” nie łapał „krok 10”–„krok 16”). Ścieżki plików jako argumenty nie działają — skrypt czyta je jako nazwy projektów; wybieraj przez `--grep`.
+- Tytuł testu: `krok N — <opis>`, jeden test na krok scenariusza i projekt; nazwy plików bez ciągu „krok <cyfra>”. Wyniki w `node_modules/.cache/playwright-wyniki`, reporter `list`.
+- Test bez przeglądarki nie używa fixture `page` i trafia do `tests/repo/` (biegnie w `verify`) albo `tests/readme/` (biegnie po testach w kontenerze).
 
 ### 6.2 Test interakcji na stronie zbudowanej (oba ekrany)
 
-- TBD — see §3 Phase 1 for wzorzec stan początkowy → kliknięcie → stan widoczny dla odwiedzającego → granica (demo rozmowy, 8 kroków, podgląd, FAQ), bez dokładnych zdań treści i bez czekania na czas.
+- Wzór: `tests/e2e/interakcje.spec.ts`. Otwarcie przez `otworzStrone(page)` z `tests/e2e/pomoc.ts`, potem `poHydracji(page)` przed pierwszym kliknięciem (bez niej kliknięcie nic nie robi, a wysyłka formularza przeładowuje stronę).
+- Kolejność: stan początkowy → kliknięcie → stan widoczny dla odwiedzającego → granica (np. `disabled` na pierwszym i ósmym kroku).
+- Elementy przez role i nazwy dostępne (`getByRole('group', { name: 'Step' })`), `aria-pressed`, `disabled`, `aria-invalid`, `role=status`, natywne `details[open]`; zapytania zawężone do sekcji, bo `role=status` i część linków powtarzają się na stronie.
+- Tekst potrzebny w oczekiwaniu importuj z `lib/content.ts` (dokładne dopasowanie przez `dokladnie()`), nie przepisuj zdań. Czekaj na stan przez `expect(...)`, nigdy `waitForTimeout`.
 
 ### 6.3 Test sekcji, kotwic i układu na telefonie
 
-- TBD — see §3 Phase 1 for wzorzec: oczekiwana lista sekcji i kotwic z PRD, szerokość dokumentu na 360 px, własne przewijanie tabeli.
+- Wzór: `tests/e2e/sekcje-i-uklad.spec.ts`. Oczekiwana kolejność sekcji jest wpisana w teście według PRD (kotwice, a sekcje bez id po nazwie h2 z `lib/content.ts`); każdy element występuje raz, a kolejność sprawdza `compareDocumentPosition`.
+- Każdy `a[href^="#"]` ma cel `document.getElementById`; przewinięcie po kliknięciu sprawdza `toBeInViewport` (strona ma `scroll-behavior: smooth`).
+- Układ zależny od ekranu rozróżnia `testInfo.project.name`: na `telefon-360` CTA nagłówka `toBeHidden()`, a obszar tabeli porównania ma `scrollWidth > clientWidth`; na obu ekranach `scrollWidth` dokumentu ≤ `clientWidth`.
 
 ### 6.4 Test prywatności i żądań sieciowych
 
-- TBD — see §3 Phase 1 for wzorzec zapisu wszystkich żądań i kluczy pamięci przeglądarki; obowiązkowy dla każdej przyszłej zmiany formularza listy oczekujących (D-001).
+- Wzór: `krok 11` w `tests/e2e/motyw-siec-dostepnosc.spec.ts` i `krok 10` w `tests/e2e/interakcje.spec.ts`. `zapisuj(page)` zbiera żądania od pierwszego żądania; po `przewinDoKonca(page)` każdy URL ma origin `baseURL` (poza `data:` i `blob:`).
+- Formularz: zapis żądań zaczyna się po załadowaniu strony, a po wysyłce pustej, bez „@” i poprawnej lista żądań jest pusta. Pamięć przeglądarki: `Object.keys(localStorage)` to dokładnie `['maestro-theme']`, `sessionStorage` pusty.
+- Obowiązkowy dla każdej przyszłej zmiany formularza listy oczekujących (D-001): kontener biegnie z `--network none`, więc żądanie na zewnątrz pada — test ma je wykryć w zapisie, nie przez błąd sieci.
 
 ### 6.5 Test dostępności (kontrast, ograniczony ruch, komunikaty)
 
-- TBD — see §3 Phase 1 for wzorzec liczenia kontrastu z wyliczonych kolorów w obu motywach.
+- Wzór: `krok 12` i `krok 13` w `tests/e2e/motyw-siec-dostepnosc.spec.ts`. Ograniczony ruch przez `page.emulateMedia({ reducedMotion: 'reduce' })`: wyliczony `scrollBehavior` nie jest `smooth`, a po przewinięciu `document.getAnimations()` nie ma animacji w stanie `running`.
+- Kontrast liczony wzorem WCAG 2 z wyliczonych kolorów, w obu `colorScheme`, przy ograniczonym ruchu: kolor tekstu z alfą zmieszaną z tłem, tło z samego elementu albo najbliższego przodka (do `body`) o nieprzezroczystym `background-color`; brak tła to błąd testu. Przyciski `disabled` pomijane; komunikat błędu wymienia element i obie barwy.
+- Komunikaty formularza sprawdza się po wysyłce błędnej i poprawnej, w `#waitlist-status` (`role=status`, `aria-live`).
 
 ### 6.6 Per-rollout-phase notes
 

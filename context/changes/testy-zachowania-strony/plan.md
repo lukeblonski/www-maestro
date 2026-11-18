@@ -484,22 +484,22 @@ Nie dotyczy: strona i dane się nie zmieniają. Cofnięcie zmiany to usunięcie 
 
 #### Automated
 
-- [x] 3.1 Demo rozmowy
-- [x] 3.2 Osiem kroków
-- [x] 3.3 Podgląd obiadu
-- [x] 3.4 FAQ
-- [x] 3.5 Formularz
-- [x] 3.6 Bez czekania stałym czasem
-- [x] 3.7 Typy
+- [x] 3.1 Demo rozmowy — cac0c02
+- [x] 3.2 Osiem kroków — cac0c02
+- [x] 3.3 Podgląd obiadu — cac0c02
+- [x] 3.4 FAQ — cac0c02
+- [x] 3.5 Formularz — cac0c02
+- [x] 3.6 Bez czekania stałym czasem — cac0c02
+- [x] 3.7 Typy — cac0c02
 
 ### Phase 4: README, krok 15, sekcje `CLAUDE.md` i plan testów
 
 #### Automated
 
-- [ ] 4.1 README i polecenie wszystkich testów
-- [ ] 4.2 Wszystkie testy jednym poleceniem z README
-- [ ] 4.3 Polecenie sprawdzające nadal przechodzi
-- [ ] 4.4 Polecenie uruchomienia słucha tylko na 127.0.0.1 z portem z `PORT`
-- [ ] 4.5 `next-env.d.ts` niezmieniony
-- [ ] 4.6 Bez czekania stałym czasem
-- [ ] 4.7 Zmiana dotyka tylko plików z planu
+- [x] 4.1 README i polecenie wszystkich testów
+- [x] 4.2 Wszystkie testy jednym poleceniem z README
+- [x] 4.3 Polecenie sprawdzające nadal przechodzi
+- [x] 4.4 Polecenie uruchomienia słucha tylko na 127.0.0.1 z portem z `PORT`
+- [x] 4.5 `next-env.d.ts` niezmieniony
+- [x] 4.6 Bez czekania stałym czasem
+- [x] 4.7 Zmiana dotyka tylko plików z planu

@@ -13,6 +13,8 @@ npm run dev
 
 Otwórz adres wypisany przez serwer — zwykle `http://127.0.0.1:3000`.
 
+Serwer słucha tylko na `127.0.0.1`, więc strona nie jest widoczna z innych urządzeń w sieci. Port bierze się ze zmiennej `PORT` (domyślnie 3000), np. `PORT=3001 npm run dev`; gdy port jest zajęty, Next wybiera następny wolny i wypisuje go w adresie.
+
 ```sh
 npm run typecheck
 npm run build
@@ -25,6 +27,27 @@ python3 -m http.server 3000 --directory out
 ```
 
 Nie używaj `next start` do tego eksportu statycznego.
+
+## Testy
+
+Wszystkie testy jednym poleceniem, w katalogu projektu po `npm ci`:
+
+```sh
+npm test
+```
+
+`npm test` uruchamia po kolei dwa polecenia i kończy się kodem różnym od 0, gdy cokolwiek nie przejdzie:
+
+- `npm run verify` — sprawdzenie typów, test bez przeglądarki „krok 16” (kod strony i konfiguracja budowy jak w commicie `5e4dcac`) i skan sekretów programem `gitleaks`. Nie potrzebuje Dockera.
+- `npm run test:e2e` — buduje stronę tak jak do publikacji, z prefiksem `/www-maestro` (`NEXT_PUBLIC_BASE_PATH=/www-maestro`), i uruchamia testy kroków 1–14 scenariusza w przeglądarce Chromium, na ekranie telefonu (360 px, projekt `telefon-360`) i komputera (1280 px, projekt `komputer-1280`). Lokalnie przeglądarka działa w obrazie Playwright `mcr.microsoft.com/playwright:v<wersja @playwright/test>-noble` przez Docker bez roota (skrypt sam uruchamia Dockera, gdy jest wyłączony), w kontenerze bez dostępu do sieci. Na koniec, już bez przeglądarki, test „krok 15” sprawdza to README i uruchamia `npm test`.
+
+Każdy test nazywa się krokiem scenariusza, np. „krok 6 — demo rozmowy: zatwierdzenie i powtórka”. Jeden krok, na obu ekranach, uruchamia:
+
+```sh
+npm run test:e2e -- --grep "krok 6\b"
+```
+
+`\b` sprawia, że „krok 1” nie wybiera też kroków 10–16. Argumenty, które nie wybierają żadnego testu, kończą polecenie błędem.
 
 ## Gdzie wprowadzać zmiany
 

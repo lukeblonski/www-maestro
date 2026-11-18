@@ -12,6 +12,18 @@ Last passing run (2026-11-18):
 10:27AM INF no leaks found
 ```
 
+## Testy w CI
+
+`npm run test:e2e`
+
+Testy kroków 1–14 scenariusza z `tests/e2e/` w Chromium, na stronie zbudowanej z `NEXT_PUBLIC_BASE_PATH=/www-maestro` i podanej pod `/www-maestro/`, w projektach `telefon-360` (360 px) i `komputer-1280` (1280 px). Lokalnie biegną w obrazie `mcr.microsoft.com/playwright:v<wersja @playwright/test>-noble` przez Docker bez roota (skrypt sam uruchamia Dockera, gdy jest wyłączony), w kontenerze `<folder repo>-e2e` z `--network none`; w CI (zmienna `CI`) wprost, po `npx playwright install --with-deps chromium`. Potem na komputerze biegnie test „krok 15” (README i `npm test` w całości). Jeden krok wybiera `npm run test:e2e -- --grep "krok 6\b"`. Polecenie z `## Verify` tych testów nie uruchamia.
+
+## Uruchomienie lokalne
+
+`npm run dev`
+
+Serwer deweloperski Next słucha tylko na `127.0.0.1`, na porcie ze zmiennej `PORT` (domyślnie 3000), np. `PORT=3001 npm run dev`. `next dev` przepisuje `next-env.d.ts`, więc po zatrzymaniu serwera przywróć plik: `git checkout -- next-env.d.ts`.
+
 ## Wdrożenie
 
 Pisze sesja główna przed autopilotem, razem ze zgodą człowieka w ## Zgody zmiany. Autopilot czyta te pola i uruchamia ich polecenia (kroki przygotowanie-wdrozenia i wynik-wdrozenia). Zmiana tej sekcji wymaga nowej zgody człowieka; krok agenta jej nie zmienia.
