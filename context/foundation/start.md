@@ -94,6 +94,7 @@ Repozytorium: https://github.com/lukeblonski/www-maestro
 ## Zatrzymania autopilota
 
 - czas: 2026-11-18 07:25 · krok: akceptacja · powód: czeka na pytanie przejęcia: zacommitowany context/foundation/start.md nie ma w ## Akceptacja linii z kto: człowiek i akceptacja: przejęcie zapisanej po pytaniu o stan z commita cd75582abd24. Zadaj człowiekowi pytanie przejęcia według sekcji „Pytanie przejęcia” w /home/fabryka/fabryka/docs/start-pro… · zrobiono: — · skutek: —
+- czas: 2026-11-18 07:33 · krok: szkielet · powód: odmowa uprawnień: Bash: cat package.json CLAUDE.md AGENTS.md mise.toml .github/workflows/pages.yml; ls .github; sed -n '/Kiedy pytać człowieka/,/^## /p' /home/fabryka/fabryka/CLAUDE.md | head -60 · zrobiono: przyjęcie · skutek: krok przyjęty, łańcuch dalej
 
 ## Koszty kroków
 
