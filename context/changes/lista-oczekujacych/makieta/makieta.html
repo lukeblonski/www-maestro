@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Makieta — lista oczekujących (www-maestro)</title>
+<style>
+  :root {
+    --paper: #fafbf7; --surface: #fff; --soft: #f0f3eb; --ink: #202b23; --muted: #5c675e;
+    --line: #dce2d8; --green: #286447; --lime: #d5f680; --forest: #153c2f; --on-forest: #f3f7ee;
+    --accent-soft: #e8f1df; --danger: #8a2a1f;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: "DM Sans", system-ui, sans-serif; }
+  .container { width: min(1120px, calc(100% - 40px)); margin-inline: auto; }
+  .faq-stub { padding: 48px 0 40px; color: var(--muted); font-size: 13px; border-bottom: 1px solid var(--line); }
+  .faq-stub h3 { color: var(--ink); font-size: 22px; margin: 0 0 12px; }
+  .faq-stub div { border-top: 1px solid var(--line); padding: 14px 0; }
+  .waitlist-section { background: var(--accent-soft); padding: 78px 0; }
+  .waitlist-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 95px; align-items: center; }
+  h2 { max-width: 14ch; font-size: 50px; line-height: 1.05; margin: 0; letter-spacing: -0.02em; }
+  .lead { font-size: 15px; color: var(--muted); margin-top: 22px; max-width: 45ch; }
+  .mission { font-size: 12px; display: block; margin-top: 27px; color: var(--green); font-weight: 600; }
+  label { font-size: 12px; font-weight: 600; display: block; margin-bottom: 10px; }
+  .form-row { display: flex; gap: 8px; }
+  input { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; width: 100%;
+    min-width: 0; min-height: 51px; padding: 12px 14px; font-size: 13px; font-family: inherit; }
+  input[aria-invalid="true"] { outline: 2px solid var(--green); outline-offset: 2px; }
+  .button { display: inline-flex; align-items: center; gap: 10px; min-height: 51px; padding: 12px 16px; border: 0;
+    border-radius: 8px; font-size: 12px; font-weight: 600; white-space: nowrap; background: var(--forest);
+    color: var(--on-forest); cursor: pointer; font-family: inherit; }
+  .button[disabled] { opacity: .7; cursor: progress; }
+  .status { font-size: 12px; min-height: 20px; line-height: 1.6; margin-top: 8px; color: var(--green); }
+  .status.invalid { color: var(--ink); font-weight: 600; }
+  .status.failed { color: var(--danger); font-weight: 600; }
+  .status.success { color: var(--green); font-weight: 600; }
+  .changed { position: relative; outline: 1.5px dashed #c2410c; outline-offset: 6px; border-radius: 4px; }
+  .changed::after { content: "Zmienione"; position: absolute; top: -22px; right: -6px; background: #c2410c; color: #fff;
+    font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; letter-spacing: .02em; }
+  .removed-note { margin-top: 22px; font-size: 11px; color: #c2410c; border: 1.5px dashed #c2410c; border-radius: 6px; padding: 8px 10px; }
+  .removed-note s { color: var(--muted); }
+  footer { padding: 36px 0 110px; display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); }
+  @media (max-width: 900px) {
+    .waitlist-layout { grid-template-columns: 1fr; gap: 45px; }
+    .form-row { flex-direction: column; }
+    .form-row .button { align-self: flex-start; }
+    h2 { font-size: 38px; }
+  }
+  /* pasek makiety — nie jest częścią strony */
+  .mock-bar { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 99; display: flex;
+    align-items: center; gap: 8px; background: #111; color: #fff; padding: 7px 10px; border-radius: 999px;
+    box-shadow: 0 10px 30px #0006; font: 13px system-ui, sans-serif; }
+  .mock-bar button { background: #333; color: #fff; border: 0; border-radius: 999px; width: 30px; height: 30px; cursor: pointer; font-size: 15px; }
+  .mock-bar select { background: #222; color: #fff; border: 1px solid #444; border-radius: 999px; padding: 5px 8px; font: inherit; max-width: 62vw; }
+</style>
+</head>
+<body>
+<main>
+  <div class="container faq-stub">
+    <h3>Questions before you begin</h3>
+    <div>Do I need to know how to code?</div>
+    <div>Does the first release maintain my application automatically?</div>
+  </div>
+
+  <section class="waitlist-section" id="waitlist">
+    <div class="container waitlist-layout">
+      <div>
+        <h2>What will your moonshot be?</h2>
+        <p class="lead">Join the waiting list for the first release. Bring the problem you understand and the idea you want to explore.</p>
+        <span class="mission">Everyone can build their moonshot.</span>
+      </div>
+      <form id="form" novalidate>
+        <label for="email">Email address</label>
+        <div class="form-row">
+          <input id="email" type="email" placeholder="you@example.com" autocomplete="email" maxlength="254" aria-describedby="status">
+          <button class="button changed" id="send" type="submit"><span id="send-label">Join the first release</span> <span aria-hidden="true">↗</span></button>
+        </div>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+        <div class="removed-note" id="removed">
+          Usunięte ze strony (nie będzie widoczne):<br>
+          <s>Form preview only. Sign-ups are not open here yet; nothing is sent or saved.</s><br>
+          <s>[TODO: Connect the waiting list before accepting sign-ups.]</s><br>
+          <s>[TODO: Add the privacy notice and data controller details before collecting email addresses.]</s>
+        </div>
+      </form>
+    </div>
+  </section>
+  <footer class="container"><span>Everyone can build their moonshot.</span><span>Back to top ↑</span></footer>
+</main>
+
+<div class="mock-bar" aria-label="Pasek makiety">
+  <button id="prev" title="Poprzedni stan">←</button>
+  <select id="states"></select>
+  <button id="next" title="Następny stan">→</button>
+</div>
+
+<script>
+  const MSG = {
+    invalid: "Enter a valid email address to join the waiting list.",
+    success: "You're on the waiting list for the first release. Thank you!",
+    failed: "Your sign-up didn't go through. Please try again.",
+  };
+  const STATES = [
+    { id: "start", name: "1. Formularz przed wpisaniem adresu", email: "", status: "" },
+    { id: "pusty", name: "2. Kliknięcie bez adresu (błąd)", email: "", status: "invalid" },
+    { id: "bez-malpy", name: "3. Adres bez „@” (błąd)", email: "ola.example.com", status: "invalid" },
+    { id: "wysylanie", name: "4. Wysyłanie (przycisk nieaktywny)", email: "ola@example.com", status: "sending" },
+    { id: "zapisano", name: "5. Zapisano na listę", email: "ola@example.com", status: "success" },
+    { id: "nie-przeszlo", name: "6. Zapis nie przeszedł — spróbuj ponownie", email: "ola@example.com", status: "failed" },
+    { id: "email-wlasciciela", name: "7. E-mail, który dostaje właściciel", email: "ola@example.com", status: "owner" },
+  ];
+  const $ = (id) => document.getElementById(id);
+  const sel = $("states");
+  STATES.forEach((s, i) => sel.add(new Option(s.name, i)));
+  let timer = null;
+
+  function render(status) {
+    const st = $("status"), input = $("email"), btn = $("send");
+    st.className = "status";
+    st.textContent = "";
+    input.setAttribute("aria-invalid", status === "invalid" ? "true" : "false");
+    btn.disabled = status === "sending";
+    $("send-label").textContent = status === "sending" ? "Joining…" : "Join the first release";
+    const owner = $("owner");
+    if (owner) owner.remove();
+    if (status === "invalid" || status === "success" || status === "failed") {
+      st.classList.add(status, "changed");
+      st.textContent = MSG[status];
+    }
+    if (status === "owner") {
+      st.classList.add("success");
+      st.textContent = MSG.success;
+      const box = document.createElement("div");
+      box.id = "owner";
+      box.className = "changed";
+      box.style.cssText = "margin-top:34px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:13px;line-height:1.6;color:#202b23";
+      box.innerHTML = "<div style='font-size:11px;color:#5c675e'>Skrzynka właściciela · od: Maestro waitlist &lt;onboarding@resend.dev&gt;</div>" +
+        "<b>New sign-up on the Maestro waiting list</b><br>Email: ola@example.com<br>" +
+        "<span style='color:#5c675e;font-size:12px'>Adres jest też na liście kontaktów w panelu Resend.</span>";
+      $("form").appendChild(box);
+    }
+  }
+
+  function show(i, push = true) {
+    clearTimeout(timer);
+    const s = STATES[(i + STATES.length) % STATES.length];
+    sel.value = STATES.indexOf(s);
+    $("email").value = s.email;
+    render(s.status);
+    if (push) history.replaceState(null, "", "?state=" + s.id);
+  }
+
+  $("form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const input = $("email");
+    if (!input.value.trim() || !input.checkValidity()) { render("invalid"); input.focus(); return; }
+    render("sending");
+    // w makiecie adres ze słowem „fail” pokazuje niepowodzenie zapisu
+    timer = setTimeout(() => render(/fail/i.test(input.value) ? "failed" : "success"), 1500);
+  });
+  $("email").addEventListener("input", () => render(""));
+  $("prev").onclick = () => show(+sel.value - 1);
+  $("next").onclick = () => show(+sel.value + 1);
+  sel.onchange = () => show(+sel.value);
+  document.addEventListener("keydown", (e) => {
+    if (e.target.matches("input, select, textarea")) return;
+    if (e.key === "ArrowLeft") show(+sel.value - 1);
+    if (e.key === "ArrowRight") show(+sel.value + 1);
+  });
+  const want = new URLSearchParams(location.search).get("state");
+  const start = Math.max(0, STATES.findIndex((s) => s.id === want));
+  show(start, false);
+</script>
+</body>
+</html>
