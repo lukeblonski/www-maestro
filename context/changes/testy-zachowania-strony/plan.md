@@ -80,6 +80,8 @@ Faza 1 kładzie całe uruchomienie i sprawdza je na najprostszym teście (krok 1
 
 **`--list` i `webServer`.** `test-e2e.sh` liczy testy przez `npx playwright test -c <konfiguracja> --list --pass-with-no-tests "$@"` na komputerze. Implementujący sprawdza, że w 1.65.0 `--list` nie uruchamia `webServer`. Jeśli uruchamia, `webServer` w `playwright.config.ts` startuje tylko poza listowaniem, np. przez zmienną ustawianą przez skrypt na czas liczenia.
 
+**Świeży worktree w wierszu 1.4 (plan-review F1).** Bramka (a) w `/10x-goal-implement` biegnie przed commitem fazy, więc samo `HEAD` nie ma jeszcze skryptu `verify`. Polecenie z wiersza 1.4 kopiuje do worktree zmienione i nowe, nieignorowane pliki (`git ls-files -mo --exclude-standard`), czyli sprawdza stan, który zaraz trafi do commita. Nadal nie ma tam `node_modules` ani `.next/`. Najpierw usuwa pozostałość po przerwanym przebiegu.
+
 **Krok 15 ma długi czas.** Test uruchamia `npm test` w całości: typy, krok 16, gitleaks, budowę, kontener i kroki 1–14 w dwóch projektach. Dostaje `test.setTimeout` rzędu 20 minut. Wyjście dziecka idzie na `stdio: 'inherit'`, żeby było widać postęp.
 
 ## Phase 1: Narzędzie testów, uruchomienie i polecenie sprawdzające
@@ -192,7 +194,7 @@ Dodaje `@playwright/test` 1.65.0, dwie konfiguracje, serwer statyczny, skrypt te
 - Dokładna wersja i plik zablokowanych wersji: `node -e "const d=require('./package.json').devDependencies;for(const k of ['@playwright/test'])if(!/^\d+\.\d+\.\d+$/.test(d[k]||''))process.exit(1)" && npm ci --dry-run`
 - Typy przechodzą z testami i konfiguracjami: `npm run typecheck`
 - Polecenie sprawdzające przechodzi bez Dockera: `npm run verify`
-- Polecenie z `## Verify` przechodzi w świeżym worktree: `git worktree add --detach /tmp/maestro-verify HEAD && (cd /tmp/maestro-verify && npm ci && npm run verify); s=$?; git worktree remove --force /tmp/maestro-verify; exit $s`
+- Polecenie z `## Verify` przechodzi w świeżym worktree: `git worktree remove --force /tmp/maestro-verify 2>/dev/null; rm -rf /tmp/maestro-verify; git worktree add --detach /tmp/maestro-verify HEAD && git ls-files -mo --exclude-standard -z | xargs -0 -r cp --parents -t /tmp/maestro-verify && (cd /tmp/maestro-verify && npm ci && npm run verify); s=$?; git worktree remove --force /tmp/maestro-verify; exit $s`
 - Zasoby pod prefiksem na obu ekranach: `npm run test:e2e -- --grep "krok 14\b"`
 - Argumenty bez żadnego testu kończą się błędem: `! npm run test:e2e -- --grep "krok 99\b"`
 - Kod strony jak w `5e4dcac`: `git diff --quiet 5e4dcac -- app components lib public .github/workflows/pages.yml next.config.ts tsconfig.json postcss.config.mjs`
@@ -250,7 +252,8 @@ Testy kroków 1–5 i 11–13, każdy w obu projektach, według wzorca z `tests/
 - `krok 13 — kontrast co najmniej 4.5:1 w motywie jasnym i ciemnym`:
   - pomiar przy `reducedMotion: 'reduce'` dla obu `colorScheme`;
   - mierzone elementy: widoczne `h1, h2, h3, p, button:not([disabled])` oraz `#waitlist-status` po wysyłce błędnej i poprawnej;
-  - kolor tekstu z wyliczonego `color`, z alfą zmieszaną z tłem; tło z najbliższego przodka o nieprzezroczystym `background-color`, a jego brak to błąd testu, nie domyślna biel;
+  - kolor tekstu z wyliczonego `color`, z alfą zmieszaną z tłem; tło z samego elementu albo z jego najbliższego przodka (do `body` włącznie) o nieprzezroczystym `background-color`, a jego brak to błąd testu, nie domyślna biel (plan-review F2);
+  - przyciski z własnym tłem mierzy się na tym tle: `.button-primary`, `.reply-button`, `.step-item.selected`, `.form-row .button`; to samo dotyczy `p.claude-note`. `html` ma przezroczyste tło, a nieprzezroczyste ma `body` (`app/globals.css:59`);
   - wzór WCAG 2 na luminancję względną;
   - komunikat błędu wymienia element i obie barwy.
 
