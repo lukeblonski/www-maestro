@@ -29,7 +29,7 @@ Maestro ma jednostronicową, angielską stronę zapowiedzi, publikowaną automat
 
 | ID   | Change ID                | Outcome (user can …) | Prerequisites | PRD refs | Status |
 | ---- | ------------------------ | -------------------- | ------------- | -------- | ------ |
-| S-01 | testy-zachowania-strony  | właściciel i Factory uruchamiają jednym poleceniem testy dzisiejszego zachowania strony (360 px i 1280 px, strona zbudowana z `/www-maestro`), a README opisuje uruchomienie strony i testów | obraz przeglądarki testów i program kontenerów bez roota na komputerze fabryki (są) | US-01, FR-011, FR-012, FR-013, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, FR-009, FR-010 | ready |
+| S-01 | testy-zachowania-strony  | właściciel i Factory uruchamiają jednym poleceniem testy dzisiejszego zachowania strony (360 px i 1280 px, strona zbudowana z `/www-maestro`), a README opisuje uruchomienie strony i testów | obraz przeglądarki testów i program kontenerów bez roota na komputerze fabryki (są) | US-01, FR-011, FR-012, FR-013, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, FR-009, FR-010 | done |
 | S-02 | lista-oczekujacych       | odwiedzający zapisuje się na listę oczekujących, a właściciel dostaje e-mail z każdym nowym adresem i ma je zebrane w jednej liście | S-01 | FR-014, FR-015, FR-016 | proposed |
 
 ## Baseline
@@ -71,7 +71,7 @@ Brak. Narzędzie testów, ustawienia ekranów 360 px i 1280 px oraz podawanie zb
   - Czy krok 16 scenariusza („pliki konfiguracji budowy” bez różnic względem `5e4dcac`) obejmuje plik zależności projektu, który ten kawałek zmienia o skrypt i zależności testów dozwolone przez przejęcie? — Owner: team (ustala `/10x-plan`: porównanie obejmuje pliki budowy strony, a plik zależności tylko poza wpisem skryptu i zależności testów). Block: no.
 - **Potrzebuje:** nic
 - **Risk:** stoi pierwszy, bo bez testów żadna następna zmiana strony nie jest sprawdzana; ryzyko to testy zależne od dokładnych tekstów i czasów animacji (kruche) oraz scalenie na `main`, które od razu uruchamia publikację (strona się nie zmienia, bo kod strony zostaje); kawałek kończy roadmapę przejęcia (koniec PRD) — kolejne zmiany człowieka idą zwykłą drogą zmiany.
-- **Status:** ready
+- **Status:** done
 
 ### S-02: Prawdziwa lista oczekujących z powiadomieniem właściciela
 
