@@ -142,7 +142,7 @@ Funkcja loguje odmowy Resend bez sekretów i adresów, wysyła `User-Agent`, prz
 #### Automated Verification:
 
 - Testy funkcji przechodzą, w tym nowe testy N1–N3 i `User-Agent`: `npx playwright test -c playwright.bez-przegladarki.config.ts --project repo tests/repo/funkcja-zapisu.spec.ts`
-- Stare testy z `tests/repo/funkcja-zapisu.spec.ts` mają te same oczekiwania co na `HEAD` przed fazą: `git diff` tego pliku dodaje nowe testy i pole metody atrapy, a nie zmienia ani nie usuwa linii `expect` starych testów
+- Stare testy z `tests/repo/funkcja-zapisu.spec.ts` mają te same oczekiwania co na `HEAD` przed fazą: `git diff` tego pliku dodaje nowe testy i pole metody atrapy, a nie zmienia ani nie usuwa linii `expect` starych testów: `! git diff -U0 main -- tests/repo/funkcja-zapisu.spec.ts | grep -E '^-\s*expect'`
 - `worker/wrangler.toml` ma `[observability]` z `enabled = true`: `grep -A1 '^\[observability\]' worker/wrangler.toml`
 - Pełne sprawdzenie przechodzi: `npm ci && npm run verify`
 
@@ -154,7 +154,7 @@ Funkcja loguje odmowy Resend bez sekretów i adresów, wysyła `User-Agent`, prz
 
 ### Overview
 
-Skrypt ścieżki uruchamia lokalnie funkcję z prawdziwym Resend, ustala przyczynę 502 żądaniem diagnostycznym i sprawdza zapis do stanu końcowego. Dochodzi do niego test na atrapie i linia w `CLAUDE.md`. Wyniki N7 i N8 daje przebieg tego skryptu w kroku autopilota `przygotowanie-wdrozenia`, a N10 zapis obserwatora po publikacji. Oba wpisuje do raportu kawałka sesja główna, więc ta faza ma tylko wiersze Automated.
+Skrypt ścieżki uruchamia lokalnie funkcję z prawdziwym Resend, ustala przyczynę 502 żądaniem diagnostycznym i sprawdza zapis do stanu końcowego. Dochodzi do niego test na atrapie i linia w `CLAUDE.md`. Wyniki N7 i N8 daje przebieg tego skryptu w kroku autopilota `przygotowanie-wdrozenia`, a N10 zapis obserwatora po publikacji. Oba wpisuje do raportu kawałka sesja główna, więc ta faza ma tylko wiersze Automated. Raport kawałka to plik `raport.md` w folderze tej zmiany (po kroku `archiwum` w jej folderze w `context/archive/`). Sesja główna pisze go na końcu kawałka. Przyczynę 502 (ścieżka wywołania, status, `name` i `message`) bierze z linii skryptu w logu kroku `.autopilot-local/naprawa-listy-oczekujacych/*-przygotowanie-wdrozenia.log`, a do tego dopisuje poprawkę, która ją usuwa, i wynik N10. N7, N8 i N10 ocenia się po krokach `przygotowanie-wdrozenia` i `wynik-wdrozenia`, a nie w impl-review, które biegnie wcześniej (CHAIN, autopilot.py:444).
 
 ### Changes Required:
 
@@ -166,7 +166,7 @@ Skrypt ścieżki uruchamia lokalnie funkcję z prawdziwym Resend, ustala przyczy
 
 **Contract**:
 - Wejście: `PORT`, `NA_ZYWO_ADRES`, `NA_ZYWO_WYNIK` i `NA_ZYWO_SCIEZKA` (oczekiwane `zapis-na-liste`). Z `process.cwd()` skrypt czyta `CLAUDE.md`: `## Dostępy`, linie `- klucz API Resend: <ścieżka>` i `- adres e-mail właściciela: <ścieżka>`, ścieżka z lewymi apostrofami albo bez. Stamtąd czyta też `context/foundation/start.md` (`## Ścieżki na żywo`, linia `- zapis-na-liste:`, tekst po `stan końcowy: ` do ` · `). Funkcję importuje z `../worker/index.ts` względem pliku skryptu.
-- Brak pliku, linii albo wartości daje `zablokowane` z powodem bez treści pliku.
+- Brak pliku, linii albo wartości daje `nie przeszło` z powodem bez treści pliku. `zablokowane` jest tylko dla odmowy Resend (`/home/fabryka/fabryka/docs/sesja/kawalek-intencja.md:14`), bo `zablokowane` pozwala scalić bez `przeszło` (autopilot.py:6513-6514).
 - Kroki:
   1. Diagnostyka: `https.request` `POST https://api.resend.com/contacts`, tylko z `Authorization` i `Content-Type`, z treścią `{"email":<adres właściciela>}`. Wynik idzie do `dowod` i na stdout jako `diagnostyka (jak w Workers, bez User-Agent): POST /contacts <status> <name|początek treści>`.
   2. Owinięcie `globalThis.fetch` obserwatorem wywołań Resend: odpowiedź bez zmian, zapis klona.
@@ -176,6 +176,7 @@ Skrypt ścieżki uruchamia lokalnie funkcję z prawdziwym Resend, ustala przyczy
   6. `GET /emails/{id}` z `id` z obserwatora, do `last_event` `sent` albo `delivered` (co 3 s, do 90 s).
 - Wyjście: plik `$NA_ZYWO_WYNIK` z polami `sciezka`, `adres` (`NA_ZYWO_ADRES`), `atrapy` (`globalThis.ATRAPY_NA_ZYWO` albo `[]`), `uslugi` (`["api.resend.com"]`), `stan_koncowy` (dosłownie ze `start.md`, tylko przy `przeszło`), `dowod`, `wynik` i `powod`.
 - `dowod` ma diagnostykę, każde wywołanie funkcji do Resend (metoda, ścieżka, status, `name`), odpowiedź funkcji, stan kontaktu i `last_event`. `powod` przy odmowie Resend ma ścieżkę wywołania, status, `name` i `message`.
+- Autopilot nie zachowuje `dowod`: plik wyniku znika z worktree (autopilot.py:6331-6333), a do stanu trafiają tylko `wynik` i `powod`. Skrypt wypisuje więc na stdout, przez `scrub()`, jedną linię na każde zaobserwowane wywołanie Resend (metoda, ścieżka bez adresu, status, `name`, `message`) i na końcu linię `wynik: <wynik> — <powod>`. Prawdziwa odpowiedź Resend zostaje w logu kroku `.autopilot-local/naprawa-listy-oczekujacych/<czas>-przygotowanie-wdrozenia.log` (przy ponownym przebiegu `…-merge.log`), także gdy odmawia wywołanie funkcji, a nie diagnostyka.
 - Mapowanie wyniku jak w `## Decyzje planu`. Kod wyjścia 0 tylko przy `przeszło`. `finish()` wywołuje się jeden raz, zamyka serwer, a obsługa sygnałów i wyjątków zawsze zapisuje plik wyniku. Ogólny limit czasu skryptu to 10 min.
 - Każdy wypisany i zapisany tekst przechodzi przez `scrub()`: klucz, adres właściciela w każdej wielkości liter i w postaci `%40` oraz każdy adres e-mail zastępuje znacznik.
 
@@ -216,7 +217,9 @@ Uruchomienie: `process.execPath --import <atrapa> <repo>/scripts/na-zywo.mjs`, z
   - zapis atrapy pokazuje pierwsze wywołanie bez `User-Agent`, a wywołania funkcji z nim.
 - Scenariusz `klucz-tylko-wysylka`:
   - `wynik` `zablokowane`;
-  - `powod` zawiera `/contacts`, `401`, `restricted_api_key` i `<adres>`.
+  - `powod` zawiera `/contacts`, `401`, `restricted_api_key` i `<adres>`;
+  - stdout ma linię wywołania `/contacts` z `401` i `restricted_api_key` oraz końcową linię `wynik: zablokowane — …`.
+- Brak dostępu: `CLAUDE.md` w katalogu tymczasowym bez linii klucza Resend daje `wynik` `nie przeszło` i kod wyjścia różny od 0.
 
 W obu scenariuszach stdout, stderr i plik wyniku nie zawierają `klucz-atrapy-na-zywo` ani adresu właściciela w żadnej wielkości liter i w postaci `%40`.
 
@@ -236,7 +239,7 @@ W obu scenariuszach stdout, stderr i plik wyniku nie zawierają `klucz-atrapy-na
 
 - Test skryptu na atrapie przechodzi: `npx playwright test -c playwright.bez-przegladarki.config.ts --project repo tests/repo/na-zywo.spec.ts`
 - `CLAUDE.md` ma dokładnie jedną linię ścieżki z jednym poleceniem bez powłoki: `grep -n '^- zapis-na-liste: `node scripts/na-zywo.mjs`$' CLAUDE.md`
-- Skrypt nie importuje nic spoza modułów wbudowanych Node i `../worker/index.ts`: `grep -nE "^import|import\(" scripts/na-zywo.mjs`
+- Skrypt nie importuje nic spoza modułów wbudowanych Node i `../worker/index.ts`: `! grep -nE "(from|import\()\s*['\"]" scripts/na-zywo.mjs | grep -vE "['\"](node:[a-z_/]+|\.\./worker/index\.ts)['\"]"`
 - `package.json` jest bez zmian: `git diff --exit-code main -- package.json package-lock.json`
 - Pełne sprawdzenie przechodzi: `npm ci && npm run verify`
 
