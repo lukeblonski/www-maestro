@@ -418,5 +418,5 @@ Pierwsza publikacja po scaleniu tworzy funkcję i migrację `v1` Durable Object.
 
 #### Automated
 
-- [x] 4.1 README i polecenie testów
-- [x] 4.2 Pełne sprawdzenie zmiany
+- [x] 4.1 README i polecenie testów — 4a30896
+- [x] 4.2 Pełne sprawdzenie zmiany — 4a30896
