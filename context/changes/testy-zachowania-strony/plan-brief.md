@@ -24,7 +24,7 @@ Strona Maestro nie ma testów, a każde scalenie na `main` ją publikuje, więc 
 
 | Decyzja | Wybór | Dlaczego | Źródło |
 |---|---|---|---|
-| Gdzie biegnie krok 15 | W `test:e2e`, na komputerze po kontenerze, ze zmienną pomijającą sam siebie | T17 zostaje (`verify` bez Dockera), a polecenie z README naprawdę przechodzi | Człowiek (krok plan) |
+| Gdzie biegnie krok 15 | W `test:e2e`, na komputerze po kontenerze, ze zmienną pomijającą sam siebie | T17 zostaje (`verify` bez Dockera), a polecenie z README naprawdę przechodzi | Agent po zatrzymaniu planu; do potwierdzenia przez człowieka (bramka 1) |
 | Narzędzie | `@playwright/test` 1.65.0, tylko Chromium, obraz kontenera tej samej wersji | Jedyna nowa zależność, zgodna z obrazem | Intencja |
 | Dwie konfiguracje | Przeglądarka (z serwerem) i bez przeglądarki (projekty `repo` i `readme`) | `verify` nie może budować ani podawać strony | Research |
 | Serwer strony | Własny serwer w Node pod `/www-maestro/`, 404 dla reszty | Bez zależności, realny sygnał dla zasobów pod prefiksem | Plan |
@@ -67,6 +67,7 @@ Skrypt `test-e2e.sh` liczy testy wybrane argumentami. Jeśli są testy w przegl�
 
 ## Otwarte ryzyka i założenia
 
+- Przeniesienie kroku 15 z `verify` do `test:e2e` zmienia pole Sprawdzenie w T15 i krok 4 scenariusza. Rozstrzygnął to agent, a nie człowiek, choć zmiana kryterium to bramka 1. Człowiek powinien to potwierdzić przed implementacją.
 - Autopilot przed scaleniem nie uruchamia testów w przeglądarce, tylko `## Verify`. W tej zmianie robią to wiersze Automated planu, a dla kolejnych zmian potrzebna jest poprawka Factory.
 - Pary kolorów z motywu dają co najmniej 5.08:1. Jeśli jednak któryś element dzisiejszej strony będzie poniżej 4.5:1, kodu strony nie wolno zmienić, więc implementacja staje i zgłasza to, zamiast obniżać próg.
 - Założenie: `--list` w Playwright 1.65.0 nie uruchamia `webServer`. W przeciwnym razie serwer startuje warunkowo (plan, „Critical Implementation Details”).
