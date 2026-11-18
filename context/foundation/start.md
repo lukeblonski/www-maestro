@@ -68,7 +68,7 @@ Repozytorium: https://github.com/lukeblonski/www-maestro
 
 ## Ścieżki na żywo
 
-- brak
+- zapis-na-liste: kroki 10 · usługi: Resend · sprawdzenie: polecenie z `## Sprawdzenie na żywo` w CLAUDE.md uruchamia lokalnie funkcję zapisu z prawdziwym kluczem Resend i adresem właściciela, wysyła jeden zapis adresem właściciela z nagłówkiem Origin strony, potem pyta Resend o kontakt i o wysłany e-mail · stan końcowy: funkcja odpowiada 200 {"ok":true}, Resend ma kontakt z tym adresem, a e-mail „New sign-up on the Maestro waiting list” do właściciela ma w Resend stan wysłany albo dostarczony · dane: adres e-mail właściciela do Resend (kontakt i e-mail, dane w USA) · brakuje: nic
 
 ## Sprawdzalność scenariusza
 

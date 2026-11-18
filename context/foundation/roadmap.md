@@ -31,6 +31,7 @@ Maestro ma jednostronicową, angielską stronę zapowiedzi, publikowaną automat
 | ---- | ------------------------ | -------------------- | ------------- | -------- | ------ |
 | S-01 | testy-zachowania-strony  | właściciel i Factory uruchamiają jednym poleceniem testy dzisiejszego zachowania strony (360 px i 1280 px, strona zbudowana z `/www-maestro`), a README opisuje uruchomienie strony i testów | obraz przeglądarki testów i program kontenerów bez roota na komputerze fabryki (są) | US-01, FR-011, FR-012, FR-013, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, FR-009, FR-010 | done |
 | S-02 | lista-oczekujacych       | odwiedzający zapisuje się na listę oczekujących, a właściciel dostaje e-mail z każdym nowym adresem i ma je zebrane w jednej liście | S-01 | FR-014, FR-015, FR-016 | done |
+| S-03 | naprawa-listy-oczekujacych | zapis na opublikowanej stronie naprawdę przechodzi: odwiedzający widzi potwierdzenie, właściciel dostaje e-mail, a adres jest w kontaktach Resend | S-02 | FR-014, FR-015, FR-016 | ready |
 
 ## Baseline
 
@@ -70,6 +71,7 @@ Brak. Narzędzie testów, ustawienia ekranów 360 px i 1280 px oraz podawanie zb
 - **Unknowns:**
   - Czy krok 16 scenariusza („pliki konfiguracji budowy” bez różnic względem `5e4dcac`) obejmuje plik zależności projektu, który ten kawałek zmienia o skrypt i zależności testów dozwolone przez przejęcie? — Owner: team (ustala `/10x-plan`: porównanie obejmuje pliki budowy strony, a plik zależności tylko poza wpisem skryptu i zależności testów). Block: no.
 - **Potrzebuje:** nic
+- **Na żywo:** nic
 - **Risk:** stoi pierwszy, bo bez testów żadna następna zmiana strony nie jest sprawdzana; ryzyko to testy zależne od dokładnych tekstów i czasów animacji (kruche) oraz scalenie na `main`, które od razu uruchamia publikację (strona się nie zmienia, bo kod strony zostaje); kawałek kończy roadmapę przejęcia (koniec PRD) — kolejne zmiany człowieka idą zwykłą drogą zmiany.
 - **Status:** done
 
@@ -89,8 +91,26 @@ Brak. Narzędzie testów, ustawienia ekranów 360 px i 1280 px oraz podawanie zb
   - rodzaj: zakres · krok: akceptacja-prd · pytanie: Strona www-maestro, plan pierwszej zmiany (lista oczekujących). Factory zapisała prośbę jako plan; nic nie jest zbudowane ani zacommitowane. Kolejność: najpierw A (S-47 w laboratorium), potem B (S-01, testy obecnego zachowania strony), potem nowa pozycja S-02 lista-oczekujacych (S-02 wymaga S-01). Zmiany w plikach (PRD w wersji 2, nowa pozycja S-02): formularz zapisuje adres na listę i pokazuje „jesteś zapisany”, a gdy zapis się nie uda — komunikat, że można spróbować jeszcze raz; właściciel dostaje e-mail z każdym nowym adresem, a wszystkie adresy są też w jednej liście w Resend; ze strony znika „[TODO: Connect the waiting list…]” i zdanie „Form preview only… nothing is sent or saved”; informacji o prywatności nie robimy; adresu e-mail właściciela nie ma w plikach (repo jest publiczne), tylko w ustawieniach usługi. Decyzja fabryki co do techniki: zostajemy przy Resend, ale strona na GitHub Pages nie może trzymać klucza Resend (każdy mógłby go podejrzeć). Formularz wysyła adres do małej funkcji na Cloudflare (plan darmowy), która trzyma klucz i wysyła maile. Resend bez własnej domeny wysyła maile tylko na adres właściciela konta, a tu więcej nie trzeba. Funkcja przyjmuje zapisy tylko z adresu strony, ma pułapkę na boty i limit zapisów z jednego adresu IP. Na później, przed budową S-02: konto Resend na Twój e-mail z kluczem API i konto Cloudflare z tokenem; oba klucze zapiszesz jednym poleceniem w terminalu, nie przez rozmowę. Rekomendacja Factory: akceptować — działająca lista przed premierą 30.11; ryzyko: Cloudflare to drugie konto do założenia. Alternatywa: gotowy serwis formularzy bez własnej funkcji — prostszy, ale darmowy plan ma około 50 zapisów miesięcznie. Pytanie 1: Czy akceptujesz zmieniony plan: S-02 po S-01, zapis przez funkcję Cloudflare i Resend, bez informacji o prywatności? Odpowiedzi: „Akceptuję (Recommended)”, „Zmień technikę”. (odpowiedź człowieka: „Akceptuję (Recommended)”) · rekomendacja: akceptować PRD v2 i S-02 (funkcja Cloudflare i Resend) · wybór: rekomendacja · rozstrzygnął: człowiek · granica: 20 pytaj mnie (akceptacja zmienionego opisu produktu i roadmapy)
   - rodzaj: zakres · krok: akceptacja-prd · pytanie: Strona www-maestro, drugi znacznik TODO. Czy „[TODO: Add the privacy notice and data controller details before collecting email addresses.]” ma zostać widoczny, kiedy formularz już naprawdę zbiera adresy? Rekomendacja Factory: ukryć go ze strony i zostawić sprawę jako zapisane ograniczenie — odwiedzający nie zobaczy notatki dla autora, która przeczy temu, co robi formularz. Ryzyko się nie zmienia: zbieranie adresów bez informacji o prywatności narusza RODO, a w roadmapie zostaje to zapisane jako ryzyko. Druga droga: zostawić go widocznym — uczciwe wobec odwiedzających, ale wygląda na niedokończoną stronę. Odpowiedzi: „Ukryć (Recommended)”, „Zostawić widoczny”. (odpowiedź człowieka: „Ukryć (Recommended)”) · rekomendacja: ukryć drugi znacznik TODO ze strony · wybór: rekomendacja · rozstrzygnął: człowiek · granica: 20 pytaj mnie (rozstrzygnięcie widoczne w aplikacji)
 - **Potrzebuje:** konto Resend założone na adres e-mail właściciela, z kluczem API (plik klucza w `/home/fabryka/.secrets/www-maestro/`); konto Cloudflare z tokenem API do publikacji funkcji (plik klucza w tym samym folderze).
+- **Na żywo:** nic
 - **Risk:** strona zaczyna zbierać adresy e-mail bez informacji o prywatności i administratorze danych (decyzja człowieka „tego na razie nie robimy”; RODO wymaga tej informacji przy zbieraniu, rejestr ograniczeń D-001); pierwsza usługa zewnętrzna i pierwsze dane odwiedzających; scalenie na `main` od razu publikuje stronę z działającym formularzem.
 - **Status:** done
+
+### S-03: Naprawa listy oczekujących na opublikowanej stronie
+
+- **Outcome:** odwiedzający, który zapisze się formularzem na opublikowanej stronie, widzi potwierdzenie zapisu; właściciel dostaje e-mail „New sign-up on the Maestro waiting list” z tym adresem, a adres jest na liście kontaktów Resend. Przyczyna dzisiejszego błędu jest ustalona z prawdziwej odpowiedzi Resend, a funkcja zapisu zostawia w logach Cloudflare powód każdej odmowy Resend (bez klucza).
+- **Change ID:** naprawa-listy-oczekujacych
+- **Prośba człowieka:** naprawić listę oczekujących po S-02: prawdziwy zapis adresem właściciela 2026-11-18 13:47:40 UTC na opublikowanej funkcji dał HTTP 502 `{"ok":false}` i brak e-maila u właściciela; przyczyna z prawdziwych danych (logi funkcji, odpowiedź Resend), poprawka i przed oddaniem prawdziwy zapis z wynikiem (e-mail u właściciela i kontakt w Resend), nie na atrapach.
+- **PRD refs:** FR-014, FR-015, FR-016
+- **Zakres:** funkcja zapisu (`worker/index.ts`) zapisuje w logu funkcji status i nazwę błędu z odpowiedzi Resend dla `/contacts` i `/emails` (bez klucza i bez adresu odwiedzającego), a `worker/wrangler.toml` włącza przechowywanie logów Cloudflare (Workers Logs); poprawka przyczyny ustalonej z prawdziwej odpowiedzi Resend; ścieżka na żywo `zapis-na-liste` z poleceniem w `## Sprawdzenie na żywo` w `CLAUDE.md` (lokalna instancja funkcji z prawdziwym Resend, bez atrapy); testy funkcji na atrapie Resend dla nowego zachowania. Gdy przyczyną jest ustawienie konta (np. klucz Resend tylko do wysyłki), poprawka idzie przez człowieka w panelu Resend, pytaniem przez obserwatora.
+- **Prerequisites:** S-02
+- **Parallel with:** —
+- **Blockers:** —
+- **Unknowns:**
+  - Która odpowiedź Resend daje 502: `/contacts` czy `/emails`, i z jakim błędem? — Owner: team (ustala pierwsza faza kawałka z prawdziwej odpowiedzi Resend). Block: no.
+- **Potrzebuje:** klucz API Resend i adres e-mail właściciela (pliki z `## Dostępy` w `CLAUDE.md`, są) do sprawdzenia na żywo; token API Cloudflare (jest) do publikacji funkcji.
+- **Na żywo:** zapis-na-liste
+- **Risk:** prawdziwy zapis przed scaleniem dodaje adres właściciela do kontaktów Resend i wysyła mu e-mail (zgoda człowieka); gdy przyczyną jest klucz Resend tylko do wysyłki, naprawa czeka na nowy klucz od człowieka; scalenie na `main` od razu publikuje funkcję i stronę.
+- **Status:** ready
 
 ## Backlog Handoff
 
@@ -98,6 +118,7 @@ Brak. Narzędzie testów, ustawienia ekranów 360 px i 1280 px oraz podawanie zb
 | ---------- | ----------------------- | ---------------------------------------------------------------------------- | --------------------- | ----- |
 | S-01       | testy-zachowania-strony | Testy dzisiejszego zachowania strony (360/1280 px, `/www-maestro`), README i polecenie testów | yes                   | Run `/10x-plan testy-zachowania-strony` |
 | S-02       | lista-oczekujacych      | Prawdziwa lista oczekujących: zapis przez funkcję Cloudflare i Resend, powiadomienie właściciela | no (po S-01)          | Intencja przez `/intent` z człowiekiem |
+| S-03       | naprawa-listy-oczekujacych | Naprawa listy oczekujących: przyczyna 502 z odpowiedzi Resend, poprawka, prawdziwy zapis | yes | Intencja przez `/intent` z człowiekiem |
 
 ## Open Roadmap Questions
 
