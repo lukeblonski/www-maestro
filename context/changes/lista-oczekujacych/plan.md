@@ -74,7 +74,7 @@ Najpierw funkcja zapisu z testami, bo jest poza ścieżkami „krok 16” i nie 
 ## Critical Implementation Details
 
 - **Kolejność sprawdzeń w funkcji.** Metoda `POST` (inaczej 405), `Origin` równy `https://lukeblonski.github.io` (inaczej 403, bez Resend), treść JSON (inaczej 400), pole-pułapka niepuste → 200 sukces bez Resend, format adresu (inaczej 400), limit IP (inaczej 429), dopiero potem `POST /contacts` i `POST /emails`. Wszystkie odpowiedzi dla dozwolonego `Origin` mają `Access-Control-Allow-Origin: https://lukeblonski.github.io` i `Vary: Origin`; strona traktuje każdą odpowiedź poza 2xx jako niepowodzenie.
-- **Worker bez importu `cloudflare:workers`.** Node w testach nie rozwiąże tego modułu, więc klasa Durable Object jest zwykłą klasą z `constructor(state, env)` i metodą `fetch`, a handler woła `env.LIMIT.get(env.LIMIT.idFromName(ip)).fetch(…)`.
+- **Worker bez importu `cloudflare:workers`.** Node w testach nie rozwiąże tego modułu, więc klasa Durable Object jest zwykłą klasą z `constructor(state, env)` i metodą `fetch`, a handler woła `env.LIMIT.get(env.LIMIT.idFromName(klucz)).fetch("https://limit/")` (klucz limitu w Phase 1 §1).
 - **Atrapa w przeglądarce musi oddać `Access-Control-Allow-Origin`.** Bez tego nagłówka Chromium odrzuci odpowiedź z innego originu i test sukcesu zobaczy niepowodzenie.
 - **Pole-pułapka nie może dać poziomego przewijania** (`krok 3`): ukrycie wzorem „visually hidden” z `clip`, a nie przesunięciem poza ekran; `tabIndex={-1}`, `autoComplete="off"`, opakowanie z `aria-hidden="true"`.
 
@@ -97,7 +97,8 @@ Funkcja w Cloudflare Workers z testami bez przeglądarki na atrapie Resend, w `n
 **Contract**:
 - `export default { fetch(request: Request, env: Env): Promise<Response> }` z `Env = { RESEND_API_KEY: string; OWNER_EMAIL: string; LIMIT: PrzestrzenLimitu }`. Typy `PrzestrzenLimitu` (`idFromName`, `get` → obiekt z `fetch`) i stanu obiektu (`storage.get`/`storage.put`) są zdefiniowane lokalnie.
 - `export class LimitZapisow` z `fetch()`: znaczniki czasu z ostatnich 60 s w `storage`. Przy 5 lub więcej zwraca 429 i nie dopisuje znacznika, inaczej dopisuje i zwraca 200.
-- Kolejność sprawdzeń z „Critical Implementation Details”. Treść żądania to JSON `{ email: string, website?: string }` przeczytany z `request.text()`. Adres: przycięty, najwyżej 254 znaki, wzorzec `^[^\s@]+@[^\s@]+\.[^\s@]+$`. IP z `CF-Connecting-IP`.
+- Kolejność sprawdzeń z „Critical Implementation Details”. Treść żądania to JSON `{ email: string, website?: string }` przeczytany z `request.text()`. Adres: przycięty, najwyżej 254 znaki, wzorzec `^[^\s@]+@[^\s@]+\.[^\s@]+$` (własna kopia w funkcji, bo funkcja nie importuje kodu strony; ten sam wzorzec sprawdza formularz, Phase 2 §1 i §3). IP z `CF-Connecting-IP`.
+- Klucz limitu: dla adresu IPv6 (zawiera `:`) pierwsze cztery grupy adresu (sieć `/64`), dla IPv4 pełny adres, a przy braku nagłówka `CF-Connecting-IP` klucz `"brak-ip"` (wspólny licznik). Handler woła `env.LIMIT.get(env.LIMIT.idFromName(klucz)).fetch("https://limit/")` (pełny adres, bez niego wywołanie obiektu pada).
 - Resend: `POST https://api.resend.com/contacts` z `{ email }`, potem `POST https://api.resend.com/emails` z `{ from: "Maestro waitlist <onboarding@resend.dev>", to: [env.OWNER_EMAIL], subject: "New sign-up on the Maestro waiting list", text: "Email: <adres>" }`. Oba mają `Authorization: Bearer ${env.RESEND_API_KEY}` i `Content-Type: application/json`. Odpowiedź poza 2xx albo wyjątek `fetch` daje 502. Brak `RESEND_API_KEY` albo `OWNER_EMAIL` daje 500 bez wywołania Resend.
 - Odpowiedzi to JSON `{ ok: true }` albo `{ ok: false }`.
 
@@ -113,13 +114,14 @@ Funkcja w Cloudflare Workers z testami bez przeglądarki na atrapie Resend, w `n
 
 **File**: `tests/repo/funkcja-zapisu.spec.ts`
 
-**Intent**: L7–L11 bez sieci. Test importuje handler i klasę z `worker/index.ts` i podmienia `globalThis.fetch` na atrapę, która zapisuje wywołania `api.resend.com` i oddaje ustawioną odpowiedź (po teście przywraca oryginał). `env` ma atrapę `LIMIT` z prawdziwą klasą `LimitZapisow` na `Map` jako `storage`, `RESEND_API_KEY: "klucz-atrapy"` i `OWNER_EMAIL: "wlasciciel@example.com"`.
+**Intent**: L7–L11 bez sieci. Test importuje handler i klasę z `worker/index.ts` przez `import … from "../../worker/index"` bez rozszerzenia (z `.ts` zamrożony `tsconfig.json` daje w `tsc --noEmit` błąd TS5097) i podmienia `globalThis.fetch` na atrapę, która zapisuje wywołania `api.resend.com` i oddaje ustawioną odpowiedź (po teście przywraca oryginał). `env` ma atrapę `LIMIT` z prawdziwą klasą `LimitZapisow` na `Map` jako `storage`, `RESEND_API_KEY: "klucz-atrapy"` i `OWNER_EMAIL: "wlasciciel@example.com"`.
 
 **Contract**: tytuły zaczynają się od „funkcja zapisu — …”. Przypadki:
 - poprawne żądanie z `Origin` strony daje 200, nagłówek CORS strony, wywołanie `/contacts` z adresem i `/emails` z `to` równym `OWNER_EMAIL` i adresem w treści (L7);
 - inny `Origin`, brak `Origin` i adres bez poprawnego formatu dają odmowę (4xx), zero wywołań Resend (L8);
 - wypełnione `website` daje 200, zero wywołań (L9);
 - 6 zapisów z jednego `CF-Connecting-IP` daje pięć razy 200 i szósty 429, przy czym szósty bez wywołań Resend (L10);
+- 6 zapisów z sześciu różnych adresów IPv6 tej samej sieci `/64` (np. `2001:db8:1:2::1` … `2001:db8:1:2::6`) daje szósty 429 bez wywołań Resend (L10);
 - odpowiedź 500 atrapy dla `/contacts` i osobno dla `/emails` oraz wyjątek `fetch` dają 5xx (L11).
 
 Wartości atrap mają niską entropię, żeby `gitleaks` i `block_secrets.py` ich nie brały za klucz.
@@ -150,7 +152,7 @@ Formularz wysyła zapis do funkcji, pokazuje stany z makiety, „krok 16” ma w
 
 **Intent**: Prawdziwa wysyłka zamiast podglądu.
 
-**Contract**: `submitWaitlist(email: string, website: string): Promise<{ status: "success" | "failed" }>`. Wysyła `fetch(process.env.NEXT_PUBLIC_WAITLIST_URL, { method: "POST", body: JSON.stringify({ email, website }) })` bez własnych nagłówków. Odpowiedź 2xx daje `success`, każda inna odpowiedź, wyjątek `fetch` i pusty adres funkcji dają `failed` (przy pustym adresie bez żądania). Komentarz pliku opisuje nowe działanie.
+**Contract**: `export const WZORZEC_ADRESU = /^[^\s@]+@[^\s@]+\.[^\s@]+$/` (ten sam wzorzec co w `worker/index.ts`; przeglądarka przy `type="email"` przyjmuje też adres bez kropki w domenie, np. `anna@gmail`, który funkcja odrzuca kodem 400). `submitWaitlist(email: string, website: string): Promise<{ status: "success" | "failed" }>`. Wysyła `fetch(process.env.NEXT_PUBLIC_WAITLIST_URL, { method: "POST", body: JSON.stringify({ email, website }) })` bez własnych nagłówków. Odpowiedź 2xx daje `success`, każda inna odpowiedź, wyjątek `fetch` i pusty adres funkcji dają `failed` (przy pustym adresie bez żądania). Komentarz pliku opisuje nowe działanie.
 
 #### 2. Teksty
 
@@ -175,7 +177,7 @@ Reszta pliku bez zmian.
 
 **Contract**:
 - Stan: `"idle" | "invalid" | "sending" | "success" | "failed"`.
-- Wysyłka przy stanie `sending` nic nie robi. Walidacja jak dziś, bez żądania. Potem `sending` i `await submitWaitlist(adres, pułapka)`.
+- Wysyłka przy stanie `sending` nic nie robi. Walidacja jak dziś (`validity.valid`), a po niej przycięty adres musi spełniać `WZORZEC_ADRESU` z `lib/waitlist.ts`; inaczej stan `invalid`, fokus na polu i bez żądania. Potem `sending` i `await submitWaitlist(adres, pułapka)`.
 - Przycisk w stanie `sending` ma `disabled` i tekst `c.waitlist.sending`, a w innych stanach `c.waitlist.button`.
 - `onChange` pola przywraca `idle` tylko poza `sending`.
 - `aria-describedby="waitlist-status"`.
@@ -243,7 +245,7 @@ Reszta pliku bez zmian.
   - opcja wstrzymania odpowiedzi do zwolnienia przez test.
 - `krok 10` (tytuł zaczyna się od „krok 10 — ”):
   - brak tekstów „[TODO: Connect the waiting list”, „[TODO: Add the privacy notice” i „Form preview only” w `#waitlist` (L4);
-  - pusty adres i adres bez „@” dają `w.error`, `aria-invalid="true"` i zero żądań przy tych wysyłkach (L3);
+  - pusty adres, adres bez „@” i adres bez kropki w domenie (`anna@gmail`) dają `w.error`, `aria-invalid="true"` i zero żądań przy tych wysyłkach (L3);
   - przy wstrzymanej atrapie przycisk ma nazwę `w.sending` i jest nieaktywny (L17);
   - po odpowiedzi sukcesu `#waitlist-status` ma `w.success` i jest dokładnie jedno `POST` pod `ADRES_FUNKCJI` z adresem w `postData()` (L1);
   - po odpowiedzi 500 i po przerwanym żądaniu jest `w.failure`, a pole ma dalej wpisany adres (L2).
@@ -337,7 +339,7 @@ README i `CLAUDE.md` opisują nowe działanie, rejestr ograniczeń dostaje znane
 
 **File**: `context/foundation/limitations.md`
 
-**Intent**: D-001 traci część „formularz niczego nie wysyła”, a zostaje brak informacji o prywatności. Nowy wpis D-013 opisuje ponowny zapis tego samego adresu (możliwe niepowodzenie, bo zachowanie Resend jest niesprawdzone) i dzienny limit 100 e-maili Resend Free (101. zapis dnia dostaje niepowodzenie).
+**Intent**: D-001 traci część „formularz niczego nie wysyła”, a zostaje brak informacji o prywatności. Nowy wpis z następnym wolnym numerem `D-<nnn>` (najwyższy z trzech plików rejestru plus jeden: `grep -hoE '^## D-[0-9]{3}' context/foundation/{decisions,limitations,decisions-archive}.md | sort | tail -1`) opisuje ponowny zapis tego samego adresu (możliwe niepowodzenie, bo zachowanie Resend jest niesprawdzone) i dzienny limit 100 e-maili Resend Free (101. zapis dnia dostaje niepowodzenie).
 
 **Contract**: format wpisów jak D-005 (pola Pytanie, Wybór, Kto zdecydował: model (10x-plan), Podstawa, Kiedy wrócić, Źródło, Status, Zmiana).
 
