@@ -1,10 +1,10 @@
 ---
 project: "Maestro — strona www"
-version: 2
+version: 3
 status: draft
 created: 2026-11-18
 updated: 2026-11-18
-prd_version: 2
+prd_version: 3
 main_goal: quality
 top_blocker: none
 ---
@@ -32,6 +32,7 @@ Maestro ma jednostronicową, angielską stronę zapowiedzi, publikowaną automat
 | S-01 | testy-zachowania-strony  | właściciel i Factory uruchamiają jednym poleceniem testy dzisiejszego zachowania strony (360 px i 1280 px, strona zbudowana z `/www-maestro`), a README opisuje uruchomienie strony i testów | obraz przeglądarki testów i program kontenerów bez roota na komputerze fabryki (są) | US-01, FR-011, FR-012, FR-013, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, FR-009, FR-010 | done |
 | S-02 | lista-oczekujacych       | odwiedzający zapisuje się na listę oczekujących, a właściciel dostaje e-mail z każdym nowym adresem i ma je zebrane w jednej liście | S-01 | FR-014, FR-015, FR-016 | done |
 | S-03 | naprawa-listy-oczekujacych | zapis na opublikowanej stronie naprawdę przechodzi: odwiedzający widzi potwierdzenie, właściciel dostaje e-mail, a adres jest w kontaktach Resend | S-02 | FR-014, FR-015, FR-016 | done |
+| S-04 | przebudowa-strony | odwiedzający w kilka minut rozumie wartość Maestro na lekkiej stronie według makiety przyjętej przez człowieka (hero „You bring the idea. Maestro builds it.”, pięć sekcji ze spisem po lewej, porównanie z kreatorami aplikacji z promptu, FAQ) i zapisuje się na listę na końcu strony | S-03 | FR-017, FR-018, FR-019, FR-020, FR-021, FR-022, FR-023, FR-024, FR-009, FR-014 | ready |
 
 ## Baseline
 
@@ -112,6 +113,22 @@ Brak. Narzędzie testów, ustawienia ekranów 360 px i 1280 px oraz podawanie zb
 - **Risk:** prawdziwy zapis przed scaleniem dodaje adres właściciela do kontaktów Resend i wysyła mu e-mail (zgoda człowieka); gdy przyczyną jest klucz Resend tylko do wysyłki, naprawa czeka na nowy klucz od człowieka; scalenie na `main` od razu publikuje funkcję i stronę.
 - **Status:** done
 
+### S-04: Przebudowa treści i układu strony
+
+- **Outcome:** odwiedzający w kilka minut rozumie wartość Maestro i zapisuje się na listę oczekujących na lekkiej stronie według makiety przyjętej przez człowieka (`context/changes/przebudowa-strony/makieta/makieta.html`): hero na cały ekran z „You bring the idea. Maestro builds it.” i przyciskami do zapisu i porównania; pięć sekcji ze spisem po lewej („Your partner”, „You decide”, „From build to deploy”, „After launch” z „Coming soon”, „On your terms”); porównanie z kreatorami aplikacji z promptu bez nazw produktów; FAQ z 8 pytaniami; koniec strony „What will your moonshot be?” z jedynym formularzem. Tylko jasny motyw, bez daty wydania i wizji 2027.
+- **Change ID:** przebudowa-strony
+- **Prośba człowieka:** przebudować treść i układ całej strony: mniej treści, nowe hasło, usunięte sekcje bez wartości (problem, przykład w 8 krokach, pierwsze wydanie, roadmapa, dla kogo, data wydania i wizja 2027), układ według rozpiski człowieka i makiety Maestro, którą człowiek przyjął 2026-11-18 („jest ok. mozesz to wpisac jako "do zrobienia" na roadmape?”); budowa dopiero na słowo człowieka „buduj”. Akceptacja intencji, opisu strony w PRD i makiety: człowiek 2026-11-18, „Akceptuję tak, jak jest”.
+- **PRD refs:** FR-017, FR-018, FR-019, FR-020, FR-021, FR-022, FR-023, FR-024, FR-009, FR-014 (PRD v3, „Zmiana po przejęciu: nowa treść i układ strony”)
+- **Zakres:** `lib/content.ts` (nowa treść, ta sama stała nazwy produktu), `app/page.tsx` i `app/layout.tsx` (nowy układ, tytuł, bez przełącznika motywu), `components/interactive.tsx` (spis sekcji, jeden formularz na tej samej funkcji zapisu), `app/globals.css` (wygląd z makiety), fonty Host Grotesk i JetBrains Mono oraz obraz hero jako pliki w `public/`; testy kroków scenariusza zmienione na nowe zachowanie (kroki 1–10, 12, 13, 16). Funkcja zapisu (`worker/`) i workflow publikacji bez zmian.
+- **Prerequisites:** S-03
+- **Parallel with:** —
+- **Blockers:** —
+- **Unknowns:** —
+- **Potrzebuje:** nic
+- **Na żywo:** nic
+- **Risk:** zmiana wszystkiego, co widzi odwiedzający, na publicznej stronie zapowiedzi; scalenie na `main` od razu publikuje nową stronę; zdania o kreatorach aplikacji z promptu muszą być prawdziwe dla typowych produktów tej kategorii, a zapowiedzi „Coming soon” i „Codex and others coming soon” to decyzje człowieka o kierunku.
+- **Status:** ready
+
 ## Backlog Handoff
 
 | Roadmap ID | Change ID               | Suggested issue title                                                        | Ready for `/10x-plan` | Notes |
@@ -119,6 +136,7 @@ Brak. Narzędzie testów, ustawienia ekranów 360 px i 1280 px oraz podawanie zb
 | S-01       | testy-zachowania-strony | Testy dzisiejszego zachowania strony (360/1280 px, `/www-maestro`), README i polecenie testów | yes                   | Run `/10x-plan testy-zachowania-strony` |
 | S-02       | lista-oczekujacych      | Prawdziwa lista oczekujących: zapis przez funkcję Cloudflare i Resend, powiadomienie właściciela | no (po S-01)          | Intencja przez `/intent` z człowiekiem |
 | S-03       | naprawa-listy-oczekujacych | Naprawa listy oczekujących: przyczyna 502 z odpowiedzi Resend, poprawka, prawdziwy zapis | yes | Intencja przez `/intent` z człowiekiem |
+| S-04       | przebudowa-strony       | Przebudowa treści i układu strony według makiety przyjętej przez człowieka | yes (intencja i makieta zaakceptowane) | Budowa dopiero na słowo człowieka „buduj” |
 
 ## Open Roadmap Questions
 
@@ -129,7 +147,7 @@ Brak. Narzędzie testów, ustawienia ekranów 360 px i 1280 px oraz podawanie zb
 ## Parked
 
 - **Informacja o prywatności i administratorze danych** — Why parked: człowiek 2026-11-18: „tego na razie nie robimy”; rejestr ograniczeń D-001 (podłączenie listy przeszło do S-02).
-- **Zmiany treści, wyglądu, nazwy produktu i tłumaczenia strony** — Why parked: PRD ## Non-Goals; zmiany człowieka po przejęciu.
+- **Zmiana nazwy produktu i tłumaczenie strony** — Why parked: PRD ## Non-Goals; zmiana treści i układu przeszła do S-04 (prośba człowieka 2026-11-18).
 - **Zmiana sposobu i miejsca publikacji, testy i skan zależności w workflow publikacji** — Why parked: PRD ## Non-Goals, krok 16 scenariusza; rejestr ograniczeń D-004.
 - **Przypięcie wersji zależności i aktualizacje frameworka** — Why parked: PRD ## Non-Goals; rejestr ograniczeń D-002.
 - **Linter, formatowanie i wspólne ustawienia edytora** — Why parked: przejęcie ich nie zapowiadało; rejestr ograniczeń D-003.

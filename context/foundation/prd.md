@@ -1,6 +1,6 @@
 ---
 project: "Maestro — strona www"
-version: 2
+version: 3
 status: draft
 created: 2026-11-18
 updated: 2026-11-18
@@ -151,6 +151,23 @@ Prośba człowieka (2026-11-18): „na stronie trzeba obsluzyc: [TODO: Connect t
 
 **Technika (zaproponował agent, zaakceptował człowiek 2026-11-18: „Akceptuję (Recommended)”).** Strona zostaje statyczna na GitHub Pages. Klucza usługi wysyłki nie można trzymać w plikach strony (każdy odwiedzający by go zobaczył), więc formularz wysyła adres do małej funkcji w chmurze (Cloudflare Workers, plan darmowy), która trzyma klucz Resend jako sekret, dodaje adres do listy kontaktów Resend i wysyła właścicielowi e-mail z nowym adresem. Resend bez własnej domeny wysyła tylko na adres właściciela konta — dokładnie to, czego ta zmiana potrzebuje. Funkcja przyjmuje żądania tylko z adresu strony, ma pole-pułapkę na boty i limit zapisów z jednego adresu IP.
 
+### Zmiana po przejęciu: nowa treść i układ strony (S-04)
+
+Prośba człowieka (2026-11-18), streszczenie jego słów: za dużo treści; hasło „Build the right product, the right way. Autonomously.” sugeruje, że użytkownik sam buduje automatycznie, a to nie jest idea Maestro; grafika w hero pokazuje zwykły czat zamiast wartości; sekcje problemu, przykładu w 8 krokach, pierwszego wydania, roadmapy i „dla kogo” nic nie wnoszą; data wydania i wizja 2027 to „bzdety niepotrzebne z punktu widzenia odbiorcy. Odbiorca ma zrozumiec wartosc maestro i zapisac sie na liste oczekujacych.” Pierwszą makietę Factory człowiek odrzucił; wygląd zaprojektował Maestro z rozpiski człowieka (hero na cały ekran, sekcje ze spisem po lewej, porównanie tylko z kreatorami aplikacji z promptu, FAQ, koniec strony „What will your moonshot be?”, lekka stylistyka), a człowiek przyjął go po 21 komentarzach: „jest ok”. Wzorem ekranów jest `context/changes/przebudowa-strony/makieta/makieta.html`. Opis zmiany, ten opis strony i makietę człowiek zaakceptował 2026-11-18: „Akceptuję tak, jak jest” (zapis w `context/changes/przebudowa-strony/change.md`, „Pytania do człowieka”).
+
+- [changed] FR-001 → FR-017: Odwiedzający widzi w kolejności: hero na cały ekran (`#top`) z „You bring the idea. Maestro builds it.” i przyciskami „Join the first release” i „See how it’s different”; blok pięciu sekcji (`#how-it-works`): „Your partner” (`#observer`), „You decide” (`#control`), „From build to deploy” (`#deploy`), „After launch” (`#after-launch`, „Coming soon”), „On your terms” (`#ownership`); porównanie (`#why`); FAQ (`#faq`); koniec strony „What will your moonshot be?” z zapisem (`#waitlist`, `#first-release`) i stopką. Znikają sekcje problemu, przykładu w 8 krokach, zasad, pierwszego wydania, roadmapy i „dla kogo”, data wydania i wizja 2027. Treść jest w pliku treści strony, nazwa produktu w jednej stałej. Priority: must-have
+- [changed] FR-002 → FR-018: Linki wewnętrzne: oba przyciski „Join the first release” → `#waitlist`, „See how it’s different” → `#why`, „skip to content” → `#main`, logo i „Back to top” → `#top`, pozycje spisu → swoje sekcje. Stare kotwice (`#how-it-works`, `#first-release` i pozostałe) istnieją, żeby udostępnione linki działały. Priority: must-have
+- [changed] FR-003 → FR-019: Na telefonie (360 px) dokument nie przewija się w poziomie, a porównanie poniżej 640 px ma wiersze jako bloki. Priority: must-have
+- [changed] FR-004, FR-005 → FR-020: Strona ma jeden, jasny motyw (bez przełącznika i bez zapisu w przeglądarce), fonty Host Grotesk i JetBrains Mono z adresu strony. Priority: must-have
+- [changed] FR-006 → FR-024: Na ekranie od 980 px spis pięciu sekcji przykleja się przy przewijaniu, wyróżnia sekcję, której górna krawędź minęła 35% wysokości okna, a kliknięcie pozycji przenosi do sekcji; poniżej 980 px spisu nie ma. Priority: must-have
+- [removed] FR-007, FR-008: przykład w 8 krokach i podgląd aplikacji obiadowej znikają razem z sekcją.
+- [changed] FR-009: FAQ ma 8 pytań z makiety (nowe: „When can I start?”, „Does Maestro do anything without asking me?”; bez „How long does it take to start a project?”), każde otwiera się i zamyka. Priority: must-have
+- [changed] FR-014 → FR-021: Formularz zapisu jest jeden, na końcu strony, i działa jak FR-014, tą samą funkcją zapisu i z tymi samymi komunikatami. Priority: must-have
+- [new] FR-022: Porównanie ma dwie kolumny („Prompt-to-app builders” i Maestro) i 6 wierszy, bez nazw cudzych produktów i bez przypisu. Priority: must-have
+- [new] FR-023: „After launch” i pytanie FAQ o utrzymanie mają widoczne „Coming soon”; strona nigdzie nie obiecuje, że właściciel niczego nie sprawdza. Priority: must-have
+
+**Scenariusz po S-04.** Kroki scenariusza zmieniają się tak: krok 1 sprawdza kolejność z FR-017 i brak tekstów usuniętych sekcji, daty wydania i wizji 2027; krok 2 linki z FR-018; krok 3 brak przewijania w bok i porównanie z FR-019; krok 4 nagłówek z logo i przyciskiem, bez przełącznika motywu; krok 5 zamiast motywu według systemu sprawdza jeden jasny motyw bez zapisu w przeglądarce (FR-020); krok 6 zamiast grafiki rozmowy sprawdza spis sekcji (FR-024); kroki 7 i 8 zamiast przykładu w 8 krokach sprawdzają porównanie (FR-022) i oznaczenia „Coming soon” (FR-023); krok 9 osiem pytań FAQ; krok 10 formularz na końcu strony (FR-021); krok 12 brak płynnego przewijania i przejść przy ograniczonym ruchu; krok 13 kontrast w jasnym motywie; kroki 11 i 14 bez zmian (fonty i obraz hero pod adresem strony); krok 16 dopuszcza pliki tej zmiany. Sprawdzenie każdego kroku: test w przeglądarce na ekranie telefonu i komputera, jak dotąd.
+
 ### Dokładane przez przejęcie
 
 - [new] FR-011: Właściciel (i Factory) uruchamia testy dzisiejszego zachowania strony jednym poleceniem. Priority: must-have
@@ -169,8 +186,8 @@ Prośba człowieka (2026-11-18): „na stronie trzeba obsluzyc: [TODO: Connect t
 **Zgodność wstecz (adresy i formaty):**
 
 - Adres publikacji i prefiks ścieżki `/www-maestro` zostają; od nich zależy adres strony.
-- Kotwice sekcji (`#top`, `#main`, `#why`, `#how-it-works`, `#observer`, `#ownership`, `#first-release`, `#faq`, `#waitlist`) zostają, bo mogą być już udostępnione w linkach.
-- Klucz preferencji motywu `maestro-theme` w pamięci przeglądarki zostaje, żeby powracający odwiedzający nie stracili wybranego motywu.
+- Kotwice sekcji (`#top`, `#main`, `#why`, `#how-it-works`, `#observer`, `#ownership`, `#first-release`, `#faq`, `#waitlist`) zostają, bo mogą być już udostępnione w linkach. Od S-04 `#why` to porównanie, `#how-it-works` blok pięciu sekcji, `#first-release` koniec strony z zapisem, a nowe kotwice `#control`, `#deploy` i `#after-launch` to sekcje „You decide”, „From build to deploy” i „After launch” (FR-018).
+- Klucz preferencji motywu `maestro-theme` w pamięci przeglądarki zostaje do S-04. Od S-04 strona ma tylko jasny motyw i klucza nie czyta, więc powracający odwiedzający z wybranym ciemnym motywem zobaczy jasny (FR-020).
 
 **Przenoszenie danych:** brak — strona nie ma danych odwiedzających ani zaplecza; plan wycofania to cofnięcie commitów przejęcia, bo nie dotykają kodu strony.
 
@@ -184,7 +201,7 @@ Prośba człowieka (2026-11-18): „na stronie trzeba obsluzyc: [TODO: Connect t
 - Kod strony (katalogi strony, komponentów, treści, plików publicznych i style) zostaje bez zmian w przejęciu.
 - Strona działa jako same pliki statyczne, bez zaplecza; budowa daje katalog gotowych plików z prefiksem adresu ustawianym przy budowie.
 - Formularz listy oczekujących zostaje demonstracją bez wysyłki i bez zapisu danych.
-- Jedyny zapis w przeglądarce: preferencja motywu pod kluczem `maestro-theme`.
+- Jedyny zapis w przeglądarce: preferencja motywu pod kluczem `maestro-theme`; od S-04 strona niczego nie zapisuje w przeglądarce (FR-020).
 - Brak analityki i usług zewnętrznych; fonty podawane z tego samego adresu co strona.
 - Dostępność: komunikaty formularza ogłaszane czytnikom ekranu, kontrast tekstu co najmniej 4.5:1 (WCAG AA) w obu motywach, ustawienie ograniczonego ruchu wyłącza animacje i płynne przewijanie.
 - Responsywność: brak poziomego przewijania dokumentu od 360 px w górę.
@@ -205,7 +222,7 @@ Strona jest publiczna, bez logowania, kont i ról. Nie zbiera danych odwiedzają
 ## Non-Goals
 
 - Informacja o prywatności i administratorze danych — człowiek: „tego na razie nie robimy” (rejestr ograniczeń D-001). Podłączenie prawdziwej listy oczekujących przeszło do zakresu jako S-02, po przejęciu.
-- Zmiany treści, wyglądu, nazwy produktu i tłumaczenia strony — po przejęciu, zwykłą drogą zmiany.
+- Zmiana nazwy produktu i tłumaczenie strony. Zmiana treści i układu jest w zakresie od S-04 (prośba człowieka 2026-11-18); hasło zmienia się tylko na stronie, nie w opisie produktu Maestro.
 - Zmiana sposobu i miejsca publikacji — dzisiejsza publikacja zostaje.
 - Przypięcie wersji zależności w pliku zależności projektu i aktualizacje frameworka — poza przejęciem.
 - Pełny audyt dostępności, czytników ekranu i przeglądarek — scenariusz sprawdza tylko to, co sprawdzono ręcznie przed przejęciem.
