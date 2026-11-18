@@ -457,28 +457,28 @@ Nie dotyczy: strona i dane się nie zmieniają. Cofnięcie zmiany to usunięcie 
 
 #### Automated
 
-- [x] 1.1 Dokładna wersja i plik zablokowanych wersji
-- [x] 1.2 Typy przechodzą z testami i konfiguracjami
-- [x] 1.3 Polecenie sprawdzające przechodzi bez Dockera
-- [x] 1.4 Polecenie z `## Verify` przechodzi w świeżym worktree
-- [x] 1.5 Zasoby pod prefiksem na obu ekranach
-- [x] 1.6 Argumenty bez żadnego testu kończą się błędem
-- [x] 1.7 Kod strony jak w `5e4dcac`
+- [x] 1.1 Dokładna wersja i plik zablokowanych wersji — 3ac9f7e
+- [x] 1.2 Typy przechodzą z testami i konfiguracjami — 3ac9f7e
+- [x] 1.3 Polecenie sprawdzające przechodzi bez Dockera — 3ac9f7e
+- [x] 1.4 Polecenie z `## Verify` przechodzi w świeżym worktree — 3ac9f7e
+- [x] 1.5 Zasoby pod prefiksem na obu ekranach — 3ac9f7e
+- [x] 1.6 Argumenty bez żadnego testu kończą się błędem — 3ac9f7e
+- [x] 1.7 Kod strony jak w `5e4dcac` — 3ac9f7e
 
 ### Phase 2: Sekcje, linki, układ, motyw, sieć, ruch i kontrast
 
 #### Automated
 
-- [ ] 2.1 Sekcje i konsola
-- [ ] 2.2 Linki wewnętrzne
-- [ ] 2.3 Przewijanie
-- [ ] 2.4 Nagłówek
-- [ ] 2.5 Motyw
-- [ ] 2.6 Żądania sieciowe
-- [ ] 2.7 Ograniczony ruch
-- [ ] 2.8 Kontrast
-- [ ] 2.9 Bez czekania stałym czasem
-- [ ] 2.10 Typy
+- [x] 2.1 Sekcje i konsola
+- [x] 2.2 Linki wewnętrzne
+- [x] 2.3 Przewijanie
+- [x] 2.4 Nagłówek
+- [x] 2.5 Motyw
+- [x] 2.6 Żądania sieciowe
+- [x] 2.7 Ograniczony ruch
+- [x] 2.8 Kontrast
+- [x] 2.9 Bez czekania stałym czasem
+- [x] 2.10 Typy
 
 ### Phase 3: Interakcje — demo rozmowy, 8 kroków, podgląd, FAQ i formularz
 

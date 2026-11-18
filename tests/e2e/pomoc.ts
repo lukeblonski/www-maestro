@@ -1,4 +1,4 @@
-import type { ConsoleMessage, Page, Request, Response } from "@playwright/test";
+import { expect, type ConsoleMessage, type Page, type Request, type Response } from "@playwright/test";
 
 // Wspólne otwarcie strony dla testów kroków 1–14: adres pod prefiksem publikacji
 // i zapis tego, co przeglądarka zrobiła od pierwszego żądania.
@@ -42,4 +42,44 @@ export async function poFontach(page: Page): Promise<void> {
 /** Ścieżka adresu bez schematu, hosta i zapytania. */
 export function sciezka(adres: string): string {
   return new URL(adres).pathname;
+}
+
+/**
+ * Czeka, aż React podłączy się do przycisku motywu w nagłówku. Przed tym kliknięcie
+ * przycisku nic nie robi, a wysyłka formularza przeładowałaby stronę.
+ */
+export async function poHydracji(page: Page): Promise<void> {
+  await page.waitForFunction(() => {
+    const przycisk = document.querySelector("header button");
+    return !!przycisk && Object.keys(przycisk).some((klucz) => klucz.startsWith("__reactProps$"));
+  });
+}
+
+/** Przewija stronę ekran po ekranie do samego końca, bez płynnego przewijania. */
+export async function przewinDoKonca(page: Page): Promise<void> {
+  await page.evaluate(async () => {
+    const klatka = () => new Promise<void>((gotowe) => requestAnimationFrame(() => gotowe()));
+    const dokument = document.documentElement;
+    for (let y = 0; y <= dokument.scrollHeight; y += Math.max(1, Math.floor(window.innerHeight / 2))) {
+      window.scrollTo({ top: y, behavior: "instant" });
+      await klatka();
+    }
+    window.scrollTo({ top: dokument.scrollHeight, behavior: "instant" });
+    await klatka();
+  });
+  await expect
+    .poll(
+      () =>
+        page.evaluate(() => {
+          const d = document.documentElement;
+          return Math.ceil(window.scrollY + window.innerHeight) >= d.scrollHeight - 1;
+        }),
+      { message: "strona przewinięta do końca" },
+    )
+    .toBe(true);
+}
+
+/** Wyrażenie regularne dopasowujące dokładnie podany tekst. */
+export function dokladnie(tekst: string): RegExp {
+  return new RegExp(`^${tekst.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`);
 }
