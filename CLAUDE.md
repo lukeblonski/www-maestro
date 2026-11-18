@@ -3,20 +3,22 @@ Gdy człowiek w rozmowie mówi „zrób zmianę”, „zrób <ID kawałka>”, �
 
 ## Verify
 
-Uruchom `npm ci && npm run verify` przed każdym commitem. Polecenie sprawdza typy, uruchamia bez przeglądarki test „krok 16” (kod strony i konfiguracja budowy jak w `5e4dcac`) i skanuje programem `gitleaks` historię git oraz pliki przygotowane do commita; nie potrzebuje Dockera ani innych usług lokalnych i kończy się kodem różnym od 0, gdy cokolwiek nie przejdzie.
+Uruchom `npm ci && npm run verify` przed każdym commitem. Polecenie sprawdza typy, buduje stronę z `NEXT_PUBLIC_BASE_PATH=/www-maestro` i adresem atrapy funkcji zapisu `NEXT_PUBLIC_WAITLIST_URL=https://zapis.atrapa.invalid/`, uruchamia bez przeglądarki testy projektu `repo` i skanuje programem `gitleaks` historię git oraz pliki przygotowane do commita. Testy `repo` to: testy funkcji zapisu z `worker/` na atrapie Resend, bez sieci („funkcja zapisu — …”), test zbudowanego `out/` bez adresu `api.resend.com` i nazwy `RESEND_API_KEY`, z adresem atrapy („zbudowana strona — …”), i „krok 16” (kod strony i konfiguracja budowy jak w `5e4dcac`, poza plikami zmiany lista-oczekujacych wymienionymi w teście z nazwy). Polecenie nie potrzebuje Dockera ani innych usług lokalnych i kończy się kodem różnym od 0, gdy cokolwiek nie przejdzie.
 
 Last passing run (2026-11-18):
 
 ```
-  ✓  1 [repo] › tests/repo/zakres-przejecia.spec.ts:32:1 › krok 16 — kod strony i konfiguracja budowy jak w 5e4dcac (20ms)
-10:27AM INF no leaks found
+  ✓  8 [repo] › tests/repo/zakres-przejecia.spec.ts:43:1 › krok 16 — kod strony i konfiguracja budowy jak w 5e4dcac (14ms)
+  ✓  9 [repo] › tests/repo/zbudowana-strona.spec.ts:20:1 › zbudowana strona — bez adresu Resend i nazwy klucza (7ms)
+  9 passed (516ms)
+1:13PM INF no leaks found
 ```
 
 ## Testy w CI
 
 `npm run test:e2e`
 
-Testy kroków 1–14 scenariusza z `tests/e2e/` w Chromium, na stronie zbudowanej z `NEXT_PUBLIC_BASE_PATH=/www-maestro` i podanej pod `/www-maestro/`, w projektach `telefon-360` (360 px) i `komputer-1280` (1280 px). Lokalnie biegną w obrazie `mcr.microsoft.com/playwright:v<wersja @playwright/test>-noble` przez Docker bez roota (skrypt sam uruchamia Dockera, gdy jest wyłączony), w kontenerze `<folder repo>-e2e` z `--network none`; w CI (zmienna `CI`) wprost, po `npx playwright install --with-deps chromium`. Potem na komputerze biegnie test „krok 15” (README i `npm test` w całości). Jeden krok wybiera `npm run test:e2e -- --grep "krok 6\b"`. Polecenie z `## Verify` tych testów nie uruchamia.
+Testy kroków 1–14 scenariusza z `tests/e2e/` w Chromium, na stronie zbudowanej z `NEXT_PUBLIC_BASE_PATH=/www-maestro` i adresem atrapy funkcji zapisu `NEXT_PUBLIC_WAITLIST_URL=https://zapis.atrapa.invalid/` (testy przechwytują go przez `page.route`, `ADRES_FUNKCJI` w `tests/e2e/pomoc.ts`) i podanej pod `/www-maestro/`, w projektach `telefon-360` (360 px) i `komputer-1280` (1280 px). Lokalnie biegną w obrazie `mcr.microsoft.com/playwright:v<wersja @playwright/test>-noble` przez Docker bez roota (skrypt sam uruchamia Dockera, gdy jest wyłączony), w kontenerze `<folder repo>-e2e` z `--network none`; w CI (zmienna `CI`) wprost, po `npx playwright install --with-deps chromium`. Potem na komputerze biegnie test „krok 15” (README i `npm test` w całości). Jeden krok wybiera `npm run test:e2e -- --grep "krok 6\b"`. Polecenie z `## Verify` tych testów nie uruchamia.
 
 ## Uruchomienie lokalne
 

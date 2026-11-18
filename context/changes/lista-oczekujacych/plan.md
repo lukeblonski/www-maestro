@@ -410,13 +410,13 @@ Pierwsza publikacja po scaleniu tworzy funkcję i migrację `v1` Durable Object.
 
 #### Automated
 
-- [x] 3.1 Reguła sekretów autopilota nie zgłasza problemów
-- [x] 3.2 Plik ma joby worker, build, deploy i krok Deploy to GitHub Pages
-- [x] 3.3 Wpisany workflow w repo jest dalej jak w 5e4dcac
+- [x] 3.1 Reguła sekretów autopilota nie zgłasza problemów — 2435db5
+- [x] 3.2 Plik ma joby worker, build, deploy i krok Deploy to GitHub Pages — 2435db5
+- [x] 3.3 Wpisany workflow w repo jest dalej jak w 5e4dcac — 2435db5
 
 ### Phase 4: Dokumentacja i pełne sprawdzenie
 
 #### Automated
 
-- [ ] 4.1 README i polecenie testów
-- [ ] 4.2 Pełne sprawdzenie zmiany
+- [x] 4.1 README i polecenie testów
+- [x] 4.2 Pełne sprawdzenie zmiany

@@ -38,8 +38,8 @@ npm test
 
 `npm test` uruchamia po kolei dwa polecenia i kończy się kodem różnym od 0, gdy cokolwiek nie przejdzie:
 
-- `npm run verify` — sprawdzenie typów, test bez przeglądarki „krok 16” (kod strony i konfiguracja budowy jak w commicie `5e4dcac`) i skan sekretów programem `gitleaks`. Nie potrzebuje Dockera.
-- `npm run test:e2e` — buduje stronę tak jak do publikacji, z prefiksem `/www-maestro` (`NEXT_PUBLIC_BASE_PATH=/www-maestro`), i uruchamia testy kroków 1–14 scenariusza w przeglądarce Chromium, na ekranie telefonu (360 px, projekt `telefon-360`) i komputera (1280 px, projekt `komputer-1280`). Lokalnie przeglądarka działa w obrazie Playwright `mcr.microsoft.com/playwright:v<wersja @playwright/test>-noble` przez Docker bez roota (skrypt sam uruchamia Dockera, gdy jest wyłączony), w kontenerze bez dostępu do sieci. Na koniec, już bez przeglądarki, test „krok 15” sprawdza to README i uruchamia `npm test`.
+- `npm run verify` — sprawdzenie typów, budowa strony z adresem atrapy funkcji zapisu (`NEXT_PUBLIC_WAITLIST_URL=https://zapis.atrapa.invalid/`), testy bez przeglądarki i skan sekretów programem `gitleaks`. Testy bez przeglądarki to testy funkcji zapisu z `worker/` na atrapie Resend (bez sieci), test zbudowanego `out/` (brak adresu `api.resend.com` i nazwy `RESEND_API_KEY`) i „krok 16” (kod strony i konfiguracja budowy jak w commicie `5e4dcac`, poza plikami formularza wymienionymi w teście z nazwy). Nie potrzebuje Dockera.
+- `npm run test:e2e` — buduje stronę tak jak do publikacji, z prefiksem `/www-maestro` (`NEXT_PUBLIC_BASE_PATH=/www-maestro`) i z adresem atrapy funkcji zapisu, który testy przechwytują w przeglądarce, i uruchamia testy kroków 1–14 scenariusza w przeglądarce Chromium, na ekranie telefonu (360 px, projekt `telefon-360`) i komputera (1280 px, projekt `komputer-1280`). Lokalnie przeglądarka działa w obrazie Playwright `mcr.microsoft.com/playwright:v<wersja @playwright/test>-noble` przez Docker bez roota (skrypt sam uruchamia Dockera, gdy jest wyłączony), w kontenerze bez dostępu do sieci. Na koniec, już bez przeglądarki, test „krok 15” sprawdza to README i uruchamia `npm test`.
 
 Każdy test nazywa się krokiem scenariusza, np. „krok 6 — demo rozmowy: zatwierdzenie i powtórka”. Jeden krok, na obu ekranach, uruchamia:
 
@@ -54,19 +54,29 @@ npm run test:e2e -- --grep "krok 6\b"
 - `lib/content.ts` — cała treść strony i `PRODUCT_NAME`.
 - `app/page.tsx` — kompozycja sekcji.
 - `components/interactive.tsx` — interakcje, w tym `WaitlistForm`.
+- `lib/waitlist.ts` — adapter, który wysyła zapis do funkcji zapisu.
+- `worker/` — funkcja zapisu na listę oczekujących (Cloudflare Workers) i jej konfiguracja `wrangler.toml`.
 - `app/globals.css` — style, motywy i reguły responsywne.
 - `public/fonts/` — lokalne pliki kroju pisma.
 
-## Podłączenie listy oczekujących
+## Lista oczekujących
 
-Obecna wersja to wyłącznie demonstracja. Sprawdza format e-maila, lecz nie wysyła żądania i nie przechowuje danych. Wyświetlane potwierdzenie mówi o zakończeniu podglądu, nie o zapisaniu na listę.
+Strona jest statyczna (`output: 'export'`), więc zapisów nie obsługuje sama. Zapis działa tak:
 
-Punktem podłączenia obsługi zapisów jest adapter `lib/waitlist.ts`, wywoływany przez `WaitlistForm` w `components/interactive.tsx`. Do uruchomienia rzeczywistych zapisów:
+1. Formularz `WaitlistForm` (`components/interactive.tsx`) sprawdza format adresu. Pusty albo błędny adres daje komunikat błędu bez żadnego żądania.
+2. Adapter `lib/waitlist.ts` wysyła poprawny adres jednym żądaniem `POST` do funkcji zapisu w Cloudflare Workers (kod w `worker/index.ts`, konfiguracja w `worker/wrangler.toml`). Adres funkcji strona dostaje przy budowie ze zmiennej `NEXT_PUBLIC_WAITLIST_URL`.
+3. Funkcja przyjmuje zapis tylko z adresu strony (nagłówek `Origin`), pomija zgłoszenia z wypełnionym ukrytym polem-pułapką i przyjmuje najwyżej 5 zapisów na minutę z jednego adresu IP.
+4. Funkcja dodaje adres do listy kontaktów Resend i wysyła właścicielowi e-mail z tym adresem. Klucz Resend i adres właściciela są sekretami funkcji, a nie częścią strony ani repozytorium.
+5. Strona pokazuje „Joining…” na przycisku w czasie wysyłki, a potem komunikat, że adres jest zapisany, albo że zapis nie przeszedł. Wpisany adres zostaje w polu, więc można spróbować ponownie.
 
-1. Podłącz adapter do własnego endpointu i zwracaj potwierdzenie dopiero po faktycznym przyjęciu zapisu.
-2. Po stronie endpointu dodaj walidację, obsługę powtórzeń i błędów oraz ochronę przed automatycznymi zgłoszeniami. Klucze i sekrety pozostają po stronie serwera.
-3. Uzupełnij informację o prywatności i administratorze danych, zanim formularz zacznie zbierać adresy.
-4. Dostosuj komunikaty `waitlist` w `lib/content.ts` do rzeczywistego działania i usuń oba widoczne TODO po wykonaniu wskazanych prac.
-5. Sprawdź poprawny zapis, błędny adres, powtórzony zapis i błąd połączenia. Zachowaj komunikaty dostępne dla czytników ekranu.
+Funkcję publikuje job `worker` w workflow `.github/workflows/pages.yml`, przed budową strony, akcją `cloudflare/wrangler-action`. Budowa strony czeka na ten job i dostaje od niego adres funkcji w `NEXT_PUBLIC_WAITLIST_URL`, więc strona nie wyjdzie bez działającej funkcji.
 
-Ze względu na `output: 'export'` endpoint musi działać osobno albo konfiguracja wdrożenia musi zostać rozszerzona o zaplecze. Bezpośrednio w tym statycznym eksporcie nie działa serwerowa trasa obsługująca formularz.
+Potrzebne sekrety repozytorium GitHub (tylko nazwy, wartości nigdy nie trafiają do repozytorium):
+
+- `CLOUDFLARE_API_TOKEN` — token API Cloudflare do publikacji funkcji;
+- `RESEND_API_KEY` — klucz API Resend, przekazywany do sekretów funkcji;
+- `OWNER_EMAIL` — adres e-mail właściciela, na który funkcja wysyła powiadomienia, przekazywany do sekretów funkcji.
+
+Lokalnie (`npm run dev`, `npm run build`) bez zmiennej `NEXT_PUBLIC_WAITLIST_URL` formularz po wysłaniu poprawnego adresu pokazuje komunikat, że zapis nie przeszedł. Testy nie łączą się z Resend ani z Cloudflare: funkcję sprawdzają na atrapie Resend, a formularz na atrapie funkcji.
+
+Strona nie ma informacji o prywatności i administratorze danych (rejestr ograniczeń, D-001).
