@@ -31,7 +31,7 @@ Maestro ma jednostronicową, angielską stronę zapowiedzi, publikowaną automat
 | ---- | ------------------------ | -------------------- | ------------- | -------- | ------ |
 | S-01 | testy-zachowania-strony  | właściciel i Factory uruchamiają jednym poleceniem testy dzisiejszego zachowania strony (360 px i 1280 px, strona zbudowana z `/www-maestro`), a README opisuje uruchomienie strony i testów | obraz przeglądarki testów i program kontenerów bez roota na komputerze fabryki (są) | US-01, FR-011, FR-012, FR-013, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, FR-009, FR-010 | done |
 | S-02 | lista-oczekujacych       | odwiedzający zapisuje się na listę oczekujących, a właściciel dostaje e-mail z każdym nowym adresem i ma je zebrane w jednej liście | S-01 | FR-014, FR-015, FR-016 | done |
-| S-03 | naprawa-listy-oczekujacych | zapis na opublikowanej stronie naprawdę przechodzi: odwiedzający widzi potwierdzenie, właściciel dostaje e-mail, a adres jest w kontaktach Resend | S-02 | FR-014, FR-015, FR-016 | ready |
+| S-03 | naprawa-listy-oczekujacych | zapis na opublikowanej stronie naprawdę przechodzi: odwiedzający widzi potwierdzenie, właściciel dostaje e-mail, a adres jest w kontaktach Resend | S-02 | FR-014, FR-015, FR-016 | done |
 
 ## Baseline
 
@@ -110,7 +110,7 @@ Brak. Narzędzie testów, ustawienia ekranów 360 px i 1280 px oraz podawanie zb
 - **Potrzebuje:** klucz API Resend i adres e-mail właściciela (pliki z `## Dostępy` w `CLAUDE.md`, są) do sprawdzenia na żywo; token API Cloudflare (jest) do publikacji funkcji.
 - **Na żywo:** zapis-na-liste
 - **Risk:** prawdziwy zapis przed scaleniem dodaje adres właściciela do kontaktów Resend i wysyła mu e-mail (zgoda człowieka); gdy przyczyną jest klucz Resend tylko do wysyłki, naprawa czeka na nowy klucz od człowieka; scalenie na `main` od razu publikuje funkcję i stronę.
-- **Status:** ready
+- **Status:** done
 
 ## Backlog Handoff
 
