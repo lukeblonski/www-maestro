@@ -30,7 +30,7 @@ Maestro ma jednostronicową, angielską stronę zapowiedzi, publikowaną automat
 | ID   | Change ID                | Outcome (user can …) | Prerequisites | PRD refs | Status |
 | ---- | ------------------------ | -------------------- | ------------- | -------- | ------ |
 | S-01 | testy-zachowania-strony  | właściciel i Factory uruchamiają jednym poleceniem testy dzisiejszego zachowania strony (360 px i 1280 px, strona zbudowana z `/www-maestro`), a README opisuje uruchomienie strony i testów | obraz przeglądarki testów i program kontenerów bez roota na komputerze fabryki (są) | US-01, FR-011, FR-012, FR-013, FR-001, FR-002, FR-003, FR-004, FR-005, FR-006, FR-007, FR-008, FR-009, FR-010 | done |
-| S-02 | lista-oczekujacych       | odwiedzający zapisuje się na listę oczekujących, a właściciel dostaje e-mail z każdym nowym adresem i ma je zebrane w jednej liście | S-01 | FR-014, FR-015, FR-016 | proposed |
+| S-02 | lista-oczekujacych       | odwiedzający zapisuje się na listę oczekujących, a właściciel dostaje e-mail z każdym nowym adresem i ma je zebrane w jednej liście | S-01 | FR-014, FR-015, FR-016 | ready |
 
 ## Baseline
 
@@ -90,7 +90,7 @@ Brak. Narzędzie testów, ustawienia ekranów 360 px i 1280 px oraz podawanie zb
   - rodzaj: zakres · krok: akceptacja-prd · pytanie: Strona www-maestro, drugi znacznik TODO. Czy „[TODO: Add the privacy notice and data controller details before collecting email addresses.]” ma zostać widoczny, kiedy formularz już naprawdę zbiera adresy? Rekomendacja Factory: ukryć go ze strony i zostawić sprawę jako zapisane ograniczenie — odwiedzający nie zobaczy notatki dla autora, która przeczy temu, co robi formularz. Ryzyko się nie zmienia: zbieranie adresów bez informacji o prywatności narusza RODO, a w roadmapie zostaje to zapisane jako ryzyko. Druga droga: zostawić go widocznym — uczciwe wobec odwiedzających, ale wygląda na niedokończoną stronę. Odpowiedzi: „Ukryć (Recommended)”, „Zostawić widoczny”. (odpowiedź człowieka: „Ukryć (Recommended)”) · rekomendacja: ukryć drugi znacznik TODO ze strony · wybór: rekomendacja · rozstrzygnął: człowiek · granica: 20 pytaj mnie (rozstrzygnięcie widoczne w aplikacji)
 - **Potrzebuje:** konto Resend założone na adres e-mail właściciela, z kluczem API (plik klucza w `/home/fabryka/.secrets/www-maestro/`); konto Cloudflare z tokenem API do publikacji funkcji (plik klucza w tym samym folderze).
 - **Risk:** strona zaczyna zbierać adresy e-mail bez informacji o prywatności i administratorze danych (decyzja człowieka „tego na razie nie robimy”; RODO wymaga tej informacji przy zbieraniu, rejestr ograniczeń D-001); pierwsza usługa zewnętrzna i pierwsze dane odwiedzających; scalenie na `main` od razu publikuje stronę z działającym formularzem.
-- **Status:** proposed (PRD v2 i pozycja zaakceptowane przez człowieka 2026-11-18: „Akceptuję (Recommended)”; budowa dopiero na słowo człowieka „buduj”, po S-47 w laboratorium i S-01)
+- **Status:** ready
 
 ## Backlog Handoff
 
