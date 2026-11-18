@@ -125,3 +125,13 @@
 - Źródło: lista-oczekujacych — `context/changes/lista-oczekujacych/reviews/impl-review.md` F6
 - Status: obowiązuje
 - Zmiana: lista-oczekujacych
+
+## D-016 Ograniczenie: Wyjątek na `GET /contacts` po nieudanym `POST` nieopisany w planie
+- Pytanie: czy naprawić teraz to, że plan nie mówi, jaki wpis logu i jaką odpowiedź daje funkcja, gdy `GET /contacts/{email}` po nieudanym `POST /contacts` kończy się wyjątkiem sieci albo treścią, która nie jest JSON?
+- Wybór: nie; ograniczenie zostaje. To rzadka awaria Resend lub sieci spoza scenariusza człowieka.
+- Kto zdecydował: model (10x-plan-review)
+- Podstawa: context/changes/naprawa-listy-oczekujacych/reviews/plan-review.md F4, reguła przypadek szczególny
+- Kiedy wrócić: zmiana dotyka sekwencji wywołań Resend w `worker/index.ts` albo w Workers Logs funkcji pojawia się wpis o wyjątku lub treści, która nie jest JSON, przy `GET /contacts`, albo odpowiedź funkcji inna niż 200 i 502.
+- Źródło: naprawa-listy-oczekujacych — `context/changes/naprawa-listy-oczekujacych/reviews/plan-review.md` F4
+- Status: obowiązuje
+- Zmiana: naprawa-listy-oczekujacych

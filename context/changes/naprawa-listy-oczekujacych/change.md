@@ -1,7 +1,7 @@
 ---
 change_id: naprawa-listy-oczekujacych
 title: Naprawa listy oczekujących po błędzie 502 z Resend
-status: planned
+status: plan_reviewed
 created: 2026-11-18
 updated: 2026-11-18
 archived_at: null
@@ -101,3 +101,12 @@ archived_at: null
 - czas: 2026-11-18 13:56 · kto: człowiek · zgoda: dane Resend (USA) · czego dotyczy: kawałek: naprawa-listy-oczekujacych, prawdziwy zapis adresem e-mail właściciela przy sprawdzeniu na żywo zapis-na-liste przed scaleniem i po publikacji: kontakt na liście Resend i e-mail do właściciela, dane w USA; funkcja Cloudflare Workers z logami bez adresów i kluczy · odpowiedź: „Akceptuję (Recommended)”
 - czas: 2026-11-18 13:56 · kto: człowiek · zgoda: sekrety · czego dotyczy: kawałek: naprawa-listy-oczekujacych, autopilot przekazuje klucz Resend (także nowy klucz z pełnym dostępem, gdy będzie potrzebny) do sekretów repozytorium i funkcji poleceniami z ## Wdrożenie; wartość nie przechodzi przez rozmowę · odpowiedź: „Akceptuję (Recommended)”
 - czas: 2026-11-18 09:48 · kto: człowiek · zgoda: upublicznienie · czego dotyczy: kawałek: naprawa-listy-oczekujacych, publiczny adres funkcji maestro-waitlist.<subdomena>.workers.dev przyjmujący zapisy tylko ze strony (posiedzenie dostępów, start.md; kawałek: lista-oczekujacych) · odpowiedź: „Na reszte sie zgadzam. Kontynuj”
+
+## Decyzje triage
+
+### context/changes/naprawa-listy-oczekujacych/reviews/plan-review.md
+
+- F1 — Missing access file or line gives `zablokowane`, which lets the merge through without a live pass (WARNING, Phase 2 — §1 Skrypt ścieżki, Contract): AUTO-FIX (normalne używanie): Skrypt `scripts/na-zywo.mjs` jest nowy, a jego czytanie `## Dostępy` i `start.md` biegnie przy każdym sprawdzeniu na żywo. Kontrakt planu zamienia błąd po stronie repo lub skryptu (brak pliku, linii albo wartości) na `zablokowane`, wbrew `kawalek-intencja.md:14`, a `zablokowane` otwiera scalenie bez `przeszło` i wtedy N7 nie jest spełnione. · commit 73e6418
+- F2 — N8: the autopilot drops `dowod`, and the plan does not say where the 502 cause is recorded (WARNING, Phase 2 — Overview i §1 Skrypt ścieżki; Implementation Approach): AUTO-FIX (normalne używanie): Przy każdym przebiegu ścieżki autopilot usuwa `dowod` razem z worktree, a plan wypisuje na stdout tylko linię diagnostyki i nie mówi, gdzie i kiedy sesja zapisuje przyczynę. Gdy przyczyna leży poza diagnostyką (np. 401 na `/contacts` funkcji), log kroku może jej nie zawierać i kryterium N8 nie da się sprawdzić. · commit 73e6418
+- F3 — Criteria 1.2 and 2.3 have no command that decides (OBSERVATION, Phase 1 Success Criteria 1.2, Phase 2 Success Criteria 2.3): AUTO-FIX (normalne używanie): Implementacja pod `/goal` uruchamia kryteria faz przy każdej fazie. Dziś 2.3 przechodzi przy dowolnym imporcie, a 1.2 nie ma polecenia, więc bramka faz nie rozstrzyga ani N9 (stare oczekiwania bez zmian), ani ograniczenia „bez nowych zależności”. · commit 73e6418
+- F4 — Exception on `GET /contacts` after a failed `POST` is not described (OBSERVATION, Phase 1 §1 Funkcja zapisu, Contract — Sekwencja, krok 2): AUTO-LIMIT (przypadek szczególny): Wyjątek sieci albo treść, która nie jest JSON, na `GET /contacts` zaraz po nieudanym `POST /contacts` to rzadka awaria Resend lub sieci. Nie ma jej w scenariuszu człowieka, a `change.md` nie ma „Chroni przed” (przyjęto model „przypadkowy błąd agenta, nie celowe obejście”). · D-016
