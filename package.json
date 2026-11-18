@@ -8,7 +8,7 @@
     "typecheck": "tsc --noEmit",
     "test": "npm run verify && npm run test:e2e",
     "test:e2e": "bash scripts/test-e2e.sh",
-    "verify": "npm run typecheck && playwright test -c playwright.bez-przegladarki.config.ts --project repo && gitleaks git --redact --no-banner ."
+    "verify": "npm run typecheck && playwright test -c playwright.bez-przegladarki.config.ts --project repo && gitleaks git --redact --no-banner . && gitleaks git --staged --redact --no-banner ."
   },
   "dependencies": {
     "next": "latest",

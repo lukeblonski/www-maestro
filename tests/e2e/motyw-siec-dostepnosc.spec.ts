@@ -163,7 +163,7 @@ test("krok 13 — kontrast co najmniej 4.5:1 w motywie jasnym i ciemnym", async 
     await poFontach(page);
     await page.mouse.move(0, 0);
 
-    problemy.push(...(await zmierzKontrast(page, "h1, h2, h3, p, button:not([disabled])", motyw)));
+    problemy.push(...(await zmierzKontrast(page, "h1, h2, h3, p, button:not([disabled]), a.button", motyw)));
 
     const formularz = page.locator("#waitlist");
     const pole = formularz.getByLabel(c.waitlist.label);

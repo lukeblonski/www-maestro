@@ -3,7 +3,7 @@ Gdy człowiek w rozmowie mówi „zrób zmianę”, „zrób <ID kawałka>”, �
 
 ## Verify
 
-Uruchom `npm ci && npm run verify` przed każdym commitem. Polecenie sprawdza typy, uruchamia bez przeglądarki test „krok 16” (kod strony i konfiguracja budowy jak w `5e4dcac`) i skanuje historię git programem `gitleaks`; nie potrzebuje Dockera ani innych usług lokalnych i kończy się kodem różnym od 0, gdy cokolwiek nie przejdzie.
+Uruchom `npm ci && npm run verify` przed każdym commitem. Polecenie sprawdza typy, uruchamia bez przeglądarki test „krok 16” (kod strony i konfiguracja budowy jak w `5e4dcac`) i skanuje programem `gitleaks` historię git oraz pliki przygotowane do commita; nie potrzebuje Dockera ani innych usług lokalnych i kończy się kodem różnym od 0, gdy cokolwiek nie przejdzie.
 
 Last passing run (2026-11-18):
 

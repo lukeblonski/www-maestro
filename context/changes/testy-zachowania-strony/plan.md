@@ -448,6 +448,14 @@ Nie dotyczy: strona i dane się nie zmieniają. Cofnięcie zmiany to usunięcie 
   - **Why**: GNU coreutils 9.7 (`cp --parents`) po utworzeniu nowego katalogu rodzica otwiera następny plik z `O_EXCL`, więc istniejący w worktree `CLAUDE.md` po `tests/repo/zakres-przejecia.spec.ts` kończy się „File exists” i kodem 123, zanim `verify` w ogóle ruszy (odtworzone na dwóch plikach w katalogu tymczasowym; `-f` nie pomaga). Osobny `cp` na plik kopiuje te same pliki, więc sprawdzenie zostaje to samo. Po commicie nowe pliki są już w `HEAD`, więc dosłowne polecenie nie trafia na ten błąd.
   - **Criteria**: T17
   - **Files**: none
+- **PC4 (Phase 1)**: `scripts.verify` dostaje na końcu `&& gitleaks git --staged --redact --no-banner .`, a zdanie w `## Verify` w `CLAUDE.md` mówi, że gitleaks skanuje historię git oraz pliki przygotowane do commita.
+  - **Why**: przegląd implementacji F7 (`reviews/impl-review.md`, AUTO-FIX, bezpieczeństwo A): `gitleaks git` skanuje tylko zapisaną historię, więc sekret w plikach przygotowanych do commita przechodził polecenie uruchamiane „przed każdym commitem”.
+  - **Criteria**: T17
+  - **Files**: `package.json`, `CLAUDE.md`
+- **PC5 (Phase 2)**: Selektor kontrastu w teście „krok 13” obejmuje też widoczne `a.button` (przyciski-linki w hero, roadmapie i CTA nagłówka).
+  - **Why**: przegląd implementacji F2 (`reviews/impl-review.md`, AUTO-FIX, normalne używanie): T13 obejmuje przyciski, a `button:not([disabled])` pomijał linki wyglądające jak przyciski, w tym jedyne użycie `.button-ink`.
+  - **Criteria**: T13
+  - **Files**: `tests/e2e/motyw-siec-dostepnosc.spec.ts`
 
 ## Progress
 
