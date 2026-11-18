@@ -1,7 +1,7 @@
 ---
 change_id: testy-zachowania-strony
 title: Testy dzisiejszego zachowania strony, README i polecenie testów
-status: planned
+status: plan_reviewed
 created: 2026-11-18
 updated: 2026-11-18
 archived_at: null
@@ -122,3 +122,21 @@ archived_at: null
 ## Zatrzymania autopilota
 
 - czas: 2026-11-18 10:00 · krok: plan · powód: odmowa uprawnień: Bash: sed -n '/^## Ścieżki/,/^## [^ŚP]/p' docs/zgoda-czlowieka.md | head -120; echo ----; grep -n "^## Płatne testy skilli" -A 30 docs/zgoda-czlowieka.md | head -40; echo ----; grep -n "^6\.\|^## " docs/zasady-budowy.md | head -40; brak pliku context/changes/testy-zachowania-stron… · zrobiono: pytanie planu o T15 spoza bramek rozstrzygnięte przez agenta: wariant (a); odmowa dotyczyła tylko odczytu nieistniejących plików docs/ w repo aplikacji · skutek: krok idzie od nowa z odpowiedzią
+
+## Decyzje triage
+
+### context/changes/testy-zachowania-strony/reviews/plan-review.md
+
+- F1 — Kryterium 1.4 uruchamia `verify` na `HEAD` sprzed commita fazy (CRITICAL, Phase 1 — Success Criteria, wiersz 1.4): AUTO-FIX (normalne używanie): Wiersz 1.4 robi worktree z `HEAD` sprzed commita fazy, w którym nie ma jeszcze skryptu `verify` ani testu „krok 16”, więc bramka Automated Fazy 1 pada przy każdej próbie i faza nigdy nie dostaje commita; poprawka zmienia tylko polecenie w planie, mieści się w intencji i nie dotyka żadnej bramki. · commit e2d9c2d
+- F2 — Tło do kontrastu ma uwzględniać sam element, nie tylko przodków (WARNING, Phase 2 — Changes Required #2, `krok 13`): AUTO-FIX (normalne używanie): Mierzone w T13 przyciski i `p.claude-note` mają własne nieprzezroczyste tło, więc kontrakt „najbliższy przodek” czytany dosłownie da czerwony test już na dzisiejszej stronie i zatrzyma implementację bez powodu; dopisanie „sam element albo jego najbliższy przodek (do `body` włącznie)” mierzy prawdziwe tło pod tekstem, a to jest zamiar T13, więc kryterium się nie zmienia. · commit e2d9c2d
+- F3 — Potwierdzenie zmiany T15 przez człowieka nie czeka nigdzie w kolejce (WARNING, Decyzje planu, wiersz „Gdzie biegnie test krok 15”; plan-brief, „Otwarte ryzyka i założenia”): AUTO-ESCALATE (bramka 1): Przeniesienie sprawdzenia T15 z `npm run verify` do `npm run test:e2e -- --grep "krok 15\b"` i nowy krok 4 scenariusza zmieniają kryterium akceptacji i scenariusz w `change.md`, a rozstrzygnął to agent (`rozstrzygnął: agent`); każde wyjście z konfliktu T15 i T17 zmienia któreś kryterium, więc decyzję podejmuje człowiek przed implementacją.
+- F4 — Zielone `typecheck` w świeżym worktree zależy od `skipLibCheck` (OBSERVATION, Current State Analysis; Phase 1, wiersz 1.4): AUTO-LIMIT (przypadek szczególny): Dziś `typecheck` przechodzi w świeżym worktree, a T16 zamraża `tsconfig.json`, więc błąd TS2882 wyszedłby tylko po wyłączeniu `skipLibCheck` albo po dopisaniu podobnych importów `.d.ts`; to przypadek wymyślony, którego nie ma w scenariuszu ani w „Chroni przed”. · D-005
+- F5 — Strażnik „zero testów” liczy projekt `repo`, którego `test:e2e` nie uruchamia (OBSERVATION, Phase 1 — Changes Required #4, kroki 1 i 4): AUTO-LIMIT (przypadek szczególny): Fałszywa zieleń wychodzi tylko wtedy, gdy ktoś uruchomi `npm run test:e2e` z `--grep`, który wybiera wyłącznie test projektu `repo` (np. „krok 16”); w `change.md` krok 16 sprawdza `npm run verify`, więc przy zwykłej pracy to się nie zdarza. · D-006
+- F6 — Zagnieżdżone przebiegi Playwright czyszczą wspólny `outputDir` (OBSERVATION, Decyzje planu, „Wyniki Playwright”; Phase 4 — `krok 15`): AUTO-LIMIT (przypadek szczególny): Zagnieżdżony przebieg w teście „krok 15” czyści wspólny `outputDir`, ale zewnętrzny przebieg projektu `readme` nie zapisuje tam artefaktów, więc dziś nic się nie psuje; szkoda pojawiłaby się dopiero przy artefaktach, których plan nie przewiduje. · D-007
+
+## Wymaga Twojej decyzji
+
+- **context/changes/testy-zachowania-strony/reviews/plan-review.md F3 — Potwierdzenie zmiany T15 przez człowieka nie czeka nigdzie w kolejce** · Reguła: bramka 1
+  - Opis: Jeden z ustalonych warunków odbioru brzmiał: „polecenie sprawdzające uruchamia polecenie wszystkich testów z README i sprawdza, że przechodzi”. Tego nie da się pogodzić z innym warunkiem: polecenie sprawdzające ma działać bez Dockera, a testy strony w przeglądarce potrzebują Dockera. Fabryka sama, bez Ciebie, przeniosła więc ten sprawdzian do polecenia testów w przeglądarce. Po testach strony na telefonie i komputerze uruchamia ono raz jeszcze całe polecenie z README i sprawdza, że kończy się sukcesem. W tym celu poprawiła warunek T15 i krok 4 scenariusza. Zmiana warunku odbioru należy do Ciebie, a bez Twojej odpowiedzi fabryka zaczęłaby budować na poprawionym warunku.
+  - Rekomendacja: Zatwierdzić wariant (a), czyli sprawdzian README w poleceniu testów w przeglądarce. Tylko on daje naraz jedno polecenie wszystkich testów, które naprawdę przechodzi, i polecenie sprawdzające bez Dockera. Wariant (b), polecenie sprawdzające z Dockerem, łamie regułę fabryki. Wariant (c), samo czytanie README, nie dowodzi, że polecenie przechodzi.
+  - Pytanie: Czy zatwierdzasz poprawiony warunek T15 i krok 4 scenariusza (wariant (a))? Gotowa odpowiedź: „Zatwierdzam wariant (a) dla T15.” Po niej fabryka buduje według obecnego planu. Wybór (b) albo (c) zmieni plan i warunek przed budową.
