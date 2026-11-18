@@ -1,10 +1,10 @@
 ---
 change_id: lista-oczekujacych
 title: Prawdziwa lista oczekujących z powiadomieniem właściciela
-status: impl_reviewed
+status: archived
 created: 2026-11-18
 updated: 2026-11-18
-archived_at: null
+archived_at: 2026-11-18T13:40:45Z
 ---
 
 ## Notes
