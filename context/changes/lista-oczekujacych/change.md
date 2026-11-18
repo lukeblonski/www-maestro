@@ -1,7 +1,7 @@
 ---
 change_id: lista-oczekujacych
 title: Prawdziwa lista oczekujących z powiadomieniem właściciela
-status: planned
+status: plan_reviewed
 created: 2026-11-18
 updated: 2026-11-18
 archived_at: null
@@ -137,3 +137,12 @@ archived_at: null
 ## Zatrzymania autopilota
 
 - czas: 2026-11-18 12:26 · krok: start · powód: polecenie python3 /home/fabryka/fabryka/skills/intent/scripts/check_intent.py context/changes/lista-oczekujacych/change.md; git symbolic-ref --short -q HEAD; git rev-parse --verify -q refs/heads/main; test ! -e context/changes/lista-oczekujacych/research.md zakończyło się kodem 1: / Warunki startu … · zrobiono: — · skutek: —
+
+## Decyzje triage
+
+### context/changes/lista-oczekujacych/reviews/plan-review.md
+
+- F1 — Adres bez kropki w domenie przechodzi formularz i daje „Your sign-up didn't go through” (WARNING, Phase 2 — §3 Formularz, wobec Phase 1 — §1 Kod funkcji): AUTO-FIX (normalne używanie): Literówka bez „.com” (np. `anna@gmail`) zdarza się przy zwykłym wpisywaniu adresu. Taki adres przechodzi formularz, funkcja go odrzuca, a odwiedzający dostaje „Your sign-up didn't go through” za każdym razem, choć „Oczekiwany efekt” i krok 5 scenariusza mówią, że błędny adres daje komunikat błędu bez żądania; poprawka mieści się w intencji i w plikach już objętych planem. · commit 0142aaa
+- F2 — Szczegóły, które wywrócą `typecheck` albo zostawią zgadywanie (OBSERVATION, Phase 1 — §1 Kod funkcji, §3 Testy funkcji): AUTO-FIX (normalne używanie): Import `…/index.ts` z rozszerzeniem wywraca `tsc --noEmit` w `npm run verify`, a `stub.fetch` bez pełnego adresu pada przy każdym zapisie, więc oba błędy zdarzą się przy zwykłym przebiegu L7–L11; dopisanie zachowania przy braku `CF-Connecting-IP` usuwa zgadywanie w tym samym miejscu §1 i §3. · commit 0142aaa
+- F3 — Numer wpisu D-013 zapisany na sztywno (OBSERVATION, Phase 4 — §3 Rejestr ograniczeń): AUTO-FIX (normalne używanie): Ten triage dopisuje do rejestru wpis z F4, więc numer D-013 może być zajęty przed fazą 4 i wpis dostałby powtórzony numer. Branie następnego wolnego numeru z trzech plików rejestru zapobiega temu tanim kosztem. · commit 0142aaa
+- F4 — Limit z jednego IP liczony po pełnym adresie IPv6 (OBSERVATION, Phase 1 — §1 Kod funkcji): AUTO-FIX (bezpieczeństwo B): Zabezpieczyłem limit zapisów przed obejściem przez zmianę adresu w jednej sieci IPv6, stosując standardowe liczenie limitu po prefiksie `/64` dla IPv6 i po pełnym adresie dla IPv4, z przypadkiem testowym dwóch adresów z tej samej `/64` w L10. · commit 0142aaa
