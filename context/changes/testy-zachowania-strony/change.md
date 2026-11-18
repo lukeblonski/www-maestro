@@ -1,7 +1,7 @@
 ---
 change_id: testy-zachowania-strony
 title: Testy dzisiejszego zachowania strony, README i polecenie testów
-status: preparing
+status: planned
 created: 2026-11-18
 updated: 2026-11-18
 archived_at: null
@@ -21,7 +21,7 @@ archived_at: null
 1. Właściciel (albo krok Factory) otwiera README w repo i znajduje polecenie uruchomienia strony i jedno polecenie wszystkich testów.
 2. Uruchamia polecenie testów; testy budują stronę z prefiksem `/www-maestro` i otwierają ją w przeglądarce na ekranie telefonu i komputera.
 3. Testy przechodzą kroki 1–14 scenariusza PRD: kolejność sekcji i brak błędów w konsoli, linki wewnętrzne, brak poziomego przewijania i przewijana tabela, nagłówek bez nawigacji, motyw według systemu i zapamiętany, demo rozmowy, 8 kroków przykładu, podgląd aplikacji obiadowej, FAQ, formularz-demo bez wysyłki, brak żądań poza adres strony, ograniczony ruch, kontrast, zasoby pod prefiksem.
-4. Testy bez przeglądarki sprawdzają kroki 15–16: README ma oba polecenia, a kod strony, konfiguracja budowy i workflow publikacji są takie jak w commicie właściciela `5e4dcac`.
+4. Polecenie testów w przeglądarce po testach w kontenerze uruchamia na komputerze test kroku 15: README ma oba polecenia, a polecenie testów z README przechodzi. Test bez przeglądarki w poleceniu sprawdzającym potwierdza krok 16: kod strony, konfiguracja budowy i workflow publikacji są takie jak w commicie właściciela `5e4dcac`.
 5. Właściciel widzi wynik: wszystko zielone przy dzisiejszej stronie; gdy następna zmiana coś zepsuje, test nazwany krokiem scenariusza pada przed scaleniem.
 
 **Kogo dotyczy.** Właściciel strony Maestro i kroki Factory, które sprawdzają każdą następną zmianę strony; odwiedzający nie widzą różnicy.
@@ -77,7 +77,7 @@ archived_at: null
 - **T14.** Pliki zbudowane z `NEXT_PUBLIC_BASE_PATH=/www-maestro` podane pod `/www-maestro/` otwierają stronę, a żadne żądanie fontu, ikony, stylu ani skryptu nie kończy się błędem.
   - Sprawdzenie: polecenie `npm run test:e2e -- --grep "krok 14\b"` (polecenie z `## Testy w CI` w `CLAUDE.md`; test „krok 14” przechodzi w projekcie telefonu 360 px i komputera 1280 px, na stronie zbudowanej z `NEXT_PUBLIC_BASE_PATH=/www-maestro`)
 - **T15.** `README.md` zawiera polecenie uruchomienia strony i jedno polecenie wszystkich testów, a polecenie testów z README uruchomione przez test kończy się kodem 0.
-  - Sprawdzenie: polecenie `npm run verify` (polecenie z `## Verify` w `CLAUDE.md`); test bez przeglądarki „krok 15” czyta README, sprawdza oba polecenia i uruchamia polecenie testów z README ze zmienną środowiska, która w tym uruchomieniu pomija sam test „krok 15” (bez pętli), i sprawdza kod 0
+  - Sprawdzenie: polecenie `npm run test:e2e -- --grep "krok 15\b"` (polecenie z `## Testy w CI` w `CLAUDE.md`); po testach w kontenerze test „krok 15” biegnie na komputerze bez przeglądarki, czyta README, sprawdza oba polecenia i uruchamia polecenie testów z README ze zmienną środowiska, która w tym uruchomieniu pomija sam test „krok 15” (bez pętli), i sprawdza kod 0
 - **T16.** Katalogi `app/`, `components/`, `lib/`, `public/`, `.github/workflows/pages.yml` i pliki konfiguracji budowy (`next.config.ts`, `tsconfig.json`, `postcss.config.mjs`) nie różnią się od commitu `5e4dcac`, a `package.json` różni się od niego tylko wpisami skryptów testów i zależności testów.
   - Sprawdzenie: polecenie `npm run verify` (polecenie z `## Verify` w `CLAUDE.md`); test bez przeglądarki „krok 16” porównuje te ścieżki z `5e4dcac` przez `git`
 - **T17.** Polecenie z `## Verify` w `CLAUDE.md` (skrypt testów `verify` w `package.json`) nie kończy się już komunikatem o braku testów: uruchamia sprawdzenie typów, testy bez przeglądarki i skan sekretów programem `gitleaks`, który już jest na komputerze fabryki (bez nowej zależności), i przechodzi bez uruchomionych usług lokalnych (bez Dockera).
@@ -113,6 +113,7 @@ archived_at: null
 - rodzaj: inne · krok: plan · pytanie: kto uruchamia testy w przeglądarce przed scaleniem, skoro autopilot dla przejętego projektu bramkuje tylko `## Verify`, a CI gałęzi nie ma (research, Otwarte pytania 1) · rekomendacja: wiersze Automated planu uruchamiają `npm run test:e2e -- --grep "krok N\b"`, więc krok implementacji i przeglądu tej zmiany uruchamia testy w przeglądarce; luka w autopilocie to osobna sprawa Factory, zgłoszona człowiekowi w pytaniu planu · wybór: rekomendacja · rozstrzygnął: agent
 - rodzaj: inne · krok: plan · pytanie: gdzie Playwright zapisuje wyniki — katalog w ignorowanym `node_modules/.cache/` z reporterem `list` czy nowa linia `test-results/` w `.gitignore` (research, Otwarte pytania 3) · rekomendacja: `outputDir` w `node_modules/.cache/` i reporter `list` bez raportu HTML, bo nie dotyka `.gitignore` spoza plików zmiany · wybór: rekomendacja · rozstrzygnął: agent
 - rodzaj: inne · krok: plan · pytanie: co z `next-env.d.ts`, który `npm run dev` przepisuje przy sprawdzaniu T18 (research, Otwarte pytania 4) · rekomendacja: plan nie commituje `next-env.d.ts`, a krok, który uruchamia `npm run dev`, przywraca go `git checkout -- next-env.d.ts` · wybór: rekomendacja · rozstrzygnął: agent
+- rodzaj: kryterium · krok: plan · pytanie: T15 (krok 15 w `npm run verify` uruchamia polecenie wszystkich testów z README, które wymaga Dockera) i T17 (`verify` bez Dockera) nie dają się spełnić naraz — (a) krok 15 przechodzi do `npm run test:e2e` i biegnie na komputerze po testach w kontenerze, (b) `verify` uruchamia Dockera, (c) krok 15 w `verify` tylko czyta README bez uruchomienia (research, Otwarte pytania 2) · rekomendacja: (a), zmiana pola Sprawdzenie w T15 i kroku 4 scenariusza · wybór: rekomendacja · rozstrzygnął: człowiek · granica: bramka 1
 - rodzaj: kryterium · krok: plan · pytanie: Opis: T15 i T17 nie dają się spełnić naraz — T15 każe `npm run verify` uruchomić polecenie wszystkich testów z README, które obejmuje testy w przeglądarce idące tylko w Dockerze, a T17 i reguła fabryki wymagają, żeby `verify` przechodził bez Dockera. Rekomendacja: (a) test „krok 15” przechodzi z `npm run verify` do `npm run test:e2e`; po testach w kontenerze uruchamia na komputerze polecenie z README i sprawdza kod 0, pomijając sam siebie; zmienia się pole Sprawdzenie w T15 i krok 4 scenariusza; (b) `verify` uruchamia Dockera — łamie T17; (c) „krok 15” w `verify` tylko czyta README — nie dowodzi, że polecenie przechodzi. Pytanie: Czy zgadzasz się na wariant (a), czyli przeniesienie sprawdzenia T15 z `npm run verify` do `npm run test:e2e -- --grep "krok 15\b"` i poprawkę kroku 4 scenariusza, czy wybierasz (b) albo (c)? · rekomendacja: (a) · wybór: rekomendacja · rozstrzygnął: agent
 
 ## Zgody
