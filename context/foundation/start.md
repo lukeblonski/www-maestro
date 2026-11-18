@@ -87,6 +87,8 @@ Repozytorium: https://github.com/lukeblonski/www-maestro
 
 ## Zatrzymania autopilota
 
+- czas: 2026-11-18 07:25 · krok: akceptacja · powód: czeka na pytanie przejęcia: zacommitowany context/foundation/start.md nie ma w ## Akceptacja linii z kto: człowiek i akceptacja: przejęcie zapisanej po pytaniu o stan z commita cd75582abd24. Zadaj człowiekowi pytanie przejęcia według sekcji „Pytanie przejęcia” w /home/fabryka/fabryka/docs/start-pro… · zrobiono: — · skutek: —
+
 ## Koszty kroków
 
 | Krok | Sesja | Początek | Czas (s) | Model | Wejście | Wyjście | Odczyt cache | Zapis cache | Największy kontekst | Koszt USD | Czas modelu (s) | Czas narzędzi (s) | Testy | Pełne testy | Czas testów (s) |
