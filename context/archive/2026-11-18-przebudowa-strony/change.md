@@ -1,10 +1,10 @@
 ---
 change_id: przebudowa-strony
 title: Przebudowa treści i układu strony Maestro
-status: impl_reviewed
+status: archived
 created: 2026-11-18
 updated: 2026-11-19
-archived_at: null
+archived_at: 2026-11-19T01:25:10Z
 ---
 
 ## Notes

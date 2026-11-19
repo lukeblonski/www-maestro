@@ -3,7 +3,7 @@ project: "Maestro — strona www"
 version: 3
 status: draft
 created: 2026-11-18
-updated: 2026-11-18
+updated: 2026-11-19
 prd_version: 3
 main_goal: quality
 top_blocker: none
@@ -158,4 +158,5 @@ Brak. Narzędzie testów, ustawienia ekranów 360 px i 1280 px oraz podawanie zb
 - **S-01: właściciel i Factory uruchamiają jednym poleceniem testy, które na stronie zbudowanej tak jak do publikacji (prefiks `/www-maestro`), na ekranie telefonu (360 px) i komputera (1280 px), potwierdzają dzisiejsze zachowanie strony — kroki 1–16 scenariusza pierwszej wersji z PRD; README opisuje uruchomienie strony i testów, a polecenie z `## Verify` w `CLAUDE.md` przestaje kończyć się komunikatem o braku testów i uruchamia testy projektu.** — Archived 2026-11-18 → `context/archive/2026-11-18-testy-zachowania-strony/`. Lesson: —.
 - **S-02: odwiedzający wpisuje e-mail w formularz na stronie i jest zapisany na listę oczekujących; właściciel dostaje e-mail z każdym nowym adresem na adres swojego konta w usłudze wysyłki, a adresy są zebrane w liście kontaktów tej usługi.** — Archived 2026-11-18 → `context/archive/2026-11-18-lista-oczekujacych/`. Lesson: —.
 - **S-03: odwiedzający, który zapisze się formularzem na opublikowanej stronie, widzi potwierdzenie zapisu; właściciel dostaje e-mail „New sign-up on the Maestro waiting list” z tym adresem, a adres jest na liście kontaktów Resend. Przyczyna dzisiejszego błędu jest ustalona z prawdziwej odpowiedzi Resend, a funkcja zapisu zostawia w logach Cloudflare powód każdej odmowy Resend (bez klucza).** — Archived 2026-11-18 → `context/archive/2026-11-18-naprawa-listy-oczekujacych/`. Lesson: —.
+- **S-04: odwiedzający w kilka minut rozumie wartość Maestro i zapisuje się na listę oczekujących na lekkiej stronie według makiety przyjętej przez człowieka (`context/changes/przebudowa-strony/makieta/makieta.html`): hero na cały ekran z „You bring the idea. Maestro builds it.” i przyciskami do zapisu i porównania; pięć sekcji ze spisem po lewej („Your partner”, „You decide”, „From build to deploy”, „After launch” z „Coming soon”, „On your terms”); porównanie z kreatorami aplikacji z promptu bez nazw produktów; FAQ z 8 pytaniami; koniec strony „What will your moonshot be?” z jedynym formularzem. Tylko jasny motyw, bez daty wydania i wizji 2027.** — Archived 2026-11-19 → `context/archive/2026-11-18-przebudowa-strony/`. Lesson: —.
 
