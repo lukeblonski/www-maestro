@@ -146,3 +146,53 @@
 - Źródło: naprawa-listy-oczekujacych — `context/changes/naprawa-listy-oczekujacych/reviews/impl-review.md` F4
 - Status: obowiązuje
 - Zmiana: naprawa-listy-oczekujacych
+
+## D-018 Ograniczenie: Krok 13 nie mierzy tekstów w `span` wewnątrz `p`
+- Pytanie: czy naprawić teraz to, że krok 13 mierzy kolor samego `p`, a nie spanów z własnym kolorem (`.chapter-label span.mono`, `.foot > span`, `.who`)?
+- Wybór: nie; ograniczenie zostaje. Te spany mają dziś kontrast co najmniej 4.5:1, więc ograniczenie z intencji i P13 są spełnione, a luka w teście ujawni się dopiero przy późniejszej zmianie kolorów.
+- Kto zdecydował: model (10x-impl-review)
+- Podstawa: context/changes/przebudowa-strony/reviews/impl-review.md F1, reguła przypadek szczególny
+- Kiedy wrócić: zmiana dotyka kolorów w `app/globals.css` (`--sky`, `--sky-soft`, `.foot`, `.chapter-label`, `.who`) albo selektora `TEKSTY_STRONY` w `tests/e2e/motyw-siec-dostepnosc.spec.ts`.
+- Źródło: przebudowa-strony — `context/changes/przebudowa-strony/reviews/impl-review.md` F1
+- Status: obowiązuje
+- Zmiana: przebudowa-strony
+
+## D-019 Ograniczenie: Krok 6 nie sprawdza wyliczenia spisu przy otwarciu z kotwicą
+- Pytanie: czy naprawić teraz to, że krok 6 nie sprawdza, że strona otwarta z linku z kotwicą od razu wyróżnia w spisie właściwą sekcję?
+- Wybór: nie; ograniczenie zostaje. Wyliczenie przy montowaniu jest w kodzie i działa, a brakujący test chroni tylko przed jego przyszłym usunięciem.
+- Kto zdecydował: model (10x-impl-review)
+- Podstawa: context/changes/przebudowa-strony/reviews/impl-review.md F2, reguła przypadek szczególny
+- Kiedy wrócić: zmiana dotyka `ChapterIndex` w `components/interactive.tsx` albo kroku 6 w `tests/e2e/interakcje.spec.ts`.
+- Źródło: przebudowa-strony — `context/changes/przebudowa-strony/reviews/impl-review.md` F2
+- Status: obowiązuje
+- Zmiana: przebudowa-strony
+
+## D-020 Ograniczenie: Ramka pola e-mail ma kontrast ok. 1.5:1
+- Pytanie: czy naprawić teraz to, że ramka pola e-mail (`#9fb0bf` na `--sky`) ma ok. 1.5:1 zamiast 3:1 z WCAG 1.4.11?
+- Wybór: nie; ograniczenie zostaje. Intencja wymaga 4.5:1 tylko dla tekstu, etykieta i placeholder pozwalają rozpoznać pole, a kolor ramki pochodzi z makiety przyjętej przez człowieka.
+- Kto zdecydował: model (10x-impl-review)
+- Podstawa: context/changes/przebudowa-strony/reviews/impl-review.md F3, reguła przypadek szczególny
+- Kiedy wrócić: zmiana dotyka stylów formularza w `app/globals.css` (`.field-row input`) albo intencja zmiany dodaje wymóg kontrastu elementów nietekstowych.
+- Źródło: przebudowa-strony — `context/changes/przebudowa-strony/reviews/impl-review.md` F3
+- Status: obowiązuje
+- Zmiana: przebudowa-strony
+
+## D-021 Ograniczenie: Mapa ryzyk w planie testów opisuje starą stronę
+- Pytanie: czy naprawić teraz to, że tabela ryzyk i wskazówki w §2 `context/foundation/test-plan.md` oraz zdanie w §6.4 o pustej liście żądań opisują starą stronę?
+- Wybór: nie; ograniczenie zostaje. Nieaktualny opis nie wpływa na odwiedzającego ani na kryteria P1–P14, a wprowadzi w błąd dopiero następny krok, który czyta plan testów jako kontekst.
+- Kto zdecydował: model (10x-impl-review)
+- Podstawa: context/changes/przebudowa-strony/reviews/impl-review.md F5, reguła przypadek szczególny
+- Kiedy wrócić: zmiana dotyka `context/foundation/test-plan.md` albo `tests/e2e/`, albo uruchamia `/10x-test-plan` lub `/10x-research` z planem testów jako kontekstem.
+- Źródło: przebudowa-strony — `context/changes/przebudowa-strony/reviews/impl-review.md` F5
+- Status: obowiązuje
+- Zmiana: przebudowa-strony
+
+## D-022 Ograniczenie: Spis liczy pozycje przy przewijaniu także poniżej 980 px
+- Pytanie: czy naprawić teraz to, że poniżej 980 px ukryty spis dalej czyta 5 prostokątów sekcji na klatkę przy przewijaniu?
+- Wybór: nie; ograniczenie zostaje. Koszt to same odczyty w jednym `requestAnimationFrame` na klatkę, a spowolnienie przewijania na telefonie jest hipotetyczne.
+- Kto zdecydował: model (10x-impl-review)
+- Podstawa: context/changes/przebudowa-strony/reviews/impl-review.md F6, reguła przypadek szczególny
+- Kiedy wrócić: zmiana dokłada pracę do nasłuchu przewijania w `components/interactive.tsx` albo pojawia się zgłoszenie wolnego przewijania na telefonie od prawdziwych użytkowników.
+- Źródło: przebudowa-strony — `context/changes/przebudowa-strony/reviews/impl-review.md` F6
+- Status: obowiązuje
+- Zmiana: przebudowa-strony

@@ -1,7 +1,7 @@
 ---
 change_id: przebudowa-strony
 title: Przebudowa treści i układu strony Maestro
-status: implemented
+status: impl_reviewed
 created: 2026-11-18
 updated: 2026-11-19
 archived_at: null
@@ -123,3 +123,13 @@ archived_at: null
 - F1 — Krok 12 sprawdza `transition-duration` na elemencie, który nie ma przejścia (WARNING, Phase 2 — #7 Kroki 5, 11–13 (krok 12, P11)): AUTO-FIX (normalne używanie): Kontrakt kroku 12 mierzy `transition-duration` na linku spisu, który sam nie ma przejścia, więc asercja przechodzi zawsze i nie sprawdza kryterium P11 dla osób z ograniczonym ruchem; trzeba mierzyć `::after` i `span` każdej pozycji spisu. · commit acd59f5
 - F2 — „Ostatni blok `body`” w Decyzjach planu nie da się spełnić w Next (WARNING, Decyzje planu, wiersz „Element `#waitlist`” vs Phase 2 — #6 (krok 1)): AUTO-FIX (normalne używanie): Tabela decyzji każe sprawdzać, że `#waitlist` to ostatni blok `body`, a w zbudowanej stronie po stopce stoją `script` i `next-route-announcer`, więc krok 1 napisany według tabeli nie przejdzie; brzmienie tabeli i kontraktu kroku 1 trzeba ujednolicić na „ostatni element `body` poza `script` i `next-route-announcer`” (decyzja o `<footer id="waitlist">` jest rozstrzygnięta przez agenta, więc nie trafia na bramkę 1). · commit acd59f5
 - F3 — Kontrakt `ChapterIndex` nie mówi o wyliczeniu pozycji przy montowaniu (OBSERVATION, Phase 2 — #3 Interakcje (kontrakt `ChapterIndex`)): AUTO-FIX (normalne używanie): Scenariusz człowieka zaczyna się od otwarcia strony z udostępnionego linku, a kotwica `#ownership` jest w Ograniczeniach, więc na komputerze spis pokazywałby „Your partner” do pierwszego przewinięcia; do kontraktu `ChapterIndex` trzeba dopisać, że wylicza bieżącą pozycję raz przy montowaniu. · commit acd59f5
+
+### context/changes/przebudowa-strony/reviews/impl-review.md
+
+- F1 — Krok 13 nie mierzy tekstów w `span` wewnątrz `p` (OBSERVATION, tests/e2e/motyw-siec-dostepnosc.spec.ts:206-207): AUTO-LIMIT (przypadek szczególny): `change.md` nie ma modelu zagrożenia, więc przyjąłem „przypadkowy błąd agenta, nie celowe obejście”. Spany w `p` (`.chapter-label span.mono` ok. 5.1:1, `.foot > span` ok. 4.7:1, `.who`) mają dziś kontrast co najmniej 4.5:1, więc ograniczenie „kontrast tekstu co najmniej 4.5:1” i P13 są spełnione, a luka w teście ujawni się dopiero przy późniejszej zmianie kolorów, nie przy normalnym używaniu strony. · D-018
+- F2 — Krok 6 nie sprawdza wyliczenia spisu przy otwarciu z kotwicą (OBSERVATION, tests/e2e/interakcje.spec.ts:37): AUTO-LIMIT (przypadek szczególny): Wyliczenie pozycji spisu przy montowaniu jest w kodzie (`markChapter()` w `components/interactive.tsx`), więc strona otwarta z linku z kotwicą od razu wyróżnia właściwą sekcję. Brakujący test chroni tylko przed przyszłym usunięciem tego wywołania, a nie przed błędem, który zdarza się dziś. · D-019
+- F3 — Ramka pola e-mail ma kontrast ok. 1.5:1 (OBSERVATION, app/globals.css:120): AUTO-LIMIT (przypadek szczególny): Intencja wymaga 4.5:1 tylko dla tekstu, a etykieta i placeholder pozwalają rozpoznać pole. Kolor ramki pochodzi z makiety przyjętej przez człowieka („Akceptuję tak, jak jest”, kolory z makiety w „Decyzje z góry”), więc wymóg WCAG 1.4.11 dla granicy kontrolki jest poza kryteriami tej zmiany, a jego poprawka byłaby odstępstwem od decyzji człowieka. · D-020
+- F4 — README nadal mówi o Tailwind CSS (OBSERVATION, README.md:3): AUTO-SKIP (styl): To opis stosu w jednym zdaniu README. Tailwind nadal jest w zależnościach i we wtyczce PostCSS, a strona i testy działają bez względu na to zdanie.
+- F5 — Mapa ryzyk w planie testów opisuje starą stronę (OBSERVATION, context/foundation/test-plan.md:46-65, :155): AUTO-LIMIT (przypadek szczególny): Nieaktualna mapa ryzyk i zdanie w §6.4 o pustej liście żądań nie wpływają na odwiedzającego ani na kryteria P1–P14. Wprowadzą w błąd dopiero następny krok, który czyta `test-plan.md` jako kontekst. · D-021
+- F6 — Spis liczy pozycje przy przewijaniu także poniżej 980 px (OBSERVATION, components/interactive.tsx:20-43): AUTO-LIMIT (przypadek szczególny): Poniżej 980 px nasłuch czyta 5 prostokątów sekcji w jednym `requestAnimationFrame` na klatkę, a sam recenzent ocenia ten koszt jako pomijalny. Spowolnienie przewijania na telefonie to przypadek hipotetyczny. · D-022
+- F7 — Nieużywana klasa `.sr-only` (OBSERVATION, app/globals.css:25): AUTO-SKIP (styl): Nieużywana reguła `.sr-only` z makiety to pozostałość, która nie zmienia wyglądu ani zachowania strony.
