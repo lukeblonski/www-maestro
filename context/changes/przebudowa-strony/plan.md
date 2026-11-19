@@ -345,5 +345,5 @@ Osoba z zapisanym `maestro-theme=dark` zobaczy jasną stronę; klucz zostaje w j
 
 #### Automated
 
-- [x] 3.1 Opisy nie mówią o starej stronie
-- [x] 3.2 Pełne sprawdzenie z P13 przechodzi
+- [x] 3.1 Opisy nie mówią o starej stronie — 98ae6c4
+- [x] 3.2 Pełne sprawdzenie z P13 przechodzi — 98ae6c4
