@@ -324,9 +324,9 @@ Osoba z zapisanym `maestro-theme=dark` zobaczy jasną stronę; klucz zostaje w j
 
 #### Automated
 
-- [ ] 1.1 Pliki mają sumy z makiety
-- [ ] 1.2 Licencje mają linie praw autorskich
-- [ ] 1.3 Sprawdzenie projektu przechodzi
+- [x] 1.1 Pliki mają sumy z makiety
+- [x] 1.2 Licencje mają linie praw autorskich
+- [x] 1.3 Sprawdzenie projektu przechodzi
 
 ### Phase 2: Nowa strona i testy kroków 1–14
 

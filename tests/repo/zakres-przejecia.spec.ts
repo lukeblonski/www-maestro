@@ -4,8 +4,8 @@ import { resolve } from "node:path";
 import { expect, test } from "@playwright/test";
 
 // Krok 16 scenariusza PRD, bez przeglądarki: kod strony, konfiguracja budowy i workflow
-// publikacji są takie jak w commicie właściciela (poza plikami zmian z PLIKI_ZMIAN), a package.json
-// różni się tylko wpisami testów.
+// publikacji są takie jak w commicie właściciela (poza plikami zmian z PLIKI_ZMIAN i
+// PLIKI_PRZEBUDOWY), a package.json różni się tylko wpisami testów.
 
 const KORZEN = resolve(__dirname, "..", "..");
 const BAZA = "5e4dcac";
@@ -28,7 +28,17 @@ const PLIKI_ZMIAN = [
   "app/globals.css",
   ".github/workflows/pages.yml",
 ];
-const WYJATKI = PLIKI_ZMIAN.map((plik) => `:(exclude)${plik}`);
+// Pliki zmiany przebudowa-strony (nowa treść, układ, fonty i obraz hero): mogą się różnić od bazy,
+// ale nie muszą. Katalog public/fonts obejmuje też usunięte i nowe pliki w nim.
+const PLIKI_PRZEBUDOWY = [
+  "app/page.tsx",
+  "app/layout.tsx",
+  "components/brand.tsx",
+  "public/icon.svg",
+  "public/fonts",
+  "public/hero-lines.webp",
+];
+const WYJATKI = [...PLIKI_ZMIAN, ...PLIKI_PRZEBUDOWY].map((plik) => `:(exclude)${plik}`);
 const WPISY_TESTOW: Record<string, string[]> = {
   scripts: ["test", "test:e2e", "verify"],
   devDependencies: ["@playwright/test"],
