@@ -1,7 +1,7 @@
 ---
 change_id: przebudowa-strony
 title: Przebudowa treści i układu strony Maestro
-status: planned
+status: plan_reviewed
 created: 2026-11-18
 updated: 2026-11-19
 archived_at: null
@@ -115,3 +115,11 @@ archived_at: null
 - rodzaj: inne · krok: plan · pytanie: #waitlist jako <footer> (makieta) czy <section> z wewnętrznym <footer>? · rekomendacja: <footer id="waitlist"> jak w makiecie, krok 1 przepisany na jedyny contentinfo po main · wybór: rekomendacja · rozstrzygnął: agent
 - rodzaj: inne · krok: plan · pytanie: drobiazgi spoza makiety: zielona ikona karty, link pominięcia nawigacji, meta description, DESIGN.md, VERIFICATION.md, .impeccable/design.json, test-plan.md i stack-assessment.md · rekomendacja: ikona w kolorach #111111/#ffffff, link pominięcia zostaje, description ze zdania hero, aktualizacja DESIGN.md, VERIFICATION.md, README, CLAUDE.md (## Verify) i test-plan.md, bez zmian .impeccable/design.json i stack-assessment.md · wybór: rekomendacja · rozstrzygnął: agent
 - rodzaj: inne · krok: plan · pytanie: zdania o kreatorach sprawdzone tylko w źródłach producentów, bez niezależnych recenzji; czy to wystarcza? · rekomendacja: przyjąć werdykty z dokumentacji producentów, a wiersze 1 i 6 poprawić według najgorszego przypadku · wybór: rekomendacja · rozstrzygnął: agent
+
+## Decyzje triage
+
+### context/changes/przebudowa-strony/reviews/plan-review.md
+
+- F1 — Krok 12 sprawdza `transition-duration` na elemencie, który nie ma przejścia (WARNING, Phase 2 — #7 Kroki 5, 11–13 (krok 12, P11)): AUTO-FIX (normalne używanie): Kontrakt kroku 12 mierzy `transition-duration` na linku spisu, który sam nie ma przejścia, więc asercja przechodzi zawsze i nie sprawdza kryterium P11 dla osób z ograniczonym ruchem; trzeba mierzyć `::after` i `span` każdej pozycji spisu. · commit acd59f5
+- F2 — „Ostatni blok `body`” w Decyzjach planu nie da się spełnić w Next (WARNING, Decyzje planu, wiersz „Element `#waitlist`” vs Phase 2 — #6 (krok 1)): AUTO-FIX (normalne używanie): Tabela decyzji każe sprawdzać, że `#waitlist` to ostatni blok `body`, a w zbudowanej stronie po stopce stoją `script` i `next-route-announcer`, więc krok 1 napisany według tabeli nie przejdzie; brzmienie tabeli i kontraktu kroku 1 trzeba ujednolicić na „ostatni element `body` poza `script` i `next-route-announcer`” (decyzja o `<footer id="waitlist">` jest rozstrzygnięta przez agenta, więc nie trafia na bramkę 1). · commit acd59f5
+- F3 — Kontrakt `ChapterIndex` nie mówi o wyliczeniu pozycji przy montowaniu (OBSERVATION, Phase 2 — #3 Interakcje (kontrakt `ChapterIndex`)): AUTO-FIX (normalne używanie): Scenariusz człowieka zaczyna się od otwarcia strony z udostępnionego linku, a kotwica `#ownership` jest w Ograniczeniach, więc na komputerze spis pokazywałby „Your partner” do pierwszego przewinięcia; do kontraktu `ChapterIndex` trzeba dopisać, że wylicza bieżącą pozycję raz przy montowaniu. · commit acd59f5
