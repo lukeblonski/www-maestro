@@ -2,128 +2,127 @@ import { expect, test } from "@playwright/test";
 import { content as c } from "../../lib/content";
 import { ADRES_FUNKCJI, atrapaFunkcji, dokladnie, otworzStrone, poFontach, poHydracji, zapisuj } from "./pomoc";
 
-// Wzór: stan początkowy → kliknięcie → stan widoczny dla odwiedzającego → granica.
+// Wzór: stan początkowy → kliknięcie albo przewinięcie → stan widoczny dla odwiedzającego → granica.
 // Elementy po rolach, nazwach dostępnych i kotwicach; teksty z lib/content.ts.
 
-const LICZBA_KROKOW_PRZYKLADU = 8;
-const KROK_PODGLADU = 3;
+// Nazwy cudzych produktów, których porównanie nie wymienia (P7).
+const CUDZE_PRODUKTY = /\b(Lovable|Bolt|Replit|Cursor|Warp|HumanLayer|Devin)\b/;
+const LICZBA_PYTAN_FAQ = 8;
 
 test.beforeEach(async ({ page }) => {
   await otworzStrone(page);
-  // Przed podłączeniem Reacta kliknięcia nic nie zmieniają, a wysyłka formularza przeładowałaby stronę.
+  // Przed podłączeniem Reacta spis nie wyróżnia sekcji, a wysyłka formularza przeładowałaby stronę.
   await poHydracji(page);
 });
 
-test("krok 6 — demo rozmowy: zatwierdzenie i powtórka", async ({ page }) => {
-  const d = c.heroDemo;
-  const demo = page.locator("#top").getByRole("figure", { name: d.caption });
-  const zatwierdzenie = demo.getByRole("button", { name: d.reply });
-  const powtorka = demo.getByRole("button", { name: d.resetLabel });
-  const statusPoczatkowy = demo.getByText(dokladnie(d.phase));
-  const statusPoZatwierdzeniu = demo.getByText(dokladnie(d.buildMessage));
-
-  await expect(zatwierdzenie, "stan początkowy: przycisk zatwierdzenia").toBeVisible();
-  await expect(powtorka, "stan początkowy: bez przycisku powtórki").toHaveCount(0);
-  await expect(statusPoczatkowy, "stan początkowy: status demo").toBeVisible();
-
-  await zatwierdzenie.click();
-  await expect(zatwierdzenie, "po zatwierdzeniu przycisk zatwierdzenia znika").toHaveCount(0);
-  await expect(powtorka, "po zatwierdzeniu jest przycisk powtórki").toBeVisible();
-  await expect(statusPoZatwierdzeniu, "po zatwierdzeniu status demo się zmienia").toBeVisible();
-  await expect(statusPoczatkowy, "po zatwierdzeniu nie ma początkowego statusu").toHaveCount(0);
-
-  await powtorka.click();
-  await expect(zatwierdzenie, "po powtórce wraca przycisk zatwierdzenia").toBeVisible();
-  await expect(powtorka, "po powtórce nie ma przycisku powtórki").toHaveCount(0);
-  await expect(statusPoczatkowy, "po powtórce wraca początkowy status").toBeVisible();
-  await expect(statusPoZatwierdzeniu, "po powtórce nie ma statusu zatwierdzenia").toHaveCount(0);
-});
-
-test("krok 7 — każdy z 8 kroków przykładu i granice", async ({ page }) => {
-  const e = c.example;
-  expect(e.steps.length, "liczba kroków przykładu w lib/content.ts").toBe(LICZBA_KROKOW_PRZYKLADU);
-
-  const grupa = page.getByRole("group", { name: e.stepLabel, exact: true });
-  const kroki = grupa.getByRole("button");
-  const panel = page.locator("#example-panel");
-  const tytul = panel.getByRole("heading", { level: 3 });
-  const poprzedni = panel.getByRole("button", { name: e.previous, exact: true });
-  const nastepny = panel.getByRole("button", { name: e.next, exact: true });
-
-  await expect(kroki).toHaveCount(LICZBA_KROKOW_PRZYKLADU);
-
-  // Granica na starcie: krok 1 wybrany, „Previous step” wyłączony.
-  await expect(kroki.nth(0)).toHaveAttribute("aria-pressed", "true");
-  await expect(poprzedni, "na kroku 1 „Previous step” jest wyłączony").toBeDisabled();
-  await expect(nastepny, "na kroku 1 „Next step” działa").toBeEnabled();
-
-  for (let i = 0; i < LICZBA_KROKOW_PRZYKLADU; i++) {
-    await kroki.nth(i).click();
-    await expect(kroki.nth(i), `krok ${i + 1} wybrany`).toHaveAttribute("aria-pressed", "true");
-    for (let j = 0; j < LICZBA_KROKOW_PRZYKLADU; j++) {
-      if (j !== i) {
-        await expect(kroki.nth(j), `przy kroku ${i + 1} krok ${j + 1} nie jest wybrany`).toHaveAttribute(
-          "aria-pressed",
-          "false",
-        );
-      }
-    }
-    await expect(tytul, `panel pokazuje tytuł kroku ${i + 1}`).toHaveText(dokladnie(e.steps[i].title));
+test("krok 6 — spis wyróżnia bieżącą sekcję i przenosi do niej", async ({ page }, testInfo) => {
+  const spis = page.getByRole("navigation", { name: c.ui.chapters });
+  if (testInfo.project.name === "telefon-360") {
+    await expect(spis, "na telefonie spisu nie widać").toBeHidden();
+    return;
   }
 
-  // Granica na końcu: krok 8 wybrany, „Next step” wyłączony.
-  await expect(nastepny, "na kroku 8 „Next step” jest wyłączony").toBeDisabled();
-  await expect(poprzedni, "na kroku 8 „Previous step” działa").toBeEnabled();
+  const pozycje = spis.getByRole("link");
+  await expect(spis).toBeVisible();
+  await expect(pozycje, "pięć pozycji spisu w kolejności").toHaveText(c.chapters.map((r) => r.indexLabel));
+  const biezace = spis.locator('[aria-current="true"]');
 
-  // Strzałki przechodzą o jeden krok.
-  await poprzedni.click();
-  await expect(kroki.nth(LICZBA_KROKOW_PRZYKLADU - 2)).toHaveAttribute("aria-pressed", "true");
-  await expect(tytul).toHaveText(dokladnie(e.steps[LICZBA_KROKOW_PRZYKLADU - 2].title));
-  await nastepny.click();
-  await expect(kroki.nth(LICZBA_KROKOW_PRZYKLADU - 1)).toHaveAttribute("aria-pressed", "true");
-  await expect(tytul).toHaveText(dokladnie(e.steps[LICZBA_KROKOW_PRZYKLADU - 1].title));
-});
+  const sprawdzBiezaca = async (indeks: number, opis: string) => {
+    await expect(pozycje.nth(indeks), `${opis}: wyróżniona „${c.chapters[indeks].indexLabel}”`).toHaveAttribute(
+      "aria-current",
+      "true",
+    );
+    await expect(biezace, `${opis}: dokładnie jedna wyróżniona pozycja`).toHaveCount(1);
+  };
+  await sprawdzBiezaca(0, "na starcie");
 
-test("krok 8 — podgląd aplikacji obiadowej i reset", async ({ page }) => {
-  const p = c.example.preview;
-  const grupa = page.getByRole("group", { name: c.example.stepLabel, exact: true });
-  const panel = page.locator("#example-panel");
-  const pokaz = panel.getByRole("button", { name: p.button });
-  const reset = panel.getByRole("button", { name: p.reset });
-  const wynik = panel.getByRole("status");
+  // Przewinięcie do każdej sekcji w przód i z powrotem do pierwszej.
+  const kolejnosc = [...c.chapters.keys(), 0];
+  for (const indeks of kolejnosc) {
+    const id = c.chapters[indeks].id;
+    await page.locator(`#${id}`).evaluate((sekcja) => sekcja.scrollIntoView({ behavior: "instant", block: "start" }));
+    await sprawdzBiezaca(indeks, `po przewinięciu do #${id}`);
+  }
 
-  await grupa.getByRole("button").nth(KROK_PODGLADU - 1).click();
-  await expect(panel.getByRole("heading", { level: 3 })).toHaveText(dokladnie(c.example.steps[KROK_PODGLADU - 1].title));
-  await expect(pokaz, "stan początkowy: przycisk pokazania podglądu").toBeVisible();
-  await expect(wynik, "stan początkowy: bez wyniku").toBeHidden();
-
-  await pokaz.click();
-  await expect(wynik, "po pokazaniu jest wynik").toBeVisible();
-  await expect(wynik, "wynik nie jest pusty").toHaveText(/\S/);
-  await expect(wynik, "wynik pokazuje posiłek").toContainText(p.resultTitle);
-  await expect(reset, "po pokazaniu jest przycisk resetu").toBeVisible();
-  await expect(pokaz, "po pokazaniu nie ma przycisku pokazania").toHaveCount(0);
-
-  await reset.click();
-  await expect(pokaz, "po resecie wraca przycisk pokazania").toBeVisible();
-  await expect(reset, "po resecie nie ma przycisku resetu").toHaveCount(0);
+  // Kliknięcie pozycji „You decide” przenosi #control w górne 35% okna.
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+  await sprawdzBiezaca(0, "po powrocie na górę strony");
+  const indeksControl = c.chapters.findIndex((r) => r.id === "control");
+  expect(c.chapters[indeksControl]?.indexLabel, "pozycja #control w spisie").toBe("You decide");
+  await spis.getByRole("link", { name: dokladnie("You decide") }).click();
   await expect
     .poll(
-      async () => {
-        if ((await wynik.count()) === 0 || !(await wynik.isVisible())) return "ukryty";
-        return (await wynik.innerText()).trim() === "" ? "pusty" : "widoczny z treścią";
-      },
-      { message: "po resecie wynik jest pusty albo ukryty" },
+      () =>
+        page.locator("#control").evaluate((sekcja) => {
+          const gora = sekcja.getBoundingClientRect().top;
+          return gora >= 0 && gora <= window.innerHeight * 0.35;
+        }),
+      { message: "#control w górnych 35% okna po kliknięciu pozycji spisu" },
     )
-    .not.toBe("widoczny z treścią");
+    .toBe(true);
+  await sprawdzBiezaca(indeksControl, "po kliknięciu „You decide”");
 });
 
-test("krok 9 — każde pytanie FAQ otwiera się i zamyka", async ({ page }) => {
-  const pytania = page.locator("#faq details");
-  await expect(pytania).toHaveCount(c.faq.items.length);
-  expect(c.faq.items.length, "FAQ ma pytania").toBeGreaterThan(0);
+test("krok 7 — porównanie z kreatorami aplikacji z promptu bez cudzych nazw", async ({ page }) => {
+  const porownanie = page.locator("#why");
+  const tabela = porownanie.getByRole("table", { name: c.comparison.ariaLabel });
+  await expect(tabela.getByRole("columnheader", { includeHidden: true }).filter({ hasText: /\S/ })).toHaveText([
+    "Prompt-to-app builders",
+    "Maestro",
+  ]);
+  await expect(tabela.getByRole("rowheader"), "6 wierszy z treści w kolejności").toHaveText(
+    c.comparison.rows.map((w) => w.label),
+  );
+  expect(c.comparison.rows.length, "6 wierszy w lib/content.ts").toBe(6);
+  // Wiersz nagłówka (ukryty poniżej 640 px) i 6 wierszy danych.
+  const wiersze = tabela.getByRole("row", { includeHidden: true });
+  await expect(wiersze).toHaveCount(7);
+  for (let i = 0; i < c.comparison.rows.length; i++) {
+    const komorki = wiersze.nth(i + 1).getByRole("cell");
+    await expect(komorki).toHaveCount(2);
+    await expect(komorki.nth(0)).toContainText(c.comparison.rows[i].builders);
+    await expect(komorki.nth(1)).toContainText(c.comparison.rows[i].maestro);
+  }
 
-  for (let i = 0; i < c.faq.items.length; i++) {
+  for (const tekst of ["Individual tools vary", "A comparison of typical approaches"]) {
+    await expect(porownanie, `#why bez „${tekst}”`).not.toContainText(tekst);
+  }
+  const tekstStrony = await page.evaluate(() => document.body.textContent ?? "");
+  expect(tekstStrony.match(CUDZE_PRODUKTY)?.[0] ?? null, "nazwa cudzego produktu w tekście strony").toBeNull();
+
+  // Bez podświetlenia kolumny Maestro: komórki obu kolumn mają to samo tło.
+  const tla = await tabela.evaluate((el) =>
+    Array.from(el.querySelectorAll('[role="row"]'))
+      .slice(1)
+      .map((wiersz) => Array.from(wiersz.querySelectorAll('[role="cell"]')).map((k) => getComputedStyle(k).backgroundColor)),
+  );
+  expect(tla.length).toBe(6);
+  tla.forEach(([kreatory, maestro], i) => expect(maestro, `wiersz ${i + 1}: tło komórki Maestro`).toBe(kreatory));
+});
+
+test("krok 8 — „Coming soon” przy opiece po starcie i innych agentach", async ({ page }) => {
+  await expect(page.locator("#after-launch").getByText(dokladnie("Coming soon"))).toBeVisible();
+  const wlasnosc = page.locator("#ownership");
+  await expect(wlasnosc.getByText(dokladnie("Codex and others coming soon"))).toBeVisible();
+  await expect(wlasnosc.getByText(dokladnie("Codex and OpenCode coming soon"))).toBeVisible();
+
+  const pytanie = page
+    .locator("#faq details")
+    .filter({ has: page.locator("summary", { hasText: "Does the first release maintain my application automatically?" }) });
+  await expect(pytanie).toHaveCount(1);
+  await pytanie.locator("summary").click();
+  await expect(pytanie.locator("p")).toBeVisible();
+  await expect(pytanie.locator("p")).toContainText("coming soon");
+});
+
+test("krok 9 — każde z 8 pytań FAQ otwiera się i zamyka", async ({ page }) => {
+  const pytania = page.locator("#faq details");
+  await expect(pytania).toHaveCount(LICZBA_PYTAN_FAQ);
+  await expect(page.locator("#faq summary"), "pytania z treści w kolejności").toHaveText(
+    c.faq.items.map((p) => p.question),
+  );
+
+  for (let i = 0; i < LICZBA_PYTAN_FAQ; i++) {
     const pytanie = pytania.nth(i);
     const naglowek = pytanie.locator("summary");
     const odpowiedz = pytanie.locator("p");
@@ -160,6 +159,11 @@ test("krok 10 — formularz zapisu: błędy bez żądań, wysyłanie, zapisano i
   for (const tekst of ["[TODO: Connect the waiting list", "[TODO: Add the privacy notice", "Form preview only"]) {
     await expect(sekcja, `#waitlist bez „${tekst}”`).not.toContainText(tekst);
   }
+
+  // Jedyny formularz i jedyne pole e-mail na stronie są na jej końcu.
+  await expect(page.locator("form"), "jeden formularz na stronie").toHaveCount(1);
+  await expect(page.locator('input[type="email"]'), "jedno pole e-mail na stronie").toHaveCount(1);
+  await expect(sekcja.locator("form"), "formularz w #waitlist").toHaveCount(1);
 
   await expect(komunikat).toHaveAttribute("id", "waitlist-status");
   await expect(komunikat, "komunikat jest ogłaszany czytnikom ekranu").toHaveAttribute(

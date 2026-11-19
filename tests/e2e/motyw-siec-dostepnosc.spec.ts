@@ -2,45 +2,78 @@ import { expect, test, type Page } from "@playwright/test";
 import { content as c } from "../../lib/content";
 import { atrapaFunkcji, dokladnie, otworzStrone, poFontach, poHydracji, przewinDoKonca } from "./pomoc";
 
+// Klucz, pod którym stara strona zapisywała wybrany motyw. Nowa strona go nie czyta ani nie zapisuje.
 const KLUCZ_MOTYWU = "maestro-theme";
-const MOTYWY = ["light", "dark"] as const;
-type Motyw = (typeof MOTYWY)[number];
+// Ustawienie motywu w systemie odwiedzającego; strona ma jeden, jasny motyw przy obu.
+const SCHEMATY_SYSTEMU = ["light", "dark"] as const;
+type Schemat = (typeof SCHEMATY_SYSTEMU)[number];
 
-const przeciwny = (motyw: Motyw): Motyw => (motyw === "light" ? "dark" : "light");
-// Etykieta przycisku mówi, na jaki motyw przełącza.
-const etykietaPrzelacznika = (motyw: Motyw) => (motyw === "light" ? c.ui.themeDark : c.ui.themeLight);
+test("krok 5 — jeden jasny motyw i nic w pamięci przeglądarki", async ({ page }) => {
+  // Przed każdym załadowaniem: zapisany kiedyś ciemny motyw, potem podsłuch zapisów i odczytów pamięci.
+  await page.addInitScript((klucz) => {
+    const okno = window as unknown as { __zapisyPamieci: string[]; __odczytyPamieci: string[] };
+    okno.__zapisyPamieci = [];
+    okno.__odczytyPamieci = [];
+    try {
+      localStorage.setItem(klucz, "dark");
+    } catch {}
+    const zapisz = Storage.prototype.setItem;
+    const odczytaj = Storage.prototype.getItem;
+    Storage.prototype.setItem = function (k: string, v: string) {
+      okno.__zapisyPamieci.push(String(k));
+      return zapisz.call(this, k, v);
+    };
+    Storage.prototype.getItem = function (k: string) {
+      okno.__odczytyPamieci.push(String(k));
+      return odczytaj.call(this, k);
+    };
+  }, KLUCZ_MOTYWU);
+  const atrapa = await atrapaFunkcji(page);
 
-async function pamiecPrzegladarki(page: Page) {
-  return page.evaluate(() => ({ local: Object.keys(localStorage), session: sessionStorage.length }));
-}
-
-test("krok 5 — motyw według systemu i zapamiętany po odświeżeniu", async ({ page }) => {
-  const html = page.locator("html");
-  for (const system of MOTYWY) {
-    const wybrany = przeciwny(system);
+  for (const system of SCHEMATY_SYSTEMU) {
     await page.emulateMedia({ colorScheme: system });
     await otworzStrone(page);
-    await page.evaluate(() => localStorage.clear());
-    await page.reload();
-
-    await expect(html, `bez zapisanego wyboru motyw jak system (${system})`).toHaveAttribute("data-theme", system);
-    expect(await pamiecPrzegladarki(page), "pamięć przeglądarki przed przełączeniem").toEqual({ local: [], session: 0 });
-
     await poHydracji(page);
-    const przelacznik = page.getByRole("banner").getByRole("button", { name: etykietaPrzelacznika(system) });
-    await expect(przelacznik).toBeVisible();
-    await przelacznik.click();
-    await expect(html, `po przełączeniu (system ${system})`).toHaveAttribute("data-theme", wybrany);
-    await expect(page.getByRole("banner").getByRole("button", { name: etykietaPrzelacznika(wybrany) })).toBeVisible();
 
-    await page.reload();
-    await expect(html, `po odświeżeniu zostaje ${wybrany} (system ${system})`).toHaveAttribute("data-theme", wybrany);
-    await expect(page.getByRole("banner").getByRole("button", { name: etykietaPrzelacznika(wybrany) })).toBeVisible();
-    expect(await pamiecPrzegladarki(page), "jedyny klucz w pamięci przeglądarki").toEqual({
-      local: [KLUCZ_MOTYWU],
-      session: 0,
+    const wyglad = await page.evaluate(() => ({
+      tlo: getComputedStyle(document.body).backgroundColor,
+      schemat: getComputedStyle(document.documentElement).colorScheme,
+      motyw: document.documentElement.getAttribute("data-theme"),
+    }));
+    expect(wyglad, `wygląd przy systemowym ${system} i zapisanym ${KLUCZ_MOTYWU}=dark`).toEqual({
+      tlo: "rgb(255, 255, 255)",
+      schemat: "light",
+      motyw: null,
     });
+
+    // Przewinięcie, otwarcie pytania FAQ i wysyłka formularza do atrapy.
+    await przewinDoKonca(page);
+    const pytanie = page.locator("#faq details").first();
+    await pytanie.locator("summary").click();
+    await expect(pytanie).toHaveAttribute("open");
+    const formularz = page.locator("#waitlist");
+    await formularz.getByLabel(c.waitlist.label).fill("osoba@example.com");
+    await formularz.getByRole("button", { name: c.waitlist.button }).click();
+    await expect(formularz.getByRole("status")).toHaveText(dokladnie(c.waitlist.success));
+
+    const pamiec = await page.evaluate(() => {
+      const okno = window as unknown as { __zapisyPamieci: string[]; __odczytyPamieci: string[] };
+      return {
+        zapisy: okno.__zapisyPamieci,
+        odczyty: okno.__odczytyPamieci,
+        session: sessionStorage.length,
+        ciasteczka: document.cookie,
+      };
+    });
+    expect(pamiec, `pamięć przeglądarki po przewinięciu, FAQ i zapisie (system ${system})`).toEqual({
+      zapisy: [],
+      odczyty: [],
+      session: 0,
+      ciasteczka: "",
+    });
+    expect(await page.context().cookies(), "ciasteczka kontekstu").toEqual([]);
   }
+  expect(atrapa.zadania.length, "wysyłki formularza doszły do atrapy").toBe(SCHEMATY_SYSTEMU.length);
 });
 
 test("krok 11 — wszystkie żądania idą pod adres strony", async ({ page }) => {
@@ -60,7 +93,7 @@ test("krok 11 — wszystkie żądania idą pod adres strony", async ({ page }) =
   expect(obce, `żądania poza ${adresStrony}`).toEqual([]);
 });
 
-test("krok 12 — ograniczony ruch bez płynnego przewijania i animacji", async ({ page }) => {
+test("krok 12 — ograniczony ruch bez płynnego przewijania i przejść", async ({ page }, testInfo) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await otworzStrone(page);
   await poHydracji(page);
@@ -80,13 +113,32 @@ test("krok 12 — ograniczony ruch bez płynnego przewijania i animacji", async 
       }),
   );
   expect(trwajace, "trwające animacje po przewinięciu").toEqual([]);
+
+  if (testInfo.project.name !== "komputer-1280") return;
+  // Spis: makieta ma przejścia na ::after (kreska) i na wewnętrznym span (nazwa sekcji).
+  const przejsciaSpisu = await page
+    .getByRole("navigation", { name: c.ui.chapters })
+    .getByRole("link")
+    .evaluateAll((linki) =>
+      linki.map((a) => ({
+        pozycja: (a.textContent ?? "").trim(),
+        kreska: getComputedStyle(a, "::after").transitionDuration,
+        nazwa: getComputedStyle(a.querySelector("span") ?? a).transitionDuration,
+      })),
+    );
+  expect(przejsciaSpisu.length, "pozycje spisu").toBe(c.chapters.length);
+  expect(
+    przejsciaSpisu.filter((p) => p.kreska.split(",").some((d) => d.trim() !== "0s") || p.nazwa.split(",").some((d) => d.trim() !== "0s")),
+    "pozycje spisu z przejściem przy ograniczonym ruchu",
+  ).toEqual([]);
 });
 
-// Kontrast WCAG 2: kolor tekstu z wyliczonego `color` (alfa zmieszana z tłem), tło z samego
-// elementu albo najbliższego przodka (do body włącznie) o nieprzezroczystym background-color.
-async function zmierzKontrast(page: Page, selektor: string, motyw: Motyw): Promise<string[]> {
+// Kontrast WCAG 2: kolor tekstu z wyliczonego `color` elementu (albo jego pseudoelementu, np.
+// `::placeholder`; alfa zmieszana z tłem), tło z samego elementu albo najbliższego przodka (do body
+// włącznie) o nieprzezroczystym background-color.
+async function zmierzKontrast(page: Page, selektor: string, system: Schemat, pseudo?: string): Promise<string[]> {
   const { zmierzone, problemy } = await page.evaluate(
-    ({ selektor, motyw }) => {
+    ({ selektor, system, pseudo }) => {
       const plotno = document.createElement("canvas");
       plotno.width = 1;
       plotno.height = 1;
@@ -109,7 +161,7 @@ async function zmierzKontrast(page: Page, selektor: string, motyw: Motyw): Promi
       const opisz = (el: Element) => {
         const tekst = (el.textContent ?? "").trim().replace(/\s+/g, " ").slice(0, 50);
         const klasy = typeof el.className === "string" && el.className ? `.${el.className.trim().replace(/\s+/g, ".")}` : "";
-        return `${el.tagName.toLowerCase()}${el.id ? `#${el.id}` : ""}${klasy} „${tekst}”`;
+        return `${el.tagName.toLowerCase()}${el.id ? `#${el.id}` : ""}${klasy}${pseudo ?? ""} „${tekst}”`;
       };
 
       const problemy: string[] = [];
@@ -132,61 +184,81 @@ async function zmierzKontrast(page: Page, selektor: string, motyw: Motyw): Promi
           }
         }
         if (!tlo) {
-          problemy.push(`[${motyw}] ${opisz(el)}: brak nieprzezroczystego tła w elemencie i przodkach do body`);
+          problemy.push(`[${system}] ${opisz(el)}: brak nieprzezroczystego tła w elemencie i przodkach do body`);
           continue;
         }
-        const [r, g, b, a] = rgba(getComputedStyle(el).color);
+        const [r, g, b, a] = rgba(getComputedStyle(el, pseudo).color);
         const tekst = [r * a + tlo[0] * (1 - a), g * a + tlo[1] * (1 - a), b * a + tlo[2] * (1 - a)];
         const [jasny, ciemny] = [luminancja(tekst), luminancja(tlo)].sort((x, y) => y - x);
         const stosunek = (jasny + 0.05) / (ciemny + 0.05);
         if (stosunek < 4.5) {
-          problemy.push(`[${motyw}] ${opisz(el)}: tekst ${hex(tekst)} na tle ${hex(tlo)} = ${stosunek.toFixed(2)}:1`);
+          problemy.push(`[${system}] ${opisz(el)}: tekst ${hex(tekst)} na tle ${hex(tlo)} = ${stosunek.toFixed(2)}:1`);
         }
       }
       return { zmierzone, problemy };
     },
-    { selektor, motyw },
+    { selektor, system, pseudo },
   );
-  expect(zmierzone, `[${motyw}] liczba zmierzonych widocznych elementów ${selektor}`).toBeGreaterThan(0);
+  expect(zmierzone, `[${system}] liczba zmierzonych widocznych elementów ${selektor}${pseudo ?? ""}`).toBeGreaterThan(0);
   return problemy;
 }
 
-test("krok 13 — kontrast co najmniej 4.5:1 w motywie jasnym i ciemnym", async ({ page }) => {
+const TEKSTY_STRONY =
+  "h1, h2, h2 span, h3, p, summary, label, a, button:not([disabled]), [role=columnheader], [role=rowheader], [role=cell], .soon";
+
+test("krok 13 — kontrast co najmniej 4.5:1 przy systemowym motywie jasnym i ciemnym", async ({ page }, testInfo) => {
   const problemy: string[] = [];
   const atrapa = await atrapaFunkcji(page);
-  for (const motyw of MOTYWY) {
-    await page.emulateMedia({ colorScheme: motyw, reducedMotion: "reduce" });
+  for (const system of SCHEMATY_SYSTEMU) {
+    await page.emulateMedia({ colorScheme: system, reducedMotion: "reduce" });
     await otworzStrone(page);
-    await page.evaluate(() => localStorage.clear());
-    await page.reload();
-    await expect(page.locator("html")).toHaveAttribute("data-theme", motyw);
     await poHydracji(page);
     await poFontach(page);
     await page.mouse.move(0, 0);
 
-    problemy.push(...(await zmierzKontrast(page, "h1, h2, h3, p, button:not([disabled]), a.button", motyw)));
+    problemy.push(...(await zmierzKontrast(page, TEKSTY_STRONY, system)));
+
+    // Pozycje spisu: nazwa sekcji jest widoczna dopiero przy fokusie (na komputerze).
+    if (testInfo.project.name === "komputer-1280") {
+      const pozycje = page.getByRole("navigation", { name: c.ui.chapters }).getByRole("link");
+      await expect(pozycje).toHaveCount(c.chapters.length);
+      for (let i = 0; i < c.chapters.length; i++) {
+        await pozycje.nth(i).focus();
+        await expect(pozycje.nth(i).locator("span"), `pozycja spisu ${i + 1} widoczna przy fokusie`).toHaveCSS(
+          "opacity",
+          "1",
+        );
+        problemy.push(...(await zmierzKontrast(page, "nav.index a:focus span", system)));
+      }
+      await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+    }
 
     const formularz = page.locator("#waitlist");
     const pole = formularz.getByLabel(c.waitlist.label);
     const wyslij = formularz.getByRole("button", { name: c.waitlist.button });
     const status = formularz.locator("#waitlist-status");
 
+    // Placeholder pustego pola bez fokusu, na tle #waitlist.
+    await expect(pole).toHaveValue("");
+    await expect(pole).not.toBeFocused();
+    problemy.push(...(await zmierzKontrast(page, "#waitlist-email", system, "::placeholder")));
+
     await wyslij.click();
     await expect(status, "komunikat po błędnej wysyłce").not.toBeEmpty();
     await expect(pole).toHaveAttribute("aria-invalid", "true");
-    problemy.push(...(await zmierzKontrast(page, "#waitlist-status", motyw)));
+    problemy.push(...(await zmierzKontrast(page, "#waitlist-status", system)));
 
     // Komunikat zapisano i komunikat niepowodzenia po odpowiedziach atrapy funkcji zapisu.
     await pole.fill("osoba@example.com");
     atrapa.ustaw("sukces");
     await wyslij.click();
     await expect(status, "komunikat zapisano po odpowiedzi sukcesu").toHaveText(dokladnie(c.waitlist.success));
-    problemy.push(...(await zmierzKontrast(page, "#waitlist-status", motyw)));
+    problemy.push(...(await zmierzKontrast(page, "#waitlist-status", system)));
 
     atrapa.ustaw("blad");
     await wyslij.click();
     await expect(status, "komunikat niepowodzenia po odpowiedzi błędu").toHaveText(dokladnie(c.waitlist.failure));
-    problemy.push(...(await zmierzKontrast(page, "#waitlist-status", motyw)));
+    problemy.push(...(await zmierzKontrast(page, "#waitlist-status", system)));
   }
   expect(problemy, "elementy z kontrastem poniżej 4.5:1").toEqual([]);
 });

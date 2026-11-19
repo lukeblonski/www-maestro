@@ -1,362 +1,201 @@
 // Product name lives here so the working name can be changed in one place.
 export const PRODUCT_NAME = "Maestro";
 
-// Product and workflow copy is grounded in source-materials/01–07. The dinner
-// app is an invented illustration requested by the user, not a customer project.
+// Page copy follows the mockup accepted by the owner
+// (context/changes/przebudowa-strony/makieta/makieta.html). Rows 1 and 6 of the
+// prompt-to-app builders column are corrected after the research of that change.
+
+export type ChapterPoint = { title: string; text: string; next?: string };
+export type Chapter = {
+  id: string;
+  label: string;
+  indexLabel: string;
+  quiet: string;
+  heading: string;
+  lead?: string;
+  soon?: boolean;
+  points: ChapterPoint[];
+};
+export type ComparisonRow = { label: string; builders: string; maestro: string; soon?: boolean };
+
+const chapters: Chapter[] = [
+  {
+    id: "observer",
+    label: "Your partner",
+    indexLabel: "Your partner",
+    quiet: "This is not another code monkey.",
+    heading: "This is your partner in building meaningful things.",
+    lead: `${PRODUCT_NAME} offloads you from everything AI does better, so you can focus on what only humans do best.`,
+    points: [
+      {
+        title: "You decide what gets built.",
+        text: `${PRODUCT_NAME} helps you describe how your idea should work, then helps you choose the technology, the infrastructure and everything else it takes.`,
+      },
+      {
+        title: "Your idea, translated for the AI agents that build it.",
+        text: `You and ${PRODUCT_NAME} agree on what you want to build. ${PRODUCT_NAME} turns that into precise work for AI agents and keeps them on track until it is done.`,
+      },
+      {
+        title: "Autonomy whenever it makes sense.",
+        text: `${PRODUCT_NAME} gathers everything it needs for the build up front, so it involves you as little as possible once the work starts. It can even configure the external services your product needs, once you give it access.`,
+      },
+      {
+        title: "Plain language, always.",
+        text: `${PRODUCT_NAME} talks to you in everyday words, so you understand everything and know exactly what is happening.`,
+      },
+      {
+        title: "It remembers.",
+        text: `${PRODUCT_NAME} remembers your decisions and the reasons behind them for as long as you want. Its entire memory is stored on your server.`,
+      },
+    ],
+  },
+  {
+    id: "control",
+    label: "You decide",
+    indexLabel: "You decide",
+    quiet: `${PRODUCT_NAME} does the work.`,
+    heading: "You make the calls.",
+    points: [
+      {
+        title: "Nothing important without your approval.",
+        text: "Installations, spending, sharing data, publishing, new accounts and anything that cannot be undone wait for your yes.",
+      },
+      {
+        title: "Every question comes with a recommendation.",
+        text: `${PRODUCT_NAME} explains what you are agreeing to in plain language and tells you which answer it recommends and why.`,
+      },
+      {
+        title: "Questions come to your phone.",
+        text: `When ${PRODUCT_NAME} needs your decision, you get a notification in the Claude app, on your computer or phone.`,
+      },
+    ],
+  },
+  {
+    id: "deploy",
+    label: "From build to deploy",
+    indexLabel: "Build to deploy",
+    quiet: "Building is half the job.",
+    heading: `${PRODUCT_NAME} puts your product in front of your users.`,
+    points: [
+      {
+        title: "See it working first.",
+        text: "As each part is finished, you can open a private preview and try your product before anyone else does.",
+      },
+      {
+        title: "Deployed for you.",
+        text: `${PRODUCT_NAME} not only helps you build your product. It deploys it, so your users can reach it.`,
+      },
+      {
+        title: "Released when you say so.",
+        text: "Nothing goes public without your approval.",
+      },
+    ],
+  },
+  {
+    id: "after-launch",
+    label: "After launch",
+    indexLabel: "After launch",
+    quiet: "A product is never finished,",
+    heading: `so ${PRODUCT_NAME} stays.`,
+    soon: true,
+    points: [
+      {
+        title: "It looks after your product.",
+        text: `${PRODUCT_NAME} keeps watching your product and, when something goes wrong, proactively fixes it.`,
+      },
+      {
+        title: "It helps your product grow.",
+        text: `${PRODUCT_NAME} helps you shape a product strategy, gathers feedback from your users and your tools, and implements changes, improvements and new features.`,
+      },
+    ],
+  },
+  {
+    id: "ownership",
+    label: "On your terms",
+    indexLabel: "On your terms",
+    quiet: "Your product.",
+    heading: "On your terms.",
+    points: [
+      {
+        title: "You never touch the code.",
+        text: "You don’t need to know what a PR, a merge, a ticket or an API is. All you need is the will to build your next moonshot.",
+      },
+      {
+        title: "Your server. Always on.",
+        text: `${PRODUCT_NAME} runs on a separate server, so it has no access to the data on your computer, and it works 24/7. Your product is built there too. The code, the documentation and ${PRODUCT_NAME}’s knowledge stay with you and are always yours.`,
+      },
+      {
+        title: "No new app to learn.",
+        text: `You talk to ${PRODUCT_NAME} in the Claude app on your computer or phone. No clunky drag-and-drop tools, no cluttered interface.`,
+        next: "Codex and others coming soon",
+      },
+      {
+        title: "Your own subscription.",
+        text: `${PRODUCT_NAME} runs the official Claude Code on your own server, signed in with your own Claude plan.`,
+        next: "Codex and OpenCode coming soon",
+      },
+    ],
+  },
+];
+
+const comparisonRows: ComparisonRow[] = [
+  {
+    label: "Made for",
+    builders: "Anyone who wants to build an app by chatting with AI",
+    maestro: "A nontechnical person with an idea to build and deploy a complete product",
+  },
+  {
+    label: "What you need to know",
+    builders: "How to prompt, and how to fix what breaks",
+    maestro: "The thing you want to build",
+  },
+  {
+    label: "Who steers the build",
+    builders: "You, prompt by prompt",
+    maestro: `${PRODUCT_NAME}. You decide what your product does and how it looks`,
+  },
+  {
+    label: "How it talks to you",
+    builders: "Through prompts and a preview",
+    maestro: "In plain language, with a recommendation",
+  },
+  {
+    label: "Where your product lives",
+    builders: "Often on the builder’s platform",
+    maestro: "On your own server. The code, documentation and knowledge are yours",
+  },
+  {
+    label: "After launch",
+    builders: "Optional monitoring and AI fixes on some plans, which you turn on and oversee",
+    maestro: "Looks after your product and helps it grow",
+    soon: true,
+  },
+];
+
 export const content = {
-  meta: { title: `${PRODUCT_NAME} — Build your next moonshot` },
+  meta: {
+    title: `${PRODUCT_NAME} — You bring the idea. ${PRODUCT_NAME} builds it.`,
+    description: `Your partner in building the right product, the right way. You agree on what to build. ${PRODUCT_NAME} takes care of the rest.`,
+  },
   hero: {
     mission: "Everyone can build their moonshot.",
-    heading: ["Build the right product,", "the right way.", "Autonomously."],
-    description: `${PRODUCT_NAME} is your partner in turning an idea into a working application. Talk through the problem, decide what matters, and let it take care of the build.`,
-    vision:
-      "Our 2027 vision: if you can name your problem, you’ll know within hours whether your idea is worth building and have a working product on your own server within days — without a developer. You’ll understand every decision and keep your code, data and knowledge.",
+    heading: ["You bring the idea.", `${PRODUCT_NAME} builds it.`],
+    lead: `Your partner in building the right product, the right way. You agree on what to build. ${PRODUCT_NAME} takes care of the rest.`,
     primary: "Join the first release",
-    secondary: "See how it works",
-    releaseNote: "First release planned for 30 November 2026",
-    proofs: [
-      "No coding required",
-      "Built on your server",
-      "Your proprietary knowledge stays yours",
-    ],
+    secondary: "See how it’s different",
   },
-  heroDemo: {
-    title: "Your idea, moving forward.",
-    caption: "Illustrative conversation · an everyday idea",
-    observerLabel: PRODUCT_NAME,
-    userLabel: "You",
-    recommendationLabel: "Recommended",
-    yourDecision: "Your decision",
-    projectLabel: "What’s for dinner?",
-    previewLabel: "Illustrative preview",
-    readyLabel: "Works, ready to use",
-    resetLabel: "Replay the conversation",
-    approvalLabel: "Direction approved",
-    buildMessage: "Direction approved. Planning next.",
-    labels: {
-      you: "You",
-      observer: PRODUCT_NAME,
-      project: "Your project",
-      status: "Build status",
-      action: "Your decision",
-    },
-    user: "I want to build an app that answers “what’s for dinner?” using what’s already in my fridge.",
-    observer:
-      "Should it help people choose dinner tonight, or plan meals for the whole week?",
-    recommendation:
-      "Start with tonight. Add the ingredients you have and get a few simple dinner ideas.",
-    reply: "Yes. Start with tonight.",
-    approved: "Direction agreed. I’ll work out the details.",
-    statuses: ["Conversation", "Shape", "Build", "Check"],
-    phase: "Your direction, ready to review",
-  },
-  problem: {
-    title: "Building software is solved. Solving problems is not.",
-    introduction:
-      "You don't need to know what a PR, Node or VPS is. All you need is the will to build your next moonshot.",
-    items: [
-      {
-        title: "Is this the right thing to build?",
-        description:
-          "An idea is a starting point. Getting clear on the problem, the person and the smallest useful version takes a different kind of conversation.",
-      },
-      {
-        title: "How does a prototype become a product?",
-        description:
-          "A promising first screen can leave you with a long list of fixes, unfamiliar decisions and no clear path to something people can use.",
-      },
-      {
-        title: "Will it really belong to me?",
-        description:
-          "Your product should not depend on keeping everything inside someone else’s platform. Your work, your data and your decisions should remain yours.",
-      },
-    ],
-  },
-  example: {
-    title: "From “I have an idea” to “it works.”",
-    description:
-      "Take a familiar question — “what’s for dinner?” — and turn it into an app that suggests meals using what’s already in the fridge.",
-    caption:
-      "An imagined dinner app, illustrating the first-release workflow. Conversations and screens are examples.",
-    stepLabel: "Step",
-    next: "Next step",
-    previous: "Previous step",
-    steps: [
-      {
-        title: "Start with the problem",
-        description: `${PRODUCT_NAME} asks who needs this, what they have tried and what a useful result would look like. It challenges the idea, too: would an existing chat tool be enough?`,
-        role: "You",
-        message:
-          "At the end of the day, I’m tired of deciding what to cook. I’d like a few ideas using the food I already have.",
-      },
-      {
-        title: "Decide what people will see",
-        description: `${PRODUCT_NAME} works out the details and brings the visible choices to you: how to add ingredients, how many meal ideas to show and how to flag anything missing. You approve or change them.`,
-        role: PRODUCT_NAME,
-        message:
-          "I recommend three simple dinner ideas from your ingredients, with a short list of anything you still need.",
-      },
-      {
-        title: "Try the shape of your idea",
-        description:
-          "Open a private, clickable mockup. Try the ingredient list and see a suggested dinner. Comment on what should change before the build begins.",
-        role: "You",
-        message:
-          "This is the experience I had in mind. Let’s build this version.",
-      },
-      {
-        title: "Approve a clear proposal",
-        description:
-          "Review what will be built, where it will run, what it may cost and the trade-offs. The decisions that matter are explained in everyday language.",
-        role: PRODUCT_NAME,
-        message:
-          "Here is the plan, the running cost and what needs your approval — all in one place.",
-      },
-      {
-        title: "Let the preparation happen",
-        description: `${PRODUCT_NAME} records the product’s intent, plans the work, prepares the application and its safeguards, and creates a private home for your code.`,
-        role: PRODUCT_NAME,
-        message:
-          "The preparation is under way. Your plan and decisions are saved with your project.",
-      },
-      {
-        title: "Set the boundaries once",
-        description:
-          "Approve access, a public address if needed, any data sent to an AI service and permitted spending. Private service keys go directly onto your server, never into the conversation.",
-        role: PRODUCT_NAME,
-        message:
-          "Before I connect a paid service, here is what it needs, what data it receives and the limit you can set.",
-      },
-      {
-        title: "Build, review and check",
-        description:
-          "The application is built piece by piece. Each piece goes through research, planning, independent reviews and automatic tests, including checks in a real browser.",
-        role: PRODUCT_NAME,
-        message:
-          "The next piece is being checked. I’ll come back if a decision needs you.",
-      },
-      {
-        title: "Works, ready to use",
-        description: `${PRODUCT_NAME} checks the whole application before handing it over. You start using it and report anything you notice; you do not have to run a manual test checklist.`,
-        role: PRODUCT_NAME,
-        message:
-          "Works, ready to use. Your application is on your server, with the decisions and work behind it saved for you.",
-      },
-    ],
-    preview: {
-      title: "What’s for dinner?",
-      caption: "Illustrative mockup · sample ingredients and meal",
-      ingredientsLabel: "In your fridge",
-      ingredients: ["Eggs", "Spinach", "Tomatoes"],
-      button: "Show a dinner idea",
-      resultTitle: "Spinach & tomato omelette",
-      resultDescription:
-        "A simple dinner using all three ingredients. A little oil, salt and pepper from the cupboard, and you’re ready to cook.",
-      resultNote: "An example of the result your app could show.",
-      reset: "Reset the preview",
-    },
-  },
-  observer: {
-    title:
-      "This is not another code monkey. This is your partner in building meaningful things.",
-    memoryExample:
-      "You wanted to make dinner easier with the food you already have. I’ve kept that at the heart of this version.",
-    memoryLabel: "Your earlier decision, remembered",
-    notificationTitle: "Your decision is needed",
-    notificationMessage:
-      "The preview is ready. I recommend starting with three dinner ideas from the ingredients you have.",
-    plainExample: "“Here’s what matters. Here’s what I recommend.”",
-    description: `Meet ${PRODUCT_NAME}: your point of contact from the first conversation to the finished application. Talk in the Claude app on your computer or phone. It keeps the work understandable and your intent in view.`,
-    features: [
-      {
-        title: "Plain language. Useful answers.",
-        description:
-          "The conclusion comes first. You see what is happening, what it means and whether anything needs your attention.",
-      },
-      {
-        title: "A recommendation, not homework.",
-        description: `When a decision needs you, ${PRODUCT_NAME} explains the choice, recommends a direction and offers a reply you can accept or change.`,
-      },
-      {
-        title: "Your context, kept with you.",
-        description:
-          "Its lasting memory lives on your server. Your reasons, preferences and decisions stay available for the next conversation.",
-      },
-      {
-        title: "A nudge when you are needed.",
-        description:
-          "A question that needs your decision can reach your phone as a notification. You can step away while the work continues.",
-      },
-    ],
-  },
-  principles: {
-    title: "Less to manage. More to make possible.",
-    description:
-      "We offload you from everything AI does better, so you can focus on what only humans do best. Focus on the outcome, not the output.",
-    items: [
-      {
-        title: "Show what matters to the decision.",
-        description:
-          "See the choices that shape your application and a clear account of progress. The underlying details are worked out and recorded for you.",
-      },
-      {
-        title: "Ask before crossing a boundary.",
-        description:
-          "Installations, spending, sharing data, publishing, accounts and irreversible actions require your approval. You know what you are agreeing to.",
-      },
-      {
-        title: "Check the whole thing.",
-        description: `${PRODUCT_NAME} reviews and tests the application before saying it is ready. Your job is to use it and tell your partner what you notice.`,
-      },
-      {
-        title: "Leave a trail you can return to.",
-        description:
-          "The original intent, research, plans, reviews and decisions are kept with your project. You can ask why something was done and revisit it later.",
-      },
-      {
-        title: "First, find out whether it is worth building.",
-        description:
-          "Planned for a later release: deeper research and assumption tests, with a reasoned recommendation to build, change direction or stop. Choosing not to build can be a useful result.",
-        planned: true,
-      },
-    ],
-  },
-  ownership: {
-    title: "Your moonshot. On your terms.",
-    description:
-      "Your proprietary knowledge belongs to you. Your application, its history and the knowledge behind it should be yours to keep — even if you stop using our product.",
-    items: [
-      {
-        title: "Your server",
-        description: `Your application and ${PRODUCT_NAME}’s memory run on a server you control, paid for directly with your provider.`,
-      },
-      {
-        title: "Your code and decisions",
-        description:
-          "The code and project history live in your private repository. The plans, research and reasons behind each change remain available to you.",
-      },
-      {
-        title: "Your subscription",
-        description:
-          "You sign in with your own Claude plan and pay your provider directly. Any additional paid services need your approval.",
-      },
-      {
-        title: "Your freedom to leave",
-        description:
-          "Keep your code, data, memory and decision history when you leave. The server and services you choose remain in your own accounts.",
-      },
-    ],
-    claudeNote: `${PRODUCT_NAME} runs the official Claude Code on your own server, signed in with your own Claude plan. Your plan’s usage limits apply.`,
-  },
+  chapters,
   comparison: {
-    title: "A different starting point.",
-    description:
-      "The relationship is the difference: a partner that keeps your intent in view and carries the work through to an application you own.",
-    note: "A comparison of typical approaches, not every product in each category. Individual tools vary.",
-    columns: ["Prototype builders", "Agents for developers", PRODUCT_NAME],
-    rows: [
-      {
-        label: "Who it starts with",
-        values: [
-          "Someone exploring an app idea",
-          "Someone comfortable with software development",
-          "A nontechnical person with a problem to solve",
-        ],
-      },
-      {
-        label: "How you work",
-        values: [
-          "Prompt, preview and refine",
-          "Guide an agent through a development workflow",
-          "Talk to a partner; decide what matters to your product",
-        ],
-      },
-      {
-        label: "The path to use",
-        values: [
-          "A quick prototype, then further work",
-          "Development tools and automation",
-          "A planned build, reviews and checks before handover",
-        ],
-      },
-      {
-        label: "Where it belongs",
-        values: [
-          "Often starts on the provider’s platform",
-          "Depends on your development setup",
-          "Your server, private code and decision history",
-        ],
-      },
-      {
-        label: "Before the build",
-        values: [
-          "Explore the idea through a preview",
-          "Define or supply the work to be done",
-          "A focused product conversation and a mockup to approve",
-        ],
-      },
-    ],
-  },
-  release: {
-    title: "The first chapter of your next idea.",
-    date: "30 November 2026",
-    label: "Planned first release",
-    description:
-      "Designed for nontechnical people ready to take an idea through to a working application. These are the capabilities planned to be available in the first release.",
-    items: [
-      "One-command installation on your own server, with guided sign-ins and setup checks.",
-      `${PRODUCT_NAME} as your conversational partner, with memory on your server and phone notifications.`,
-      "A focused product conversation that challenges assumptions and clarifies the first version.",
-      "Visible product choices and a private, clickable mockup for your approval.",
-      "Clear approval of the plan, costs, access and any sharing of data.",
-      "Building in stages, with research, independent reviews and automatic browser checks.",
-      "A working application handed over without asking you to run manual tests.",
-      "Your own server, private code, Claude plan, memory and full decision history.",
-    ],
-  },
-  roadmap: {
-    title: "A clear first step. A bigger direction.",
-    nextTitle: "Coming next",
-    nextDescription:
-      "The next improvements will follow the friction owners encounter. These are directions, without committed dates.",
-    next: [
-      "Make it easier to explain what you have in mind.",
-      "Close the gap between your intent and the result.",
-      "Make questions and progress easier to understand.",
-      "Make changes after handover feel less daunting.",
-      "Make running your own server more approachable.",
-    ],
-    laterTitle: "Further ahead",
-    laterDescription:
-      "Planned directions, not first-release capabilities. The deeper Discovery process and autonomous upkeep belong here.",
-    later: [
-      "Deeper Discovery: real experiences, alternatives, risks and tests, ending in a reasoned build, change or stop recommendation.",
-      "A shorter path for simple ideas that do not need a full strategy.",
-      "Autonomous maintenance after your application is handed over.",
-      "Support for product managers and their teams.",
-      "Improve your application against a goal you set, by examining use, testing ideas and checking the outcome.",
-      `Help ${PRODUCT_NAME} improve automatically across projects while respecting owners’ control of project data.`,
-    ],
-  },
-  audience: {
-    title: "You know your world. Bring that.",
-    forTitle: "Made for you if…",
-    for: [
-      "You are a solo founder with an idea you want to bring to life.",
-      "You know a field well and see a problem software could help solve.",
-      "You run a small business and need an application shaped around your work.",
-      "You want to make the product decisions and own what gets built.",
-    ],
-    notTitle: "Consider another approach if…",
-    not: [
-      "Your priority is the fastest possible first screen.",
-      "You want a drag-and-drop editor for building every part yourself.",
-      "You want us to host and own the application’s infrastructure.",
-      "You are looking for a developer’s coding workspace.",
-    ],
+    label: "Flat learning curve",
+    title: "A different approach to building.",
+    lead: "Writing code is solved. Solving problems is not.",
+    ariaLabel: `${PRODUCT_NAME} compared with prompt-to-app builders`,
+    columns: { builders: "Prompt-to-app builders", maestro: PRODUCT_NAME },
+    rows: comparisonRows,
   },
   faq: {
-    title: "A few things you might be wondering.",
+    label: "FAQ",
+    title: ["A few things", "you might be wondering."],
     items: [
       {
         question: "Do I need to know how to code?",
@@ -364,7 +203,16 @@ export const content = {
       },
       {
         question: "What will it cost?",
-        answer: `You pay for your own server and Claude subscription directly with their providers. Your application may need additional paid services, which require your approval and an agreed limit. ${PRODUCT_NAME} pricing is to be announced. Your Claude plan’s usage limits apply.`,
+        answer:
+          "You pay for your own server and Claude subscription directly with their providers. Your application may need additional paid services, which require your approval and an agreed limit. Your Claude plan’s usage limits apply.",
+      },
+      {
+        question: "When can I start?",
+        answer: "Join the waiting list and we’ll email you as soon as the first release is ready.",
+      },
+      {
+        question: `Does ${PRODUCT_NAME} do anything without asking me?`,
+        answer: `No. Installations, spending, sharing data, publishing, new accounts and anything that cannot be undone need your approval first. ${PRODUCT_NAME} explains what you are agreeing to.`,
       },
       {
         question: "Where are my data, code and project history?",
@@ -376,20 +224,14 @@ export const content = {
           "Your code, application data, memory and decision history remain yours. Your server and other services are in your accounts, so you can keep using or developing your application. Their ongoing charges remain your responsibility.",
       },
       {
-        question: "How long does it take to start a project?",
-        answer:
-          "Think in terms of an evening to get a project started. In an earlier founder project, the initial product conversation took about 20 minutes, followed by shaping, a mockup and approvals. That is an example, not a promised turnaround. The time to finish an application depends on what you are building.",
-      },
-      {
         question: "Will it tell me whether my idea is worth building?",
         answer:
-          "The first release includes a focused conversation and questions that challenge your assumptions. Full Discovery — deeper research, assumption tests and a reasoned build, change or stop recommendation — is planned for a later release.",
+          "The first release includes a focused conversation and questions that challenge your assumptions. Full Discovery, with deeper research, assumption tests and a reasoned build, change or stop recommendation, is planned for a later release.",
       },
       {
-        question:
-          "Does the first release maintain my application automatically?",
+        question: "Does the first release maintain my application automatically?",
         answer:
-          "No. Autonomous maintenance and improving an application based on how people use it are future directions. The first release focuses on taking your idea through to a checked, working application.",
+          "Not yet. Looking after your product and helping it grow are coming soon. The first release focuses on taking your idea through to a working application.",
       },
     ],
   },
@@ -411,19 +253,8 @@ export const content = {
   },
   ui: {
     skipLink: "Skip to main content",
-    themeLight: "Switch to light theme",
-    themeDark: "Switch to dark theme",
-    firstRelease: "First release",
-    planned: "Planned for later",
-    allYours: "All yours",
-    previewDemo: "Illustrative demo",
-    showAnswer: "Show answer",
-    hideAnswer: "Hide answer",
-    emailInvalid: "Enter a valid email address.",
-    emailRequired: "Enter your email address.",
-    loading: "Checking…",
-    themeToggle: "Switch color theme",
-    backToTop: "Back to top",
-    stepOf: "of",
+    chapters: "Chapters",
+    comingSoon: "Coming soon",
+    brandHome: `${PRODUCT_NAME}, back to top`,
   },
 };

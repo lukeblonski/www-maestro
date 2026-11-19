@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { ADRES_STRONY, PREFIKS, otworzStrone, poFontach, sciezka } from "./pomoc";
 
-const TYPY_ZASOBOW = ["font", "stylesheet", "script"] as const;
+const TYPY_ZASOBOW = ["font", "stylesheet", "script", "image"] as const;
 
 test("krok 14 — strona i zasoby pod prefiksem /www-maestro", async ({ page }) => {
   const { odpowiedz, zapis } = await otworzStrone(page);

@@ -1,261 +1,59 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import {
-  ArrowDown,
-  ArrowLeft,
-  ArrowRight,
-  ArrowUpRight,
-  Check,
-  CheckCheck,
-  ChevronDown,
-  Circle,
-  CircleCheck,
-  CornerDownLeft,
-  Moon,
-  Utensils,
-  RotateCcw,
-  Sun,
-} from "lucide-react";
 import { content as c } from "@/lib/content";
-import { Brand, BrandMark } from "./brand";
 import { submitWaitlist, WZORZEC_ADRESU } from "@/lib/waitlist";
 
-export function Header() {
-  const [dark, setDark] = useState(false);
+/**
+ * Chapter index: the current chapter is the last one whose top edge has passed a line
+ * 35% down the window (the first one before that). Recomputed once per frame on scroll
+ * and resize, and once on mount, so a page opened from a link with an anchor marks the
+ * right chapter straight away.
+ */
+export function ChapterIndex({
+  items,
+  label,
+}: {
+  items: { id: string; label: string }[];
+  label: string;
+}) {
+  const [current, setCurrent] = useState(0);
   useEffect(() => {
-    setDark(document.documentElement.dataset.theme === "dark");
+    const chapters = items.map((item) => document.getElementById(item.id));
+    let frame = 0;
+    function markChapter() {
+      frame = 0;
+      const probe = window.innerHeight * 0.35;
+      let next = 0;
+      chapters.forEach((chapter, i) => {
+        if (chapter && chapter.getBoundingClientRect().top <= probe) next = i;
+      });
+      setCurrent(next);
+    }
+    function onScroll() {
+      if (!frame) frame = requestAnimationFrame(markChapter);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    markChapter();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, []);
-  function toggleTheme() {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.dataset.theme = next ? "dark" : "light";
-    try {
-      localStorage.setItem("maestro-theme", next ? "dark" : "light");
-    } catch {}
-  }
   return (
-    <header className="site-header">
-      <div className="container header-inner">
-        <a href="#top" className="brand-link" aria-label={c.ui.backToTop}>
-          <Brand />
+    <nav className="index" aria-label={label}>
+      {items.map((item, i) => (
+        <a
+          key={item.id}
+          href={`#${item.id}`}
+          className={i === current ? "on" : undefined}
+          aria-current={i === current ? "true" : undefined}
+        >
+          <span>{item.label}</span>
         </a>
-        <div className="header-actions">
-          <button
-            className="icon-button theme-button"
-            aria-label={dark ? c.ui.themeLight : c.ui.themeDark}
-            onClick={toggleTheme}
-          >
-            {dark ? <Sun size={19} /> : <Moon size={19} />}
-          </button>
-          <a href="#waitlist" className="button button-small button-ink">
-            {c.hero.primary}
-            <ArrowUpRight size={16} />
-          </a>
-        </div>
-      </div>
-    </header>
-  );
-}
-
-export function HeroDemo() {
-  const [approved, setApproved] = useState(false);
-  const d = c.heroDemo;
-  return (
-    <figure className="hero-demo">
-      <div className="demo-window">
-        <div className="demo-top">
-          <span className="observer-avatar">
-            <BrandMark />
-          </span>
-          <div>
-            <strong>{d.observerLabel}</strong>
-            <span>{d.title}</span>
-          </div>
-          <span className="live-dot" aria-hidden="true" />
-        </div>
-        <div className="demo-conversation">
-          <div className="bubble-user">
-            <span className="speaker">{d.userLabel}</span>
-            <p>{d.user}</p>
-          </div>
-          <div className="bubble-observer">
-            <span className="speaker">
-              <BrandMark />
-              {d.observerLabel}
-            </span>
-            <p>{d.observer}</p>
-            <div className="recommendation">
-              <span>{d.recommendationLabel}</span>
-              <p>{d.recommendation}</p>
-            </div>
-          </div>
-          <div className="demo-action" aria-live="polite">
-            {approved ? (
-              <div className="approved-reply">
-                <CheckCheck size={17} />
-                <span>{d.approved}</span>
-                <button
-                  className="icon-button"
-                  onClick={() => setApproved(false)}
-                  aria-label={d.resetLabel}
-                >
-                  <RotateCcw size={15} />
-                </button>
-              </div>
-            ) : (
-              <button
-                className="reply-button"
-                onClick={() => setApproved(true)}
-              >
-                {d.reply}
-                <CornerDownLeft size={16} />
-              </button>
-            )}
-          </div>
-        </div>
-        <div className="demo-status">
-          <div className="status-header">
-            <span>{d.projectLabel}</span>
-            <strong>{approved ? d.buildMessage : d.phase}</strong>
-          </div>
-          <ol className="status-track">
-            {d.statuses.map((status, i) => (
-              <li
-                key={status}
-                className={
-                  i === 0 || (approved && i === 1)
-                    ? "done"
-                    : i === (approved ? 2 : 1)
-                      ? "active"
-                      : ""
-                }
-              >
-                {i === 0 || (approved && i === 1) ? (
-                  <Check size={12} />
-                ) : (
-                  <Circle size={12} />
-                )}
-                <span>{status}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </div>
-      <figcaption>{d.caption}</figcaption>
-      <span className="demo-side-note" aria-hidden="true">
-        {d.yourDecision}
-        <ArrowDown size={17} />
-      </span>
-    </figure>
-  );
-}
-
-export function ProjectWalkthrough() {
-  const [step, setStep] = useState(0);
-  const [checked, setChecked] = useState(false);
-  const e = c.example;
-  const current = e.steps[step];
-  function move(next: number) {
-    setStep(next);
-    setChecked(false);
-  }
-  return (
-    <div className="walkthrough">
-      <div className="step-list" role="group" aria-label={e.stepLabel}>
-        {e.steps.map((item, index) => (
-          <button
-            key={item.title}
-            className={`step-item ${step === index ? "selected" : ""}`}
-            aria-pressed={step === index}
-            aria-controls="example-panel"
-            onClick={() => move(index)}
-          >
-            <span className="step-number">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-            <span>{item.title}</span>
-            <ArrowUpRight size={17} />
-          </button>
-        ))}
-      </div>
-      <div className="example-panel" id="example-panel">
-        <div className="example-copy" aria-live="polite" aria-atomic="true">
-          <span className="step-count">
-            {e.stepLabel} {step + 1} {c.ui.stepOf} {e.steps.length}
-          </span>
-          <h3>{current.title}</h3>
-          <p>{current.description}</p>
-        </div>
-        {step === 2 ? (
-          <div className="meal-preview">
-            <div className="meal-top">
-              <Utensils size={17} />
-              <span>{e.preview.title}</span>
-              <span className="preview-tag">{e.preview.caption}</span>
-            </div>
-            <div className="meal-ingredients">
-              <span>{e.preview.ingredientsLabel}</span>
-              <ul>
-                {e.preview.ingredients.map((ingredient) => (
-                  <li key={ingredient}>{ingredient}</li>
-                ))}
-              </ul>
-            </div>
-            <button
-              className="button button-primary"
-              onClick={() => setChecked(!checked)}
-            >
-              {checked ? e.preview.reset : e.preview.button}
-              <ArrowRight size={16} />
-            </button>
-            {checked && (
-              <div className="meal-result" role="status">
-                <strong>{e.preview.resultTitle}</strong>
-                <p>{e.preview.resultDescription}</p>
-                <span>{e.preview.resultNote}</span>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div
-            className={`example-message ${step === 7 ? "message-ready" : ""}`}
-          >
-            <span className="speaker">
-              {step === 7 ? <CircleCheck size={22} /> : <BrandMark />}
-              {current.role}
-            </span>
-            <p>{current.message}</p>
-            {step === 7 && (
-              <span className="ready-line">
-                <Check size={16} />
-                {c.heroDemo.readyLabel}
-              </span>
-            )}
-          </div>
-        )}
-        <div className="step-pagination">
-          <span>{e.caption}</span>
-          <div>
-            <button
-              className="icon-button"
-              disabled={step === 0}
-              aria-label={e.previous}
-              onClick={() => move(step - 1)}
-            >
-              <ArrowLeft size={19} />
-            </button>
-            <button
-              className="icon-button"
-              disabled={step === e.steps.length - 1}
-              aria-label={e.next}
-              onClick={() => move(step + 1)}
-            >
-              <ArrowRight size={19} />
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+      ))}
+    </nav>
   );
 }
 
@@ -264,10 +62,7 @@ export function FAQ() {
     <div className="faq-list">
       {c.faq.items.map((item) => (
         <details key={item.question}>
-          <summary>
-            {item.question}
-            <ChevronDown size={21} />
-          </summary>
+          <summary>{item.question}</summary>
           <p>{item.answer}</p>
         </details>
       ))}
@@ -295,9 +90,9 @@ export function WaitlistForm() {
     setStatus(result.status);
   }
   return (
-    <form className="waitlist-form" onSubmit={submit} noValidate>
+    <form className="join" onSubmit={submit} noValidate>
       <label htmlFor="waitlist-email">{c.waitlist.label}</label>
-      <div className="form-row">
+      <div className="field-row">
         <input
           ref={email}
           id="waitlist-email"
@@ -313,13 +108,8 @@ export function WaitlistForm() {
             if (status !== "sending") setStatus("idle");
           }}
         />
-        <button
-          className="button button-primary"
-          type="submit"
-          disabled={status === "sending"}
-        >
+        <button className="btn" type="submit" disabled={status === "sending"}>
           {status === "sending" ? c.waitlist.sending : c.waitlist.button}
-          <ArrowUpRight size={18} />
         </button>
       </div>
       <div className="form-trap" aria-hidden="true">
@@ -335,7 +125,7 @@ export function WaitlistForm() {
       </div>
       <p
         id="waitlist-status"
-        className={`form-status ${status}`}
+        className={status === "failed" ? "status failed" : "status"}
         role="status"
         aria-live="polite"
       >
@@ -349,25 +139,4 @@ export function WaitlistForm() {
       </p>
     </form>
   );
-}
-
-export function ScrollMotion() {
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const observer = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("in-view");
-            observer.unobserve(entry.target);
-          }
-        }),
-      { threshold: 0.12 },
-    );
-    document
-      .querySelectorAll("[data-reveal]")
-      .forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-  return null;
 }

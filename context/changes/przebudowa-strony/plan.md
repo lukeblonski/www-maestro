@@ -316,6 +316,11 @@ Osoba z zapisanym `maestro-theme=dark` zobaczy jasną stronę; klucz zostaje w j
 
 > Append-only. One entry per departure from the plan, written in the same commit as the phase. See `references/progress-format.md`.
 
+- **PC1 (Phase 2)**: Logo w nagłówku to `<a class="brand-link">` z komponentem `Brand` (`<span class="brand">`) w środku zamiast `<a class="brand">` z makiety, z jedną regułą CSS spoza makiety `.brand-link { display: inline-flex; align-items: center }`; krok 5 poza podsłuchem `Storage.prototype.setItem` liczy też wywołania `getItem` (zero), a kroki 3 i 7 liczą wiersze porównania z `includeHidden`, bo wiersz nagłówka jest ukryty poniżej 640 px.
+  - **Why**: plan zostawia komponent `Brand` (bez kropki), więc link opakowuje go zamiast powielać znak i nazwę; „Desired End State” mówi, że strona nie czyta ani nie zapisuje `localStorage`, a sam `setItem` sprawdza tylko zapis; bez `includeHidden` na 360 px rola `row` nagłówka nie jest liczona.
+  - **Criteria**: P4, P5, P3, P7, P14
+  - **Files**: `app/page.tsx`, `app/globals.css`, `tests/e2e/motyw-siec-dostepnosc.spec.ts`, `tests/e2e/sekcje-i-uklad.spec.ts`, `tests/e2e/interakcje.spec.ts`
+
 ## Progress
 
 > Convention: `- [ ]` pending, `- [x]` done. Append ` — <commit sha>` when a step lands. Do not rename step titles. See `references/progress-format.md`.
@@ -324,17 +329,17 @@ Osoba z zapisanym `maestro-theme=dark` zobaczy jasną stronę; klucz zostaje w j
 
 #### Automated
 
-- [x] 1.1 Pliki mają sumy z makiety
-- [x] 1.2 Licencje mają linie praw autorskich
-- [x] 1.3 Sprawdzenie projektu przechodzi
+- [x] 1.1 Pliki mają sumy z makiety — c7afa3e
+- [x] 1.2 Licencje mają linie praw autorskich — c7afa3e
+- [x] 1.3 Sprawdzenie projektu przechodzi — c7afa3e
 
 ### Phase 2: Nowa strona i testy kroków 1–14
 
 #### Automated
 
-- [ ] 2.1 Testy kroków 1–14 w przeglądarce przechodzą na obu ekranach
-- [ ] 2.2 Sprawdzenie projektu przechodzi
-- [ ] 2.3 Strona nie ma zielonych tokenów, DM Sans ani motywu
+- [x] 2.1 Testy kroków 1–14 w przeglądarce przechodzą na obu ekranach
+- [x] 2.2 Sprawdzenie projektu przechodzi
+- [x] 2.3 Strona nie ma zielonych tokenów, DM Sans ani motywu
 
 ### Phase 3: Opisy w repo i pełne sprawdzenie
 

@@ -45,12 +45,12 @@ export function sciezka(adres: string): string {
 }
 
 /**
- * Czeka, aż React podłączy się do przycisku motywu w nagłówku. Przed tym kliknięcie
- * przycisku nic nie robi, a wysyłka formularza przeładowałaby stronę.
+ * Czeka, aż React podłączy się do przycisku wysyłki formularza w `#waitlist`. Przed tym
+ * spis nie wyróżnia sekcji, a wysyłka formularza przeładowałaby stronę.
  */
 export async function poHydracji(page: Page): Promise<void> {
   await page.waitForFunction(() => {
-    const przycisk = document.querySelector("header button");
+    const przycisk = document.querySelector('#waitlist button[type="submit"]');
     return !!przycisk && Object.keys(przycisk).some((klucz) => klucz.startsWith("__reactProps$"));
   });
 }
