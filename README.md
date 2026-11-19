@@ -38,10 +38,10 @@ npm test
 
 `npm test` uruchamia po kolei dwa polecenia i kończy się kodem różnym od 0, gdy cokolwiek nie przejdzie:
 
-- `npm run verify` — sprawdzenie typów, budowa strony z adresem atrapy funkcji zapisu (`NEXT_PUBLIC_WAITLIST_URL=https://zapis.atrapa.invalid/`), testy bez przeglądarki i skan sekretów programem `gitleaks`. Testy bez przeglądarki to testy funkcji zapisu z `worker/` na atrapie Resend (bez sieci), test zbudowanego `out/` (brak adresu `api.resend.com` i nazwy `RESEND_API_KEY`) i „krok 16” (kod strony i konfiguracja budowy jak w commicie `5e4dcac`, poza plikami formularza wymienionymi w teście z nazwy). Nie potrzebuje Dockera.
+- `npm run verify` — sprawdzenie typów, budowa strony z adresem atrapy funkcji zapisu (`NEXT_PUBLIC_WAITLIST_URL=https://zapis.atrapa.invalid/`), testy bez przeglądarki i skan sekretów programem `gitleaks`. Testy bez przeglądarki to testy funkcji zapisu z `worker/` na atrapie Resend (bez sieci), test zbudowanego `out/` (brak adresu `api.resend.com` i nazwy `RESEND_API_KEY`) i „krok 16” (kod strony i konfiguracja budowy jak w commicie `5e4dcac`, poza plikami zmian lista-oczekujacych i przebudowa-strony wymienionymi w teście z nazwy). Nie potrzebuje Dockera.
 - `npm run test:e2e` — buduje stronę tak jak do publikacji, z prefiksem `/www-maestro` (`NEXT_PUBLIC_BASE_PATH=/www-maestro`) i z adresem atrapy funkcji zapisu, który testy przechwytują w przeglądarce, i uruchamia testy kroków 1–14 scenariusza w przeglądarce Chromium, na ekranie telefonu (360 px, projekt `telefon-360`) i komputera (1280 px, projekt `komputer-1280`). Lokalnie przeglądarka działa w obrazie Playwright `mcr.microsoft.com/playwright:v<wersja @playwright/test>-noble` przez Docker bez roota (skrypt sam uruchamia Dockera, gdy jest wyłączony), w kontenerze bez dostępu do sieci. Na koniec, już bez przeglądarki, test „krok 15” sprawdza to README i uruchamia `npm test`.
 
-Każdy test nazywa się krokiem scenariusza, np. „krok 6 — demo rozmowy: zatwierdzenie i powtórka”. Jeden krok, na obu ekranach, uruchamia:
+Każdy test nazywa się krokiem scenariusza, np. „krok 6 — spis wyróżnia bieżącą sekcję i przenosi do niej”. Jeden krok, na obu ekranach, uruchamia:
 
 ```sh
 npm run test:e2e -- --grep "krok 6\b"
@@ -56,8 +56,9 @@ npm run test:e2e -- --grep "krok 6\b"
 - `components/interactive.tsx` — interakcje, w tym `WaitlistForm`.
 - `lib/waitlist.ts` — adapter, który wysyła zapis do funkcji zapisu.
 - `worker/` — funkcja zapisu na listę oczekujących (Cloudflare Workers) i jej konfiguracja `wrangler.toml`.
-- `app/globals.css` — style, motywy i reguły responsywne.
-- `public/fonts/` — lokalne pliki kroju pisma.
+- `app/globals.css` — style i reguły responsywne.
+- `public/fonts/` — lokalne pliki fontów Host Grotesk i JetBrains Mono z licencjami OFL.
+- `public/hero-lines.webp` — obraz hero.
 
 ## Lista oczekujących
 

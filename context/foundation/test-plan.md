@@ -147,18 +147,18 @@ the relevant rollout phase ships; before that, the sub-section reads
 
 - Wzór: `tests/e2e/sekcje-i-uklad.spec.ts`. Oczekiwana kolejność sekcji jest wpisana w teście według PRD (kotwice, a sekcje bez id po nazwie h2 z `lib/content.ts`); każdy element występuje raz, a kolejność sprawdza `compareDocumentPosition`.
 - Każdy `a[href^="#"]` ma cel `document.getElementById`; przewinięcie po kliknięciu sprawdza `toBeInViewport` (strona ma `scroll-behavior: smooth`).
-- Układ zależny od ekranu rozróżnia `testInfo.project.name`: na `telefon-360` CTA nagłówka `toBeHidden()`, a obszar tabeli porównania ma `scrollWidth > clientWidth`; na obu ekranach `scrollWidth` dokumentu ≤ `clientWidth`.
+- Układ zależny od ekranu rozróżnia `testInfo.project.name`: CTA nagłówka „Join the first release” jest widoczne na obu ekranach (krok 4); porównanie (`[role=table]`) nie przewija się w bok (`scrollWidth` ≤ `clientWidth`), na `komputer-1280` komórki wiersza stoją obok siebie, a na `telefon-360` jedna pod drugą z widocznymi etykietami `.who`; na obu ekranach `scrollWidth` dokumentu ≤ `clientWidth`.
 
 ### 6.4 Test prywatności i żądań sieciowych
 
 - Wzór: `krok 11` w `tests/e2e/motyw-siec-dostepnosc.spec.ts` i `krok 10` w `tests/e2e/interakcje.spec.ts`. `zapisuj(page)` zbiera żądania od pierwszego żądania; po `przewinDoKonca(page)` każdy URL ma origin `baseURL` (poza `data:` i `blob:`).
-- Formularz: zapis żądań zaczyna się po załadowaniu strony, a po wysyłce pustej, bez „@” i poprawnej lista żądań jest pusta. Pamięć przeglądarki: `Object.keys(localStorage)` to dokładnie `['maestro-theme']`, `sessionStorage` pusty.
+- Formularz: zapis żądań zaczyna się po załadowaniu strony, a po wysyłce pustej, bez „@” i poprawnej lista żądań jest pusta. Pamięć przeglądarki pusta: podsłuch `Storage.prototype.setItem` i `getItem` w `addInitScript` (krok 5) nie liczy żadnego wywołania, `sessionStorage` pusty, brak ciasteczek.
 - Obowiązkowy dla każdej przyszłej zmiany formularza listy oczekujących (D-001): kontener biegnie z `--network none`, więc żądanie na zewnątrz pada — test ma je wykryć w zapisie, nie przez błąd sieci.
 
 ### 6.5 Test dostępności (kontrast, ograniczony ruch, komunikaty)
 
 - Wzór: `krok 12` i `krok 13` w `tests/e2e/motyw-siec-dostepnosc.spec.ts`. Ograniczony ruch przez `page.emulateMedia({ reducedMotion: 'reduce' })`: wyliczony `scrollBehavior` nie jest `smooth`, a po przewinięciu `document.getAnimations()` nie ma animacji w stanie `running`.
-- Kontrast liczony wzorem WCAG 2 z wyliczonych kolorów, w obu `colorScheme`, przy ograniczonym ruchu: kolor tekstu z alfą zmieszaną z tłem, tło z samego elementu albo najbliższego przodka (do `body`) o nieprzezroczystym `background-color`; brak tła to błąd testu. Przyciski `disabled` pomijane; komunikat błędu wymienia element i obie barwy.
+- Strona ma jeden jasny motyw; kroki 5 i 13 sprawdzają go przy systemowym jasnym i ciemnym (`colorScheme`), bez przełączania motywu. Kontrast liczony wzorem WCAG 2 z wyliczonych kolorów, w obu `colorScheme`, przy ograniczonym ruchu: kolor tekstu z alfą zmieszaną z tłem, tło z samego elementu albo najbliższego przodka (do `body`) o nieprzezroczystym `background-color`; brak tła to błąd testu. Przyciski `disabled` pomijane; pozycje spisu mierzone przy fokusie (nazwa sekcji jest widoczna dopiero wtedy), placeholder pola e-mail przez `getComputedStyle(pole, "::placeholder")`; komunikat błędu wymienia element i obie barwy.
 - Komunikaty formularza sprawdza się po wysyłce błędnej i poprawnej, w `#waitlist-status` (`role=status`, `aria-live`).
 
 ### 6.6 Per-rollout-phase notes

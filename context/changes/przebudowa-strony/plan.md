@@ -337,13 +337,13 @@ Osoba z zapisanym `maestro-theme=dark` zobaczy jasną stronę; klucz zostaje w j
 
 #### Automated
 
-- [x] 2.1 Testy kroków 1–14 w przeglądarce przechodzą na obu ekranach
-- [x] 2.2 Sprawdzenie projektu przechodzi
-- [x] 2.3 Strona nie ma zielonych tokenów, DM Sans ani motywu
+- [x] 2.1 Testy kroków 1–14 w przeglądarce przechodzą na obu ekranach — d03ce0e
+- [x] 2.2 Sprawdzenie projektu przechodzi — d03ce0e
+- [x] 2.3 Strona nie ma zielonych tokenów, DM Sans ani motywu — d03ce0e
 
 ### Phase 3: Opisy w repo i pełne sprawdzenie
 
 #### Automated
 
-- [ ] 3.1 Opisy nie mówią o starej stronie
-- [ ] 3.2 Pełne sprawdzenie z P13 przechodzi
+- [x] 3.1 Opisy nie mówią o starej stronie
+- [x] 3.2 Pełne sprawdzenie z P13 przechodzi

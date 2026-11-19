@@ -3,16 +3,16 @@ Gdy człowiek w rozmowie mówi „zrób zmianę”, „zrób <ID kawałka>”, �
 
 ## Verify
 
-Uruchom `npm ci && npm run verify` przed każdym commitem. Polecenie sprawdza typy, buduje stronę z `NEXT_PUBLIC_BASE_PATH=/www-maestro` i adresem atrapy funkcji zapisu `NEXT_PUBLIC_WAITLIST_URL=https://zapis.atrapa.invalid/`, uruchamia bez przeglądarki testy projektu `repo` i skanuje programem `gitleaks` historię git oraz pliki przygotowane do commita. Testy `repo` to: testy funkcji zapisu z `worker/` na atrapie Resend, bez sieci („funkcja zapisu — …”), testy skryptu ścieżki na żywo `scripts/na-zywo.mjs` na atrapie Resend (`tests/repo/atrapa-resend.mjs`), bez sieci („skrypt na żywo — …”), test zbudowanego `out/` bez adresu `api.resend.com` i nazwy `RESEND_API_KEY`, z adresem atrapy („zbudowana strona — …”), i „krok 16” (kod strony i konfiguracja budowy jak w `5e4dcac`, poza plikami zmiany lista-oczekujacych wymienionymi w teście z nazwy). Polecenie nie potrzebuje Dockera ani innych usług lokalnych i kończy się kodem różnym od 0, gdy cokolwiek nie przejdzie.
+Uruchom `npm ci && npm run verify` przed każdym commitem. Polecenie sprawdza typy, buduje stronę z `NEXT_PUBLIC_BASE_PATH=/www-maestro` i adresem atrapy funkcji zapisu `NEXT_PUBLIC_WAITLIST_URL=https://zapis.atrapa.invalid/`, uruchamia bez przeglądarki testy projektu `repo` i skanuje programem `gitleaks` historię git oraz pliki przygotowane do commita. Testy `repo` to: testy funkcji zapisu z `worker/` na atrapie Resend, bez sieci („funkcja zapisu — …”), testy skryptu ścieżki na żywo `scripts/na-zywo.mjs` na atrapie Resend (`tests/repo/atrapa-resend.mjs`), bez sieci („skrypt na żywo — …”), test zbudowanego `out/` bez adresu `api.resend.com` i nazwy `RESEND_API_KEY`, z adresem atrapy („zbudowana strona — …”), i „krok 16” (kod strony i konfiguracja budowy jak w `5e4dcac`, poza plikami zmian lista-oczekujacych i przebudowa-strony wymienionymi w teście z nazwy). Polecenie nie potrzebuje Dockera ani innych usług lokalnych i kończy się kodem różnym od 0, gdy cokolwiek nie przejdzie.
 
-Last passing run (2026-11-18):
+Last passing run (2026-11-19):
 
 ```
-  ✓  19 [repo] › tests/repo/na-zywo.spec.ts:218:1 › skrypt na żywo — brak linii klucza Resend w ## Dostępy daje nie przeszło (44ms)
-  ✓  20 [repo] › tests/repo/zakres-przejecia.spec.ts:43:1 › krok 16 — kod strony i konfiguracja budowy jak w 5e4dcac (12ms)
+  ✓  19 [repo] › tests/repo/na-zywo.spec.ts:218:1 › skrypt na żywo — brak linii klucza Resend w ## Dostępy daje nie przeszło (50ms)
+  ✓  20 [repo] › tests/repo/zakres-przejecia.spec.ts:53:1 › krok 16 — kod strony i konfiguracja budowy jak w 5e4dcac (12ms)
   ✓  21 [repo] › tests/repo/zbudowana-strona.spec.ts:20:1 › zbudowana strona — bez adresu Resend i nazwy klucza (4ms)
-  21 passed (1.2s)
-2:54PM INF no leaks found
+  21 passed (1.1s)
+1:07AM INF no leaks found
 ```
 
 ## Testy w CI
