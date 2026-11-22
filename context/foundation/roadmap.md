@@ -132,19 +132,19 @@ Brak. Narzędzie testów, ustawienia ekranów 360 px i 1280 px oraz podawanie zb
 
 ### S-05: Poprawki treści strony
 
-- **Outcome:** odwiedzający czyta na stronie poprawione zdania z prośby człowieka: w „You decide” punkt o zabezpieczeniach Maestro z dopiskiem, że ich ustawianie będzie wkrótce możliwe; w „From build to deploy” punkt o tym, że każda zmiana jest sprawdzana, czy nie psuje tego, co już działa; w „After launch” zdanie o powiadomieniu po każdej naprawie i o małym zaangażowaniu właściciela; w „On your terms” „Maestro is always on.” i zdanie o braku dodatkowych opłat za AI; porównanie z etykietą „Why Maestro” i nowymi zdaniami w wierszach; FAQ z 11 pytaniami i pogrubionym „We don’t charge you anything for Maestro.”
+- **Outcome:** odwiedzający czyta na stronie poprawione zdania z prośby człowieka: w „Your partner” „nothing gets lost between sessions”; w „You decide” punkt o zabezpieczeniach Maestro z dopiskiem, że ich ustawianie będzie wkrótce możliwe; w „From build to deploy” punkt o tym, że każda zmiana jest sprawdzana, czy nie psuje tego, co już działa; w „After launch” zdanie o powiadomieniu po każdej naprawie i o małym zaangażowaniu właściciela; w „On your terms” „Maestro is always on.” i zdanie o braku dodatkowych opłat za AI; porównanie z etykietą „Why Maestro” i nowymi zdaniami w wierszach; FAQ z 11 pytaniami i pogrubionym „We don’t charge you anything for Maestro.”
 - **Change ID:** poprawki-tresci-strony
-- **Prośba człowieka:** poprawić i dopisać zdania w sekcjach „You decide”, „From build to deploy”, „After launch”, „On your terms”, w porównaniu i w FAQ według listy człowieka z 2026-11-22, bez żargonu technicznego; budowa dopiero na słowo człowieka „buduj”.
+- **Prośba człowieka:** poprawić i dopisać zdania w sekcjach „Your partner”, „You decide”, „From build to deploy”, „After launch”, „On your terms”, w porównaniu i w FAQ według listy człowieka z 2026-11-22, bez żargonu technicznego; budowa dopiero na słowo człowieka „buduj”.
 - **PRD refs:** FR-009, FR-017, FR-022, FR-023 (PRD v4, „Zmiana po przejęciu: poprawki treści strony”)
 - **Akceptacja tekstów (przenieść do `## Pytania do człowieka` w change.md przy `/intent`):**
   - rodzaj: zakres · krok: akceptacja-prd · pytanie: akceptacja zmienionego PRD (wersja 4, FAQ z 11 pytaniami) i nowej pozycji S-05 po S-04, z proponowanymi tekstami i poprawkami z punktów 1 (sprawdzanie zmian zamiast „never breaks”), 4 („No extra AI fees” zamiast „żadnych dodatkowych kosztów”), 5 („The installer guides you” zamiast pomocy Claude przy serwerze) i 6 (w porównaniu zostaje „on some plans”, a „deploy” po stronie kreatorów tylko, gdy sprawdzenie typowych kreatorów przy budowie to potwierdzi); punkt 7 („We don’t charge you anything for Maestro.”, publiczna obietnica cenowa) przyjęty tą samą odpowiedzią po przeczytaniu ryzyka (odpowiedź człowieka: „Akceptuję (Recommended)”) · rekomendacja: akceptować PRD v4 i S-05 z poprawkami 1, 4, 5 i 6 · wybór: rekomendacja · rozstrzygnął: człowiek · granica: 20 pytaj mnie (akceptacja opisu produktu i pozycji roadmapy z prośby człowieka)
-- **Zakres:** `lib/content.ts` (nowe i zmienione zdania); pogrubienie jednego zdania w odpowiedzi FAQ (pole treści i jego wyświetlenie w `app/page.tsx` albo `components/interactive.tsx`); testy kroków 1, 7, 8, 9 i 16 zmienione na nową treść. Układ, wygląd, funkcja zapisu (`worker/`) i workflow publikacji bez zmian.
+- **Zakres:** `lib/content.ts` (nowe i zmienione zdania); pogrubienie jednego zdania w odpowiedzi FAQ (pole treści i jego wyświetlenie w `app/page.tsx` albo `components/interactive.tsx`); usunięta czarna linia nad nagłówkiem tabeli porównania (`app/globals.css`, uwaga człowieka w makiecie); testy kroków 1, 7, 8, 9 i 16 zmienione na nową treść; cztery sprawdzenia na żywo opublikowanej strony (`teksty-sekcji`, `teksty-porownania`, `coming-soon`, `faq-strony`) z poleceniem w `## Sprawdzenie na żywo` w `CLAUDE.md`, bez usług zewnętrznych. Układ, wygląd, funkcja zapisu (`worker/`) i workflow publikacji bez zmian.
 - **Prerequisites:** S-04
 - **Parallel with:** —
 - **Blockers:** —
 - **Unknowns:** —
 - **Potrzebuje:** nic
-- **Na żywo:** nic
+- **Na żywo:** teksty-sekcji, teksty-porownania, coming-soon, faq-strony (czytają tylko opublikowaną stronę)
 - **Risk:** publiczne zdania o tym, co Maestro robi, i o cenie („We don’t charge you anything for Maestro.”); zdania o kreatorach aplikacji z promptu muszą być prawdziwe dla typowych produktów tej kategorii; scalenie na `main` od razu publikuje stronę.
 - **Status:** todo
 
