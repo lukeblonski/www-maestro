@@ -1,10 +1,10 @@
 ---
 project: "Maestro — strona www"
-version: 3
+version: 4
 status: draft
 created: 2026-11-18
-updated: 2026-11-19
-prd_version: 3
+updated: 2026-11-22
+prd_version: 4
 main_goal: quality
 top_blocker: none
 ---
@@ -33,6 +33,7 @@ Maestro ma jednostronicową, angielską stronę zapowiedzi, publikowaną automat
 | S-02 | lista-oczekujacych       | odwiedzający zapisuje się na listę oczekujących, a właściciel dostaje e-mail z każdym nowym adresem i ma je zebrane w jednej liście | S-01 | FR-014, FR-015, FR-016 | done |
 | S-03 | naprawa-listy-oczekujacych | zapis na opublikowanej stronie naprawdę przechodzi: odwiedzający widzi potwierdzenie, właściciel dostaje e-mail, a adres jest w kontaktach Resend | S-02 | FR-014, FR-015, FR-016 | done |
 | S-04 | przebudowa-strony | odwiedzający w kilka minut rozumie wartość Maestro na lekkiej stronie według makiety przyjętej przez człowieka (hero „You bring the idea. Maestro builds it.”, pięć sekcji ze spisem po lewej, porównanie z kreatorami aplikacji z promptu, FAQ) i zapisuje się na listę na końcu strony | S-03 | FR-017, FR-018, FR-019, FR-020, FR-021, FR-022, FR-023, FR-024, FR-009, FR-014 | done |
+| S-05 | poprawki-tresci-strony | odwiedzający czyta poprawione zdania sekcji, porównania i FAQ (zabezpieczenia Maestro, sprawdzanie zmian, powiadomienia, 3 nowe pytania FAQ, „We don’t charge you anything for Maestro.”) | S-04 | FR-009, FR-017, FR-022, FR-023 | todo |
 
 ## Baseline
 
@@ -129,6 +130,24 @@ Brak. Narzędzie testów, ustawienia ekranów 360 px i 1280 px oraz podawanie zb
 - **Risk:** zmiana wszystkiego, co widzi odwiedzający, na publicznej stronie zapowiedzi; scalenie na `main` od razu publikuje nową stronę; zdania o kreatorach aplikacji z promptu muszą być prawdziwe dla typowych produktów tej kategorii, a zapowiedzi „Coming soon” i „Codex and others coming soon” to decyzje człowieka o kierunku.
 - **Status:** done
 
+### S-05: Poprawki treści strony
+
+- **Outcome:** odwiedzający czyta na stronie poprawione zdania z prośby człowieka: w „You decide” punkt o zabezpieczeniach Maestro z dopiskiem, że ich ustawianie będzie wkrótce możliwe; w „From build to deploy” punkt o tym, że każda zmiana jest sprawdzana, czy nie psuje tego, co już działa; w „After launch” zdanie o powiadomieniu po każdej naprawie i o małym zaangażowaniu właściciela; w „On your terms” „Maestro is always on.” i zdanie o braku dodatkowych opłat za AI; porównanie z etykietą „Why Maestro” i nowymi zdaniami w wierszach; FAQ z 11 pytaniami i pogrubionym „We don’t charge you anything for Maestro.”
+- **Change ID:** poprawki-tresci-strony
+- **Prośba człowieka:** poprawić i dopisać zdania w sekcjach „You decide”, „From build to deploy”, „After launch”, „On your terms”, w porównaniu i w FAQ według listy człowieka z 2026-11-22, bez żargonu technicznego; budowa dopiero na słowo człowieka „buduj”.
+- **PRD refs:** FR-009, FR-017, FR-022, FR-023 (PRD v4, „Zmiana po przejęciu: poprawki treści strony”)
+- **Akceptacja tekstów (przenieść do `## Pytania do człowieka` w change.md przy `/intent`):**
+  - rodzaj: zakres · krok: akceptacja-prd · pytanie: akceptacja zmienionego PRD (wersja 4, FAQ z 11 pytaniami) i nowej pozycji S-05 po S-04, z proponowanymi tekstami i poprawkami z punktów 1 (sprawdzanie zmian zamiast „never breaks”), 4 („No extra AI fees” zamiast „żadnych dodatkowych kosztów”), 5 („The installer guides you” zamiast pomocy Claude przy serwerze) i 6 (w porównaniu zostaje „on some plans”, a „deploy” po stronie kreatorów tylko, gdy sprawdzenie typowych kreatorów przy budowie to potwierdzi); punkt 7 („We don’t charge you anything for Maestro.”, publiczna obietnica cenowa) przyjęty tą samą odpowiedzią po przeczytaniu ryzyka (odpowiedź człowieka: „Akceptuję (Recommended)”) · rekomendacja: akceptować PRD v4 i S-05 z poprawkami 1, 4, 5 i 6 · wybór: rekomendacja · rozstrzygnął: człowiek · granica: 20 pytaj mnie (akceptacja opisu produktu i pozycji roadmapy z prośby człowieka)
+- **Zakres:** `lib/content.ts` (nowe i zmienione zdania); pogrubienie jednego zdania w odpowiedzi FAQ (pole treści i jego wyświetlenie w `app/page.tsx` albo `components/interactive.tsx`); testy kroków 1, 7, 8, 9 i 16 zmienione na nową treść. Układ, wygląd, funkcja zapisu (`worker/`) i workflow publikacji bez zmian.
+- **Prerequisites:** S-04
+- **Parallel with:** —
+- **Blockers:** —
+- **Unknowns:** —
+- **Potrzebuje:** nic
+- **Na żywo:** nic
+- **Risk:** publiczne zdania o tym, co Maestro robi, i o cenie („We don’t charge you anything for Maestro.”); zdania o kreatorach aplikacji z promptu muszą być prawdziwe dla typowych produktów tej kategorii; scalenie na `main` od razu publikuje stronę.
+- **Status:** todo
+
 ## Backlog Handoff
 
 | Roadmap ID | Change ID               | Suggested issue title                                                        | Ready for `/10x-plan` | Notes |
@@ -137,6 +156,7 @@ Brak. Narzędzie testów, ustawienia ekranów 360 px i 1280 px oraz podawanie zb
 | S-02       | lista-oczekujacych      | Prawdziwa lista oczekujących: zapis przez funkcję Cloudflare i Resend, powiadomienie właściciela | no (po S-01)          | Intencja przez `/intent` z człowiekiem |
 | S-03       | naprawa-listy-oczekujacych | Naprawa listy oczekujących: przyczyna 502 z odpowiedzi Resend, poprawka, prawdziwy zapis | yes | Intencja przez `/intent` z człowiekiem |
 | S-04       | przebudowa-strony       | Przebudowa treści i układu strony według makiety przyjętej przez człowieka | yes (intencja i makieta zaakceptowane) | Budowa dopiero na słowo człowieka „buduj” |
+| S-05       | poprawki-tresci-strony  | Poprawki treści strony: zabezpieczenia, sprawdzanie zmian, porównanie i 3 nowe pytania FAQ | no (intencja do akceptacji) | Budowa dopiero na słowo człowieka „buduj” |
 
 ## Open Roadmap Questions
 

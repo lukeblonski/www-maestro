@@ -1,9 +1,9 @@
 ---
 project: "Maestro — strona www"
-version: 3
+version: 4
 status: draft
 created: 2026-11-18
-updated: 2026-11-18
+updated: 2026-11-22
 context_type: brownfield
 product_type: web-app
 target_scale:
@@ -167,6 +167,17 @@ Prośba człowieka (2026-11-18), streszczenie jego słów: za dużo treści; has
 - [new] FR-023: „After launch” i pytanie FAQ o utrzymanie mają widoczne „Coming soon”; strona nigdzie nie obiecuje, że właściciel niczego nie sprawdza. Priority: must-have
 
 **Scenariusz po S-04.** Kroki scenariusza zmieniają się tak: krok 1 sprawdza kolejność z FR-017 i brak tekstów usuniętych sekcji, daty wydania i wizji 2027; krok 2 linki z FR-018; krok 3 brak przewijania w bok i porównanie z FR-019; krok 4 nagłówek z logo i przyciskiem, bez przełącznika motywu; krok 5 zamiast motywu według systemu sprawdza jeden jasny motyw bez zapisu w przeglądarce (FR-020); krok 6 zamiast grafiki rozmowy sprawdza spis sekcji (FR-024); kroki 7 i 8 zamiast przykładu w 8 krokach sprawdzają porównanie (FR-022) i oznaczenia „Coming soon” (FR-023); krok 9 osiem pytań FAQ; krok 10 formularz na końcu strony (FR-021); krok 12 brak płynnego przewijania i przejść przy ograniczonym ruchu; krok 13 kontrast w jasnym motywie; kroki 11 i 14 bez zmian (fonty i obraz hero pod adresem strony); krok 16 dopuszcza pliki tej zmiany. Sprawdzenie każdego kroku: test w przeglądarce na ekranie telefonu i komputera, jak dotąd.
+
+### Zmiana po przejęciu: poprawki treści strony (S-05)
+
+Prośba człowieka (2026-11-22), streszczenie: dopisać i poprawić zdania w sekcjach „You decide”, „From build to deploy”, „After launch”, „On your terms”, w porównaniu i w FAQ, bez żargonu technicznego: punkt o zabezpieczeniach Maestro (guardrails) z zapowiedzią, że ich ustawianie będzie wkrótce możliwe; punkt o sprawdzaniu, że każda zmiana nie psuje tego, co już działa; powiadomienie o każdej naprawie po premierze; trzy nowe pytania FAQ (istniejące projekty, co trzeba mieć na start, jak działa Maestro) i pogrubione „We don’t charge you anything for Maestro.” w odpowiedzi o koszcie. Układ, makieta, funkcja zapisu i workflow publikacji bez zmian.
+
+- [changed] FR-009: FAQ ma 11 pytań: 8 z S-04 i nowe „Can Maestro work on a product I already have?”, „What do I need to start?”, „What’s under the hood?”; każde otwiera się i zamyka. Odpowiedź „What will it cost?” kończy się pogrubionym zdaniem „We don’t charge you anything for Maestro.” Priority: must-have
+- [changed] FR-017: treść sekcji według prośby z S-05 (nowy punkt o zabezpieczeniach w „You decide” z dopiskiem „coming soon” o ich ustawianiu, nowy punkt o sprawdzaniu zmian w „From build to deploy”, tytuł „Maestro is always on.” w „On your terms”); kolejność i kotwice bez zmian. Priority: must-have
+- [changed] FR-022: porównanie nadal ma 2 kolumny i 6 wierszy bez nazw cudzych produktów; etykieta sekcji „Why Maestro” zamiast „Flat learning curve”, zdania w wierszach według prośby z S-05, każde prawdziwe dla typowych kreatorów aplikacji z promptu. Priority: must-have
+- [unchanged] FR-023: strona nigdzie nie obiecuje, że właściciel niczego nie sprawdza; „After launch” zostaje z „Coming soon”.
+
+**Scenariusz po S-05.** Krok 9 sprawdza 11 pytań FAQ i pogrubione zdanie w odpowiedzi o koszcie; kroki 1, 7 i 8 sprawdzają nowe teksty sekcji i porównania; krok 16 dopuszcza pliki tej zmiany. Pozostałe kroki bez zmian.
 
 ### Dokładane przez przejęcie
 
