@@ -102,3 +102,4 @@ archived_at: null
 ## Zatrzymania autopilota
 
 - czas: 2026-11-24 00:31 · krok: plan · powód: odmowa uprawnień: Bash: cat /home/fabryka/.local/state/factory/skille-krokow/aa56bd33811f5cb2/.claude/skills/10x-plan/references/progress-format.md; echo ----; sed -n '/Kiedy pytać człowieka/,/^## [^K]/p' /home/fabryka/fabryka/CLAUDE.md; echo ----; sed -n '/^## Ścieżki/,/^## Płatne testy skilli/p' … · zrobiono: przyjęcie · skutek: krok przyjęty, łańcuch dalej
+- czas: 2026-11-24 00:43 · krok: implement · powód: odmowa uprawnień: Bash: grep -n 'def live_verdict\|def live_place\b\|def live_place(' scripts/autopilot.py; sed -n "$(grep -n 'def live_verdict' scripts/autopilot.py | cut -d: -f1),+70p" scripts/autopilot.py; sed -n "$(grep -n 'def live_place(' scripts/autopilot.py | cut -d: -f1),+15p" scripts/auto… · zrobiono: przyjęcie · skutek: krok przyjęty, łańcuch dalej
