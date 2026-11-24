@@ -139,17 +139,17 @@ Skrypt, który czyta stronę i zapisuje plik wyniku dla `teksty-sekcji`, `teksty
 
 #### Automated
 
-- [x] 1.1 Teksty sekcji i porównania oraz linia tabeli: `npm run test:e2e -- --grep "krok (1|7)\b"`
-- [x] 1.2 „Coming soon” i zapowiedź zabezpieczeń: `npm run test:e2e -- --grep "krok 8\b"`
-- [x] 1.3 FAQ z 11 pytaniami i pogrubieniem: `npm run test:e2e -- --grep "krok 9\b"`
-- [x] 1.4 Wszystkie kroki scenariusza strony: `npm run test:e2e`
-- [x] 1.5 Polecenie sprawdzające z testem „krok 16”: `npm ci && npm run verify`
+- [x] 1.1 Teksty sekcji i porównania oraz linia tabeli: `npm run test:e2e -- --grep "krok (1|7)\b"` — 040c200
+- [x] 1.2 „Coming soon” i zapowiedź zabezpieczeń: `npm run test:e2e -- --grep "krok 8\b"` — 040c200
+- [x] 1.3 FAQ z 11 pytaniami i pogrubieniem: `npm run test:e2e -- --grep "krok 9\b"` — 040c200
+- [x] 1.4 Wszystkie kroki scenariusza strony: `npm run test:e2e` — 040c200
+- [x] 1.5 Polecenie sprawdzające z testem „krok 16”: `npm ci && npm run verify` — 040c200
 
 ### Phase 2: Sprawdzenia na żywo czterech kroków
 
 #### Automated
 
-- [ ] 2.1 Składnia skryptu: `node --check scripts/strona-na-zywo.mjs`
-- [ ] 2.2 Cztery linie z poleceniem w sekcji ## Sprawdzenie na żywo w CLAUDE.md
-- [ ] 2.3 Stany końcowe w skrypcie równe tym z change.md
-- [ ] 2.4 Polecenie sprawdzające i zakres zmiany: `npm ci && npm run verify && python3 ~/.claude/skills/10x-impl-review/scripts/validate_change.py poprawki-tresci-strony --rules 6`
+- [x] 2.1 Składnia skryptu: `node --check scripts/strona-na-zywo.mjs`
+- [x] 2.2 Cztery linie z poleceniem w sekcji ## Sprawdzenie na żywo w CLAUDE.md
+- [x] 2.3 Stany końcowe w skrypcie równe tym z change.md
+- [x] 2.4 Polecenie sprawdzające i zakres zmiany: `npm ci && npm run verify && python3 ~/.claude/skills/10x-impl-review/scripts/validate_change.py poprawki-tresci-strony --rules 6`

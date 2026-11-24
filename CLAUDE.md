@@ -33,6 +33,13 @@ Serwer deweloperski Next słucha tylko na `127.0.0.1`, na porcie ze zmiennej `PO
 
 Skrypt wysyła do Resend jedno żądanie diagnostyczne bez nagłówka `User-Agent` (jak funkcja w Workers przed poprawką), uruchamia funkcję zapisu z `worker/index.ts` na `127.0.0.1:$PORT` z kluczem Resend i adresem właściciela z plików z `## Dostępy`, zapisuje się adresem właściciela, sprawdza w Resend kontakt i stan e-maila i zapisuje wynik w pliku `$NA_ZYWO_WYNIK`; uruchamia go tylko skrypt autopilota, nigdy kroki agenta ani testy.
 
+- teksty-sekcji: `node scripts/strona-na-zywo.mjs`
+- teksty-porownania: `node scripts/strona-na-zywo.mjs`
+- coming-soon: `node scripts/strona-na-zywo.mjs`
+- faq-strony: `node scripts/strona-na-zywo.mjs`
+
+Skrypt `scripts/strona-na-zywo.mjs` bierze nazwę sprawdzenia z `$NA_ZYWO_SCIEZKA` i czyta zwykły HTML strony, bez przeglądarki i bez plików z `## Dostępy`. Przed publikacją (`przed-publikacja`, też `galaz-glowna`) instaluje zależności (`npm ci`), gdy ich nie ma, buduje stronę z `NEXT_PUBLIC_BASE_PATH=/www-maestro`, podaje `out/` przez `scripts/serwer-statyczny.mjs` na `127.0.0.1:$PORT`, czyta `$NA_ZYWO_ADRES/www-maestro/` i zatrzymuje serwer. Po publikacji (`po-publikacji`) niczego nie instaluje ani nie uruchamia: czyta `$NA_ZYWO_ADRES` z parametrem omijającym pamięć podręczną co 15 s, aż strona ma wszystkie teksty sprawdzenia, najwyżej 15 minut. Wynik z pustą listą usług zapisuje w pliku `$NA_ZYWO_WYNIK`; uruchamia go tylko skrypt autopilota, nigdy kroki agenta ani testy.
+
 ## Dostępy
 
 Ścieżki do plików z sekretami, poza repo. Kroki i sesja nie czytają tych plików i nie wypisują ich treści. Czyta je tylko polecenie z `## Uruchomienie lokalne`, polecenie ścieżki z `## Sprawdzenie na żywo`, które uruchamia tylko skrypt autopilota, i krok autopilota `przygotowanie-wdrozenia`, który podaje wartość na wejście polecenia z `## Wdrożenie` i jej nie wypisuje. Testy używają atrapy usługi.
