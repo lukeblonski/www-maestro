@@ -84,8 +84,8 @@ h3 { font-size: 1.125rem; line-height: 1.35; letter-spacing: -0.012em; }
 .sec-head { display: grid; gap: 16px; max-width: 760px; }
 .sec-head .lead { max-width: 46ch; }
 
-/* comparison */
-.cmp { margin-top: clamp(36px, 5vw, 64px); border-top: 1px solid var(--ink); }
+/* comparison; no line above the table header (context/changes/poprawki-tresci-strony/makieta/makieta.html) */
+.cmp { margin-top: clamp(36px, 5vw, 64px); }
 .cmp-row { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 4fr) minmax(0, 5fr); border-bottom: 1px solid var(--line); }
 .cmp-row > * { padding: 18px 24px 18px 0; }
 .cmp-row > :nth-child(3) { color: var(--ink); font-weight: 500; }

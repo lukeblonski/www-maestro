@@ -139,11 +139,11 @@ Skrypt, który czyta stronę i zapisuje plik wyniku dla `teksty-sekcji`, `teksty
 
 #### Automated
 
-- [ ] 1.1 Teksty sekcji i porównania oraz linia tabeli: `npm run test:e2e -- --grep "krok (1|7)\b"`
-- [ ] 1.2 „Coming soon” i zapowiedź zabezpieczeń: `npm run test:e2e -- --grep "krok 8\b"`
-- [ ] 1.3 FAQ z 11 pytaniami i pogrubieniem: `npm run test:e2e -- --grep "krok 9\b"`
-- [ ] 1.4 Wszystkie kroki scenariusza strony: `npm run test:e2e`
-- [ ] 1.5 Polecenie sprawdzające z testem „krok 16”: `npm ci && npm run verify`
+- [x] 1.1 Teksty sekcji i porównania oraz linia tabeli: `npm run test:e2e -- --grep "krok (1|7)\b"`
+- [x] 1.2 „Coming soon” i zapowiedź zabezpieczeń: `npm run test:e2e -- --grep "krok 8\b"`
+- [x] 1.3 FAQ z 11 pytaniami i pogrubieniem: `npm run test:e2e -- --grep "krok 9\b"`
+- [x] 1.4 Wszystkie kroki scenariusza strony: `npm run test:e2e`
+- [x] 1.5 Polecenie sprawdzające z testem „krok 16”: `npm ci && npm run verify`
 
 ### Phase 2: Sprawdzenia na żywo czterech kroków
 

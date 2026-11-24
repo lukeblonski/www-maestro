@@ -7,7 +7,66 @@ import { ADRES_FUNKCJI, atrapaFunkcji, dokladnie, otworzStrone, poFontach, poHyd
 
 // Nazwy cudzych produktów, których porównanie nie wymienia (P7).
 const CUDZE_PRODUKTY = /\b(Lovable|Bolt|Replit|Cursor|Warp|HumanLayer|Devin)\b/;
-const LICZBA_PYTAN_FAQ = 8;
+
+// Wiersze porównania z „Oczekiwanego efektu” zmiany poprawki-tresci-strony, wpisane dosłownie (P1).
+const WIERSZE_POROWNANIA = [
+  {
+    etykieta: "Made for",
+    kreatory: "Anyone who wants to build an app by chatting with AI",
+    maestro: "Anyone who has an idea for a product but doesn’t want to deal with the build details",
+  },
+  {
+    etykieta: "What you need to know",
+    kreatory: "How to prompt, maintain and grow",
+    maestro: "The thing you want to build. Maestro helps you with the rest",
+  },
+  {
+    etykieta: "Who steers the build",
+    kreatory: "You, prompt by prompt",
+    maestro: "Maestro. You decide what your product does",
+  },
+  {
+    etykieta: "How it talks to you",
+    kreatory: "Prompt, answer, prompt",
+    maestro:
+      "Like a partner who remembers everything you agreed, discussed and decided, in plain language without technical jargon",
+  },
+  {
+    etykieta: "Where your product lives",
+    kreatory: "Often on the builder’s platform",
+    maestro: "On your own server. The code, documentation and knowledge are yours",
+  },
+  {
+    etykieta: "After launch",
+    kreatory: "Optional monitoring and AI fixes on some plans, which you need to oversee on your own",
+    maestro: "Fixes issues and helps your product grow. You approve its decisions and add your input when you want",
+  },
+];
+
+// Pytania FAQ w kolejności z „Oczekiwanego efektu” zmiany poprawki-tresci-strony (P2).
+const PYTANIA_FAQ = [
+  "Do I need to know how to code?",
+  "What do I need to start?",
+  "What will it cost?",
+  "When can I start?",
+  "Does Maestro do anything without asking me?",
+  "Where are my data, code and project history?",
+  "Can Maestro work on a product I already have?",
+  "What’s under the hood?",
+  "What happens if I stop using Maestro?",
+  "Will it tell me whether my idea is worth building?",
+  "Does the first release maintain my application automatically?",
+];
+const LICZBA_PYTAN_FAQ = 11;
+const NOWE_ODPOWIEDZI: Record<string, string> = {
+  "What do I need to start?":
+    "The Claude app, an active Claude subscription and a server. The installer guides you through setting up the server.",
+  "Can Maestro work on a product I already have?":
+    "Yes. Maestro can take over an existing project: it learns how your product works, protects what already works with checks, and then keeps building with you.",
+  "What’s under the hood?":
+    "Maestro is the official Claude Code running on your own server. Behind it, a set of steps turns what you agree on into a written plan, builds it with AI agents, reviews and tests every change, and deploys it. Maestro is the one you talk to: it keeps your project’s memory, asks you only what needs your decision, and explains everything in plain language.",
+};
+const ZDANIE_O_KOSZCIE = "We don’t charge you anything for Maestro.";
 
 test.beforeEach(async ({ page }) => {
   await otworzStrone(page);
@@ -70,19 +129,37 @@ test("krok 7 — porównanie z kreatorami aplikacji z promptu bez cudzych nazw",
     "Prompt-to-app builders",
     "Maestro",
   ]);
-  await expect(tabela.getByRole("rowheader"), "6 wierszy z treści w kolejności").toHaveText(
-    c.comparison.rows.map((w) => w.label),
+  await expect(porownanie.locator("p.mono"), "etykieta porównania").toHaveText(dokladnie("Why Maestro"));
+  await expect(tabela.getByRole("rowheader"), "6 wierszy w kolejności").toHaveText(
+    WIERSZE_POROWNANIA.map((w) => w.etykieta),
   );
   expect(c.comparison.rows.length, "6 wierszy w lib/content.ts").toBe(6);
   // Wiersz nagłówka (ukryty poniżej 640 px) i 6 wierszy danych.
   const wiersze = tabela.getByRole("row", { includeHidden: true });
   await expect(wiersze).toHaveCount(7);
-  for (let i = 0; i < c.comparison.rows.length; i++) {
+  for (let i = 0; i < WIERSZE_POROWNANIA.length; i++) {
     const komorki = wiersze.nth(i + 1).getByRole("cell");
     await expect(komorki).toHaveCount(2);
-    await expect(komorki.nth(0)).toContainText(c.comparison.rows[i].builders);
-    await expect(komorki.nth(1)).toContainText(c.comparison.rows[i].maestro);
+    await expect(komorki.nth(0), `${WIERSZE_POROWNANIA[i].etykieta}: kreatory`).toContainText(
+      WIERSZE_POROWNANIA[i].kreatory,
+    );
+    await expect(komorki.nth(1), `${WIERSZE_POROWNANIA[i].etykieta}: Maestro`).toContainText(
+      WIERSZE_POROWNANIA[i].maestro,
+    );
   }
+
+  // Bez czarnej linii nad wierszem nagłówka, z liniami między wierszami danych (P7).
+  const ramki = await tabela.evaluate((el) => ({
+    gora: parseFloat(getComputedStyle(el).borderTopWidth),
+    wiersze: Array.from(el.querySelectorAll('[role="row"]'))
+      .slice(1)
+      .map((wiersz) => parseFloat(getComputedStyle(wiersz).borderBottomWidth)),
+  }));
+  expect(ramki.gora, "górna ramka tabeli porównania").toBe(0);
+  expect(ramki.wiersze.length).toBe(6);
+  ramki.wiersze.forEach((szerokosc, i) =>
+    expect(szerokosc, `wiersz ${i + 1}: dolna linia`).toBeGreaterThan(0),
+  );
 
   for (const tekst of ["Individual tools vary", "A comparison of typical approaches"]) {
     await expect(porownanie, `#why bez „${tekst}”`).not.toContainText(tekst);
@@ -106,6 +183,21 @@ test("krok 8 — „Coming soon” przy opiece po starcie i innych agentach", as
   await expect(wlasnosc.getByText(dokladnie("Codex and others coming soon"))).toBeVisible();
   await expect(wlasnosc.getByText(dokladnie("Codex and OpenCode coming soon"))).toBeVisible();
 
+  // „Coming soon” w wierszu porównania „After launch”.
+  const wierszPoStarcie = page
+    .locator("#why")
+    .getByRole("row")
+    .filter({ has: page.getByRole("rowheader", { name: dokladnie("After launch") }) });
+  await expect(wierszPoStarcie, "jeden wiersz porównania „After launch”").toHaveCount(1);
+  await expect(wierszPoStarcie.getByText(dokladnie("Coming soon"))).toBeVisible();
+
+  // Zapowiedź ustawiania zabezpieczeń pod punktem „Guardrails built in.” w #control.
+  const zabezpieczenia = page
+    .locator("#control li")
+    .filter({ has: page.locator("h3", { hasText: dokladnie("Guardrails built in.") }) });
+  await expect(zabezpieczenia, "jeden punkt „Guardrails built in.”").toHaveCount(1);
+  await expect(zabezpieczenia.getByText(dokladnie("Setting your own guardrails coming soon"))).toBeVisible();
+
   const pytanie = page
     .locator("#faq details")
     .filter({ has: page.locator("summary", { hasText: "Does the first release maintain my application automatically?" }) });
@@ -115,11 +207,22 @@ test("krok 8 — „Coming soon” przy opiece po starcie i innych agentach", as
   await expect(pytanie.locator("p")).toContainText("coming soon");
 });
 
-test("krok 9 — każde z 8 pytań FAQ otwiera się i zamyka", async ({ page }) => {
+test("krok 9 — każde z 11 pytań FAQ otwiera się i zamyka", async ({ page }) => {
   const pytania = page.locator("#faq details");
   await expect(pytania).toHaveCount(LICZBA_PYTAN_FAQ);
-  await expect(page.locator("#faq summary"), "pytania z treści w kolejności").toHaveText(
-    c.faq.items.map((p) => p.question),
+  expect(PYTANIA_FAQ.length).toBe(LICZBA_PYTAN_FAQ);
+  await expect(page.locator("#faq summary"), "pytania w kolejności z Oczekiwanego efektu").toHaveText(
+    PYTANIA_FAQ.map((p) => dokladnie(p)),
+  );
+
+  // Trzy nowe odpowiedzi dosłownie, a w odpowiedzi o koszcie pogrubione zdanie.
+  for (const [pytanie, odpowiedz] of Object.entries(NOWE_ODPOWIEDZI)) {
+    const element = pytania.filter({ has: page.locator("summary", { hasText: dokladnie(pytanie) }) });
+    await expect(element.locator("p"), `odpowiedź na „${pytanie}”`).toHaveText(dokladnie(odpowiedz));
+  }
+  const koszt = pytania.filter({ has: page.locator("summary", { hasText: dokladnie("What will it cost?") }) });
+  await expect(koszt.locator("p strong"), "pogrubione zdanie w odpowiedzi o koszcie").toHaveText(
+    dokladnie(ZDANIE_O_KOSZCIE),
   );
 
   for (let i = 0; i < LICZBA_PYTAN_FAQ; i++) {

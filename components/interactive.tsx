@@ -63,7 +63,15 @@ export function FAQ() {
       {c.faq.items.map((item) => (
         <details key={item.question}>
           <summary>{item.question}</summary>
-          <p>{item.answer}</p>
+          <p>
+            {item.answer}
+            {item.emphasis ? (
+              <>
+                {" "}
+                <strong>{item.emphasis}</strong>
+              </>
+            ) : null}
+          </p>
         </details>
       ))}
     </div>

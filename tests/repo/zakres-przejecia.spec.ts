@@ -19,8 +19,10 @@ const SCIEZKI = [
   "tsconfig.json",
   "postcss.config.mjs",
 ];
-// Pliki zmiany lista-oczekujacych (formularz zapisu i workflow publikacji funkcji): mogą się
-// różnić od bazy, ale nie muszą. Każdy inny plik w SCIEZKI zostaje jak w BAZA.
+// Pliki zmiany lista-oczekujacych (formularz zapisu i workflow publikacji funkcji), a także
+// zmiany poprawki-tresci-strony (lib/content.ts, components/interactive.tsx z pogrubionym zdaniem
+// FAQ i app/globals.css bez górnej linii porównania): mogą się różnić od bazy, ale nie muszą.
+// Każdy inny plik w SCIEZKI zostaje jak w BAZA.
 const PLIKI_ZMIAN = [
   "components/interactive.tsx",
   "lib/waitlist.ts",

@@ -18,8 +18,82 @@ const KOLEJNOSC_KOTWIC = [
   "first-release",
 ];
 
-// Teksty starej strony, których nowa strona nie ma (P1).
-const USUNIETE_TEKSTY = ["30 November 2026", "Our 2027 vision", "Autonomously.", "manual test", "You bring the problem"];
+// Teksty starej strony, których nowa strona nie ma (P1 zmian przebudowa-strony i poprawki-tresci-strony).
+const USUNIETE_TEKSTY = [
+  "30 November 2026",
+  "Our 2027 vision",
+  "Autonomously.",
+  "manual test",
+  "You bring the problem",
+  "Your server. Always on.",
+  "Flat learning curve",
+  "Through prompts and a preview",
+  "In plain language, with a recommendation",
+  "on some plans, which you turn on and oversee",
+  "the will to build your next moonshot",
+];
+
+// Nowe i zmienione punkty pięciu sekcji z „Oczekiwanego efektu” zmiany poprawki-tresci-strony,
+// wpisane tu dosłownie, a nie odczytane z lib/content.ts: sekcja, tytuł punktu i fragment jego tekstu.
+const PUNKTY_SEKCJI: { sekcja: string; tytul: string; tekst: string }[] = [
+  {
+    sekcja: "observer",
+    tytul: "It remembers.",
+    tekst: "Its entire memory is stored on your server, so nothing gets lost between sessions.",
+  },
+  {
+    sekcja: "control",
+    tytul: "Every question comes with a recommendation.",
+    tekst: "tells you which answer it recommends and why, so you can make informed decisions.",
+  },
+  {
+    sekcja: "control",
+    tytul: "Guardrails built in.",
+    tekst:
+      "Maestro works inside built-in safeguards. It keeps away from your passwords and keys, never changes files you protect, and never bends a test just to make a change pass.",
+  },
+  {
+    sekcja: "deploy",
+    tytul: "What works keeps working.",
+    tekst:
+      "Before any change reaches your users, Maestro checks that the main things your product already does still work, the way your users use them.",
+  },
+  {
+    sekcja: "after-launch",
+    tytul: "It looks after your product.",
+    tekst:
+      "Maestro keeps watching your product and, when something goes wrong, proactively fixes it, and lets you know every time it does.",
+  },
+  {
+    sekcja: "after-launch",
+    tytul: "It helps your product grow.",
+    tekst:
+      "Maestro helps you shape a product strategy, gathers feedback from your users and your tools, and implements changes, improvements and new features, while asking as little of your time as possible.",
+  },
+  {
+    sekcja: "ownership",
+    tytul: "You never touch the code.",
+    tekst:
+      "You don’t need to know what a PR, a merge, a ticket, an API, a skill or an md file is. All you need is the will to create!",
+  },
+  {
+    sekcja: "ownership",
+    tytul: "Maestro is always on.",
+    tekst: "Maestro runs 24/7 on a separate server, so it has no access to the data on your computer.",
+  },
+  {
+    sekcja: "ownership",
+    tytul: "No new app to learn.",
+    tekst:
+      "You talk to Maestro in the Claude app on your computer or phone. Not another clunky drag-and-drop tool or cluttered interface.",
+  },
+  {
+    sekcja: "ownership",
+    tytul: "Your own subscription.",
+    tekst:
+      "Maestro runs the official Claude Code on your own server, signed in with your own Claude plan. No extra AI fees: Maestro only uses what your Claude subscription already includes.",
+  },
+];
 
 test("krok 1 — sekcje w kolejności z makiety i brak błędów w konsoli", async ({ page }) => {
   const { zapis } = await otworzStrone(page);
@@ -83,6 +157,13 @@ test("krok 1 — sekcje w kolejności z makiety i brak błędów w konsoli", asy
   expect(stopka.dzieckoBody, "#waitlist jest dzieckiem body").toBe(true);
   expect(stopka.poMain && !stopka.wMain, "#waitlist stoi po <main>").toBe(true);
   expect(stopka.poStopce, "elementy body po #waitlist (poza script i next-route-announcer)").toEqual([]);
+
+  // Nowe i zmienione punkty w swoich sekcjach, z tekstem w akapicie pod tytułem (P1).
+  for (const { sekcja, tytul, tekst } of PUNKTY_SEKCJI) {
+    const punkt = page.locator(`#${sekcja} li`).filter({ has: page.locator("h3", { hasText: dokladnie(tytul) }) });
+    await expect(punkt, `#${sekcja}: jeden punkt „${tytul}”`).toHaveCount(1);
+    await expect(punkt.locator("p").first(), `#${sekcja}: tekst punktu „${tytul}”`).toContainText(tekst);
+  }
 
   const tekstStrony = await page.evaluate(() => document.body.textContent ?? "");
   const tytul = await page.title();

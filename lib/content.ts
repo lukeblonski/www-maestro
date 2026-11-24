@@ -2,8 +2,8 @@
 export const PRODUCT_NAME = "Maestro";
 
 // Page copy follows the mockup accepted by the owner
-// (context/changes/przebudowa-strony/makieta/makieta.html). Rows 1 and 6 of the
-// prompt-to-app builders column are corrected after the research of that change.
+// (context/changes/poprawki-tresci-strony/makieta/makieta.html, version 2), built on
+// the layout of context/changes/przebudowa-strony/makieta/makieta.html.
 
 export type ChapterPoint = { title: string; text: string; next?: string };
 export type Chapter = {
@@ -16,6 +16,7 @@ export type Chapter = {
   soon?: boolean;
   points: ChapterPoint[];
 };
+export type FaqItem = { question: string; answer: string; emphasis?: string };
 export type ComparisonRow = { label: string; builders: string; maestro: string; soon?: boolean };
 
 const chapters: Chapter[] = [
@@ -45,7 +46,7 @@ const chapters: Chapter[] = [
       },
       {
         title: "It remembers.",
-        text: `${PRODUCT_NAME} remembers your decisions and the reasons behind them for as long as you want. Its entire memory is stored on your server.`,
+        text: `${PRODUCT_NAME} remembers your decisions and the reasons behind them for as long as you want. Its entire memory is stored on your server, so nothing gets lost between sessions.`,
       },
     ],
   },
@@ -62,11 +63,16 @@ const chapters: Chapter[] = [
       },
       {
         title: "Every question comes with a recommendation.",
-        text: `${PRODUCT_NAME} explains what you are agreeing to in plain language and tells you which answer it recommends and why.`,
+        text: `${PRODUCT_NAME} explains what you are agreeing to in plain language and tells you which answer it recommends and why, so you can make informed decisions.`,
       },
       {
         title: "Questions come to your phone.",
         text: `When ${PRODUCT_NAME} needs your decision, you get a notification in the Claude app, on your computer or phone.`,
+      },
+      {
+        title: "Guardrails built in.",
+        text: `${PRODUCT_NAME} works inside built-in safeguards. It keeps away from your passwords and keys, never changes files you protect, and never bends a test just to make a change pass.`,
+        next: "Setting your own guardrails coming soon",
       },
     ],
   },
@@ -89,6 +95,10 @@ const chapters: Chapter[] = [
         title: "Released when you say so.",
         text: "Nothing goes public without your approval.",
       },
+      {
+        title: "What works keeps working.",
+        text: `Before any change reaches your users, ${PRODUCT_NAME} checks that the main things your product already does still work, the way your users use them.`,
+      },
     ],
   },
   {
@@ -101,11 +111,11 @@ const chapters: Chapter[] = [
     points: [
       {
         title: "It looks after your product.",
-        text: `${PRODUCT_NAME} keeps watching your product and, when something goes wrong, proactively fixes it.`,
+        text: `${PRODUCT_NAME} keeps watching your product and, when something goes wrong, proactively fixes it, and lets you know every time it does.`,
       },
       {
         title: "It helps your product grow.",
-        text: `${PRODUCT_NAME} helps you shape a product strategy, gathers feedback from your users and your tools, and implements changes, improvements and new features.`,
+        text: `${PRODUCT_NAME} helps you shape a product strategy, gathers feedback from your users and your tools, and implements changes, improvements and new features, while asking as little of your time as possible.`,
       },
     ],
   },
@@ -118,20 +128,20 @@ const chapters: Chapter[] = [
     points: [
       {
         title: "You never touch the code.",
-        text: "You don’t need to know what a PR, a merge, a ticket or an API is. All you need is the will to build your next moonshot.",
+        text: "You don’t need to know what a PR, a merge, a ticket, an API, a skill or an md file is. All you need is the will to create!",
       },
       {
-        title: "Your server. Always on.",
-        text: `${PRODUCT_NAME} runs on a separate server, so it has no access to the data on your computer, and it works 24/7. Your product is built there too. The code, the documentation and ${PRODUCT_NAME}’s knowledge stay with you and are always yours.`,
+        title: `${PRODUCT_NAME} is always on.`,
+        text: `${PRODUCT_NAME} runs 24/7 on a separate server, so it has no access to the data on your computer. Your product is built there too. The code, the documentation and ${PRODUCT_NAME}’s knowledge stay with you and are always yours.`,
       },
       {
         title: "No new app to learn.",
-        text: `You talk to ${PRODUCT_NAME} in the Claude app on your computer or phone. No clunky drag-and-drop tools, no cluttered interface.`,
+        text: `You talk to ${PRODUCT_NAME} in the Claude app on your computer or phone. Not another clunky drag-and-drop tool or cluttered interface.`,
         next: "Codex and others coming soon",
       },
       {
         title: "Your own subscription.",
-        text: `${PRODUCT_NAME} runs the official Claude Code on your own server, signed in with your own Claude plan.`,
+        text: `${PRODUCT_NAME} runs the official Claude Code on your own server, signed in with your own Claude plan. No extra AI fees: ${PRODUCT_NAME} only uses what your Claude subscription already includes.`,
         next: "Codex and OpenCode coming soon",
       },
     ],
@@ -142,22 +152,22 @@ const comparisonRows: ComparisonRow[] = [
   {
     label: "Made for",
     builders: "Anyone who wants to build an app by chatting with AI",
-    maestro: "A nontechnical person with an idea to build and deploy a complete product",
+    maestro: "Anyone who has an idea for a product but doesn’t want to deal with the build details",
   },
   {
     label: "What you need to know",
-    builders: "How to prompt, and how to fix what breaks",
-    maestro: "The thing you want to build",
+    builders: "How to prompt, maintain and grow",
+    maestro: `The thing you want to build. ${PRODUCT_NAME} helps you with the rest`,
   },
   {
     label: "Who steers the build",
     builders: "You, prompt by prompt",
-    maestro: `${PRODUCT_NAME}. You decide what your product does and how it looks`,
+    maestro: `${PRODUCT_NAME}. You decide what your product does`,
   },
   {
     label: "How it talks to you",
-    builders: "Through prompts and a preview",
-    maestro: "In plain language, with a recommendation",
+    builders: "Prompt, answer, prompt",
+    maestro: "Like a partner who remembers everything you agreed, discussed and decided, in plain language without technical jargon",
   },
   {
     label: "Where your product lives",
@@ -166,9 +176,61 @@ const comparisonRows: ComparisonRow[] = [
   },
   {
     label: "After launch",
-    builders: "Optional monitoring and AI fixes on some plans, which you turn on and oversee",
-    maestro: "Looks after your product and helps it grow",
+    builders: "Optional monitoring and AI fixes on some plans, which you need to oversee on your own",
+    maestro: "Fixes issues and helps your product grow. You approve its decisions and add your input when you want",
     soon: true,
+  },
+];
+
+const faqItems: FaqItem[] = [
+  {
+    question: "Do I need to know how to code?",
+    answer: `No. To set up ${PRODUCT_NAME}, paste an installation command into your server provider’s browser terminal and sign in to your own accounts. The installer provides checks and guidance.`,
+  },
+  {
+    question: "What do I need to start?",
+    answer: "The Claude app, an active Claude subscription and a server. The installer guides you through setting up the server.",
+  },
+  {
+    question: "What will it cost?",
+    answer:
+      "You pay for your own server and Claude subscription directly with their providers. Your application may need additional paid services, which require your approval and an agreed limit. Your Claude plan’s usage limits apply.",
+    emphasis: `We don’t charge you anything for ${PRODUCT_NAME}.`,
+  },
+  {
+    question: "When can I start?",
+    answer: "Join the waiting list and we’ll email you as soon as the first release is ready.",
+  },
+  {
+    question: `Does ${PRODUCT_NAME} do anything without asking me?`,
+    answer: `No. Installations, spending, sharing data, publishing, new accounts and anything that cannot be undone need your approval first. ${PRODUCT_NAME} explains what you are agreeing to.`,
+  },
+  {
+    question: "Where are my data, code and project history?",
+    answer: `Your application data and ${PRODUCT_NAME}’s memory live on your server. Your code and project history live in your own private repository. If a feature needs to send data to an AI or other external service, ${PRODUCT_NAME} asks for your approval and explains what will be shared.`,
+  },
+  {
+    question: `Can ${PRODUCT_NAME} work on a product I already have?`,
+    answer: `Yes. ${PRODUCT_NAME} can take over an existing project: it learns how your product works, protects what already works with checks, and then keeps building with you.`,
+  },
+  {
+    question: "What’s under the hood?",
+    answer: `${PRODUCT_NAME} is the official Claude Code running on your own server. Behind it, a set of steps turns what you agree on into a written plan, builds it with AI agents, reviews and tests every change, and deploys it. ${PRODUCT_NAME} is the one you talk to: it keeps your project’s memory, asks you only what needs your decision, and explains everything in plain language.`,
+  },
+  {
+    question: `What happens if I stop using ${PRODUCT_NAME}?`,
+    answer:
+      "Your code, application data, memory and decision history remain yours. Your server and other services are in your accounts, so you can keep using or developing your application. Their ongoing charges remain your responsibility.",
+  },
+  {
+    question: "Will it tell me whether my idea is worth building?",
+    answer:
+      "The first release includes a focused conversation and questions that challenge your assumptions. Full Discovery, with deeper research, assumption tests and a reasoned build, change or stop recommendation, is planned for a later release.",
+  },
+  {
+    question: "Does the first release maintain my application automatically?",
+    answer:
+      "Not yet. Looking after your product and helping it grow are coming soon. The first release focuses on taking your idea through to a working application.",
   },
 ];
 
@@ -186,7 +248,7 @@ export const content = {
   },
   chapters,
   comparison: {
-    label: "Flat learning curve",
+    label: `Why ${PRODUCT_NAME}`,
     title: "A different approach to building.",
     lead: "Writing code is solved. Solving problems is not.",
     ariaLabel: `${PRODUCT_NAME} compared with prompt-to-app builders`,
@@ -196,44 +258,7 @@ export const content = {
   faq: {
     label: "FAQ",
     title: ["A few things", "you might be wondering."],
-    items: [
-      {
-        question: "Do I need to know how to code?",
-        answer: `No. To set up ${PRODUCT_NAME}, paste an installation command into your server provider’s browser terminal and sign in to your own accounts. The installer provides checks and guidance.`,
-      },
-      {
-        question: "What will it cost?",
-        answer:
-          "You pay for your own server and Claude subscription directly with their providers. Your application may need additional paid services, which require your approval and an agreed limit. Your Claude plan’s usage limits apply.",
-      },
-      {
-        question: "When can I start?",
-        answer: "Join the waiting list and we’ll email you as soon as the first release is ready.",
-      },
-      {
-        question: `Does ${PRODUCT_NAME} do anything without asking me?`,
-        answer: `No. Installations, spending, sharing data, publishing, new accounts and anything that cannot be undone need your approval first. ${PRODUCT_NAME} explains what you are agreeing to.`,
-      },
-      {
-        question: "Where are my data, code and project history?",
-        answer: `Your application data and ${PRODUCT_NAME}’s memory live on your server. Your code and project history live in your own private repository. If a feature needs to send data to an AI or other external service, ${PRODUCT_NAME} asks for your approval and explains what will be shared.`,
-      },
-      {
-        question: `What happens if I stop using ${PRODUCT_NAME}?`,
-        answer:
-          "Your code, application data, memory and decision history remain yours. Your server and other services are in your accounts, so you can keep using or developing your application. Their ongoing charges remain your responsibility.",
-      },
-      {
-        question: "Will it tell me whether my idea is worth building?",
-        answer:
-          "The first release includes a focused conversation and questions that challenge your assumptions. Full Discovery, with deeper research, assumption tests and a reasoned build, change or stop recommendation, is planned for a later release.",
-      },
-      {
-        question: "Does the first release maintain my application automatically?",
-        answer:
-          "Not yet. Looking after your product and helping it grow are coming soon. The first release focuses on taking your idea through to a working application.",
-      },
-    ],
+    items: faqItems,
   },
   waitlist: {
     title: "What will your moonshot be?",
