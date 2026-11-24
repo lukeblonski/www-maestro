@@ -98,3 +98,7 @@ archived_at: null
 
 - czas: 2026-11-18 09:48 · kto: człowiek · zgoda: wdrożenie · czego dotyczy: kawałek: wszystkie, sekcja ## Wdrożenie w CLAUDE.md (workflow pages.yml, krok Deploy to GitHub Pages, bez narzędzi z sekretami, cofnięcie: brak, adres https://lukeblonski.github.io/www-maestro/); po każdym scaleniu na main fabryka sprawdza wynik publikacji i przy porażce staje bez cofania (posiedzenie dostępów, start.md) · odpowiedź: „Na reszte sie zgadzam. Kontynuj”
 - czas: 2026-11-24 00:25 · kto: człowiek · zgoda: upublicznienie · czego dotyczy: kawałek: poprawki-tresci-strony, publikacja poprawionej treści na https://lukeblonski.github.io/www-maestro/ po scaleniu, tylko w zakresie makiety v2 (53dd4ca) i intencji S-05; publikacja poza tym zakresem wymaga nowego pytania · odpowiedź: „Zgoda (Recommended)”
+
+## Zatrzymania autopilota
+
+- czas: 2026-11-24 00:31 · krok: plan · powód: odmowa uprawnień: Bash: cat /home/fabryka/.local/state/factory/skille-krokow/aa56bd33811f5cb2/.claude/skills/10x-plan/references/progress-format.md; echo ----; sed -n '/Kiedy pytać człowieka/,/^## [^K]/p' /home/fabryka/fabryka/CLAUDE.md; echo ----; sed -n '/^## Ścieżki/,/^## Płatne testy skilli/p' … · zrobiono: przyjęcie · skutek: krok przyjęty, łańcuch dalej
