@@ -33,7 +33,7 @@ Maestro ma jednostronicową, angielską stronę zapowiedzi, publikowaną automat
 | S-02 | lista-oczekujacych       | odwiedzający zapisuje się na listę oczekujących, a właściciel dostaje e-mail z każdym nowym adresem i ma je zebrane w jednej liście | S-01 | FR-014, FR-015, FR-016 | done |
 | S-03 | naprawa-listy-oczekujacych | zapis na opublikowanej stronie naprawdę przechodzi: odwiedzający widzi potwierdzenie, właściciel dostaje e-mail, a adres jest w kontaktach Resend | S-02 | FR-014, FR-015, FR-016 | done |
 | S-04 | przebudowa-strony | odwiedzający w kilka minut rozumie wartość Maestro na lekkiej stronie według makiety przyjętej przez człowieka (hero „You bring the idea. Maestro builds it.”, pięć sekcji ze spisem po lewej, porównanie z kreatorami aplikacji z promptu, FAQ) i zapisuje się na listę na końcu strony | S-03 | FR-017, FR-018, FR-019, FR-020, FR-021, FR-022, FR-023, FR-024, FR-009, FR-014 | done |
-| S-05 | poprawki-tresci-strony | odwiedzający czyta poprawione zdania sekcji, porównania i FAQ (zabezpieczenia Maestro, sprawdzanie zmian, powiadomienia, 3 nowe pytania FAQ, „We don’t charge you anything for Maestro.”) | S-04 | FR-009, FR-017, FR-022, FR-023 | todo |
+| S-05 | poprawki-tresci-strony | odwiedzający czyta poprawione zdania sekcji, porównania i FAQ (zabezpieczenia Maestro, sprawdzanie zmian, powiadomienia, 3 nowe pytania FAQ, „We don’t charge you anything for Maestro.”) | S-04 | FR-009, FR-017, FR-022, FR-023 | done |
 
 ## Baseline
 
@@ -146,7 +146,7 @@ Brak. Narzędzie testów, ustawienia ekranów 360 px i 1280 px oraz podawanie zb
 - **Potrzebuje:** nic
 - **Na żywo:** teksty-sekcji, teksty-porownania, coming-soon, faq-strony (czytają tylko opublikowaną stronę)
 - **Risk:** publiczne zdania o tym, co Maestro robi, i o cenie („We don’t charge you anything for Maestro.”); zdania o kreatorach aplikacji z promptu muszą być prawdziwe dla typowych produktów tej kategorii; scalenie na `main` od razu publikuje stronę.
-- **Status:** todo
+- **Status:** done
 
 ## Backlog Handoff
 
