@@ -1,9 +1,9 @@
 ---
 change_id: poprawki-tresci-strony
 title: Poprawki treści strony Maestro według listy człowieka
-status: new
+status: planned
 created: 2026-11-22
-updated: 2026-11-22
+updated: 2026-11-24
 archived_at: null
 ---
 
