@@ -1,7 +1,7 @@
 ---
 change_id: poprawki-tresci-strony
 title: Poprawki treści strony Maestro według listy człowieka
-status: implemented
+status: impl_reviewed
 created: 2026-11-22
 updated: 2026-11-24
 archived_at: null
@@ -103,3 +103,12 @@ archived_at: null
 
 - czas: 2026-11-24 00:31 · krok: plan · powód: odmowa uprawnień: Bash: cat /home/fabryka/.local/state/factory/skille-krokow/aa56bd33811f5cb2/.claude/skills/10x-plan/references/progress-format.md; echo ----; sed -n '/Kiedy pytać człowieka/,/^## [^K]/p' /home/fabryka/fabryka/CLAUDE.md; echo ----; sed -n '/^## Ścieżki/,/^## Płatne testy skilli/p' … · zrobiono: przyjęcie · skutek: krok przyjęty, łańcuch dalej
 - czas: 2026-11-24 00:43 · krok: implement · powód: odmowa uprawnień: Bash: grep -n 'def live_verdict\|def live_place\b\|def live_place(' scripts/autopilot.py; sed -n "$(grep -n 'def live_verdict' scripts/autopilot.py | cut -d: -f1),+70p" scripts/autopilot.py; sed -n "$(grep -n 'def live_place(' scripts/autopilot.py | cut -d: -f1),+15p" scripts/auto… · zrobiono: przyjęcie · skutek: krok przyjęty, łańcuch dalej
+
+## Decyzje triage
+
+### context/changes/poprawki-tresci-strony/reviews/impl-review.md
+
+- F1 — `npm ci` i budowa w skrypcie sprawdzeń bez limitu czasu (OBSERVATION, scripts/strona-na-zywo.mjs:269-274): AUTO-LIMIT (przypadek szczególny): `npm ci` albo budowa zawiesza się tylko w rzadkim przypadku i wtedy autopilot i tak kończy krok porażką („brak pliku wyniku”), więc brakuje tylko nazwy kroku, który zawisł, a werdykt nie jest fałszywie pozytywny; zmiana nie ma „Chroni przed”, więc przyjmuję model „przypadkowy błąd agenta, nie celowe obejście”. · D-023
+- F2 — VERIFICATION.md opisuje stare kroki 7, 8, 9 i 16 (OBSERVATION, VERIFICATION.md:11-13,18): AUTO-SKIP (styl): razem z niczym, bo dotyczy innego miejsca; `VERIFICATION.md` to opis z nieaktualnymi liniami kroków 7, 8, 9 i 16, a testy i strona działają poprawnie; poprawka wychodzi też poza pliki z Ograniczeń `change.md`.
+- F3 — Obsługa błędów skryptu słabsza niż w scripts/na-zywo.mjs (OBSERVATION, scripts/strona-na-zywo.mjs:284-309, 328-331): AUTO-LIMIT (przypadek szczególny): razem z F1: to te same ścieżki błędu skryptu w `przedPublikacja`/`zapisz`, czyli zły powód przy błędzie parsera, brak słuchacza `error`, brak czekania na koniec serwera i `zapisz` bez try/catch; w zwykłym przebiegu werdykt się nie zmienia, bo autopilot zabija grupę procesów po kroku. · D-023
+- F4 — Sprawdzenie coming-soon po publikacji przechodzi też na starej stronie (OBSERVATION, scripts/strona-na-zywo.mjs:211-227, 312-326): AUTO-LIMIT (przypadek szczególny): wczesny odczyt starej strony daje prawdziwy stan końcowy („Coming soon” jest w obu wersjach), a fałszywe „przeszło” wymagałoby nowej wersji bez „Coming soon”, której pilnuje test kroku 8 przed scaleniem; tego ataku nie ma w „Chroni przed”, bo zmiana go nie opisuje. · D-024

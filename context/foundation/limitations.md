@@ -196,3 +196,23 @@
 - Źródło: przebudowa-strony — `context/changes/przebudowa-strony/reviews/impl-review.md` F6
 - Status: obowiązuje
 - Zmiana: przebudowa-strony
+
+## D-023 Ograniczenie: Obsługa błędów skryptu sprawdzeń strony (limit czasu `npm ci` i budowy, ścieżki błędu serwera)
+- Pytanie: czy naprawić teraz to, że `scripts/strona-na-zywo.mjs` uruchamia `npm ci` i budowę bez limitu czasu, łapie błąd parsera jako „strona nie odpowiedziała”, nie słucha `error` serwera, nie czeka na jego koniec i zapisuje wynik bez try/catch?
+- Wybór: nie; ograniczenie zostaje. Te ścieżki zdarzają się tylko w rzadkim przypadku i wtedy krok i tak kończy się porażką (brak pliku wyniku albo mylący powód), a werdykt nie jest fałszywie pozytywny.
+- Kto zdecydował: model (10x-impl-review)
+- Podstawa: context/changes/poprawki-tresci-strony/reviews/impl-review.md F1 (razem z F3), reguła przypadek szczególny
+- Kiedy wrócić: w śladach przebiegu autopilot zabija `scripts/strona-na-zywo.mjs` po limicie czasu w miejscu `przed-publikacja` albo `galaz-glowna` i nie ma pliku wyniku, albo sprawdzenie przed publikacją kończy się powodem „strona nie odpowiedziała”, choć strona się zbudowała, albo zmiana dotyka `scripts/strona-na-zywo.mjs`.
+- Źródło: poprawki-tresci-strony — `context/changes/poprawki-tresci-strony/reviews/impl-review.md` F1, F3
+- Status: obowiązuje
+- Zmiana: poprawki-tresci-strony
+
+## D-024 Ograniczenie: Sprawdzenie coming-soon po publikacji przechodzi też na starej stronie
+- Pytanie: czy naprawić teraz to, że sprawdzenie `coming-soon` po publikacji przechodzi przy pierwszym odczycie, zanim nowa wersja strony jest online, bo „Coming soon” było też na stronie S-04?
+- Wybór: nie; ograniczenie zostaje. Wczesny odczyt starej strony daje prawdziwy stan końcowy, a nowej wersji bez „Coming soon” pilnuje test kroku 8 przed scaleniem.
+- Kto zdecydował: model (10x-impl-review)
+- Podstawa: context/changes/poprawki-tresci-strony/reviews/impl-review.md F4, reguła przypadek szczególny
+- Kiedy wrócić: zmiana dotyka pól `soon` albo tekstów „Coming soon” w `lib/content.ts` lub skryptu `scripts/strona-na-zywo.mjs`, albo w śladach publikacji `coming-soon` przechodzi przy pierwszym odczycie, a pozostałe sprawdzenia tej publikacji czekają albo nie przechodzą.
+- Źródło: poprawki-tresci-strony — `context/changes/poprawki-tresci-strony/reviews/impl-review.md` F4
+- Status: obowiązuje
+- Zmiana: poprawki-tresci-strony
