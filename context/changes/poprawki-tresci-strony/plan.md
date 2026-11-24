@@ -149,7 +149,7 @@ Skrypt, który czyta stronę i zapisuje plik wyniku dla `teksty-sekcji`, `teksty
 
 #### Automated
 
-- [x] 2.1 Składnia skryptu: `node --check scripts/strona-na-zywo.mjs`
-- [x] 2.2 Cztery linie z poleceniem w sekcji ## Sprawdzenie na żywo w CLAUDE.md
-- [x] 2.3 Stany końcowe w skrypcie równe tym z change.md
-- [x] 2.4 Polecenie sprawdzające i zakres zmiany: `npm ci && npm run verify && python3 ~/.claude/skills/10x-impl-review/scripts/validate_change.py poprawki-tresci-strony --rules 6`
+- [x] 2.1 Składnia skryptu: `node --check scripts/strona-na-zywo.mjs` — ed1c701
+- [x] 2.2 Cztery linie z poleceniem w sekcji ## Sprawdzenie na żywo w CLAUDE.md — ed1c701
+- [x] 2.3 Stany końcowe w skrypcie równe tym z change.md — ed1c701
+- [x] 2.4 Polecenie sprawdzające i zakres zmiany: `npm ci && npm run verify && python3 ~/.claude/skills/10x-impl-review/scripts/validate_change.py poprawki-tresci-strony --rules 6` — ed1c701
