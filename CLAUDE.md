@@ -1,5 +1,5 @@
-Dopóki context/foundation/start.md nie ma sekcji „## Lista końcowa”, przy prośbie o budowę albo zmianę sesja czyta /home/fabryka/fabryka/docs/start-projektu.md i działa według niego.
-Gdy człowiek w rozmowie mówi „zrób zmianę”, „zrób <ID kawałka>”, „zrób kolejny kawałek”, „kontynuuj <change-id>” albo „co się dzieje?”, albo gdy kończy się wywołanie autopilota uruchomione w tle, sesja czyta /home/fabryka/fabryka/docs/sesja-glowna.md i działa według niego. Krok claude -p autopilota (ma w środowisku zmienną AUTOPILOT_KROK) tego nie robi i nie uruchamia autopilota.
+Dopóki context/foundation/start.md nie ma sekcji „## Lista końcowa”, przy prośbie o budowę albo zmianę sesja czyta /home/factory/fabryka/docs/start-projektu.md i działa według niego.
+Gdy człowiek w rozmowie mówi „zrób zmianę”, „zrób <ID kawałka>”, „zrób kolejny kawałek”, „kontynuuj <change-id>” albo „co się dzieje?”, albo gdy kończy się wywołanie autopilota uruchomione w tle, sesja czyta /home/factory/fabryka/docs/sesja-glowna.md i działa według niego. Krok claude -p autopilota (ma w środowisku zmienną AUTOPILOT_KROK) tego nie robi i nie uruchamia autopilota.
 
 ## Verify
 
@@ -44,9 +44,9 @@ Skrypt `scripts/strona-na-zywo.mjs` bierze nazwę sprawdzenia z `$NA_ZYWO_SCIEZK
 
 Ścieżki do plików z sekretami, poza repo. Kroki i sesja nie czytają tych plików i nie wypisują ich treści. Czyta je tylko polecenie z `## Uruchomienie lokalne`, polecenie ścieżki z `## Sprawdzenie na żywo`, które uruchamia tylko skrypt autopilota, i krok autopilota `przygotowanie-wdrozenia`, który podaje wartość na wejście polecenia z `## Wdrożenie` i jej nie wypisuje. Testy używają atrapy usługi.
 
-- klucz API Resend: /home/fabryka/.secrets/www-maestro/resend-api-key
-- token API Cloudflare: /home/fabryka/.secrets/www-maestro/cloudflare-api-token
-- adres e-mail właściciela: /home/fabryka/.secrets/www-maestro/owner-email
+- klucz API Resend: /home/factory/.secrets/www-maestro/resend-api-key
+- token API Cloudflare: /home/factory/.secrets/www-maestro/cloudflare-api-token
+- adres e-mail właściciela: /home/factory/.secrets/www-maestro/owner-email
 
 ## Wdrożenie
 
